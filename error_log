@@ -1,0 +1,5 @@
+[27-Jul-2025 12:25:18 UTC] PHP Warning:  require(/home/adshop/tjar.lam3.ps/../vendor/autoload.php): Failed to open stream: No such file or directory in /home/adshop/tjar.lam3.ps/index.php on line 34
+[27-Jul-2025 12:25:18 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/adshop/tjar.lam3.ps/../vendor/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/adshop/tjar.lam3.ps/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home/adshop/tjar.lam3.ps/index.php on line 34

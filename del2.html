@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>إدارة المخزون</title>
+    <style>
+        body {
+            font-family: Tahoma, Arial;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .card {
+            background: #fff;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+        .filters {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .filters input, .filters select, .filters button {
+            padding: 6px 10px;
+            font-size: 14px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+            font-size: 14px;
+        }
+        th {
+            background: #f0f0f0;
+        }
+        .status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            display: inline-block;
+        }
+        .available {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .low {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .out {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .actions button {
+            margin: 2px;
+            padding: 5px 8px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>📦 صفحة إدارة المخزون</h1>
+
+    <!-- Filters -->
+    <div class="card">
+        <div class="filters">
+            <input type="text" placeholder="بحث باسم المنتج">
+            <select>
+                <option>كل الحالات</option>
+                <option>متوفر</option>
+                <option>منخفض</option>
+                <option>نفد</option>
+            </select>
+            <button>بحث</button>
+        </div>
+    </div>
+
+    <!-- Inventory Table -->
+    <div class="card">
+        <table>
+            <thead>
+                <tr>
+                    <th>المنتج</th>
+                    <th>الخيار</th>
+                    <th>الكمية الحالية</th>
+                    <th>حالة المخزون</th>
+                    <th>إجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>سماعة بلوتوث</td>
+                    <td>أسود</td>
+                    <td>25</td>
+                    <td><span class="status available">متوفر</span></td>
+                    <td class="actions">
+                        <button>➕ إضافة كمية</button>
+                        <button>➖ خصم كمية</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>سماعة بلوتوث</td>
+                    <td>أبيض</td>
+                    <td>4</td>
+                    <td><span class="status low">منخفض</span></td>
+                    <td class="actions">
+                        <button>➕ إضافة كمية</button>
+                        <button>➖ خصم كمية</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>بروجكتر</td>
+                    <td>-</td>
+                    <td>0</td>
+                    <td><span class="status out">نفد</span></td>
+                    <td class="actions">
+                        <button>➕ إضافة كمية</button>
+                        <button>➖ خصم كمية</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>تقرير أرباح المبيعات</title>
+    <style>
+        body {
+            font-family: Tahoma, Arial;
+            background: #f5f6fa;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .card {
+            background: #fff;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+        .filters {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .filters label {
+            font-size: 14px;
+        }
+        .filters input, .filters select, .filters button {
+            padding: 6px 10px;
+            font-size: 14px;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+        .stat-box {
+            background: #eef2ff;
+            padding: 15px;
+            border-radius: 6px;
+        }
+        .stat-box span {
+            display: block;
+            font-size: 13px;
+            color: #555;
+        }
+        .stat-box strong {
+            display: block;
+            margin-top: 5px;
+            font-size: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+            font-size: 14px;
+        }
+        th {
+            background: #f0f0f0;
+        }
+        .status {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .completed { background: #d1fae5; color: #065f46; }
+        .pending { background: #fef3c7; color: #92400e; }
+        .cancelled { background: #fee2e2; color: #991b1b; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>💰 تقرير أرباح المبيعات</h1>
+
+    <!-- Filters -->
+    <div class="card">
+        <div class="filters">
+            <label>
+                من:
+                <input type="date">
+            </label>
+            <label>
+                إلى:
+                <input type="date">
+            </label>
+            <label>
+                المنتج:
+                <select>
+                    <option>كل المنتجات</option>
+                    <option>سماعة بلوتوث</option>
+                    <option>بروجكتر</option>
+                </select>
+            </label>
+            <label>
+                حالة الطلب:
+                <select>
+                    <option>الكل</option>
+                    <option>مكتمل</option>
+                    <option>جاري التنفيذ</option>
+                    <option>ملغي</option>
+                </select>
+            </label>
+            <button>عرض التقرير</button>
+        </div>
+    </div>
+
+    <!-- Summary -->
+    <div class="card">
+        <div class="stats">
+            <div class="stat-box">
+                <span>إجمالي المبيعات</span>
+                <strong>18,500 ₪</strong>
+            </div>
+            <div class="stat-box">
+                <span>عدد الطلبات</span>
+                <strong>42</strong>
+            </div>
+            <div class="stat-box">
+                <span>صافي الأرباح</span>
+                <strong>6,300 ₪</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card">
+        <table>
+            <thead>
+                <tr>
+                    <th>رقم الطلب</th>
+                    <th>التاريخ</th>
+                    <th>المنتج</th>
+                    <th>قيمة الطلب</th>
+                    <th>الربح</th>
+                    <th>حالة الطلب</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>#1025</td>
+                    <td>2025-02-01</td>
+                    <td>سماعة بلوتوث</td>
+                    <td>350 ₪</td>
+                    <td>120 ₪</td>
+                    <td><span class="status completed">مكتمل</span></td>
+                </tr>
+                <tr>
+                    <td>#1028</td>
+                    <td>2025-02-02</td>
+                    <td>بروجكتر</td>
+                    <td>1,200 ₪</td>
+                    <td>300 ₪</td>
+                    <td><span class="status pending">جاري التنفيذ</span></td>
+                </tr>
+                <tr>
+                    <td>#1031</td>
+                    <td>2025-02-03</td>
+                    <td>سماعة بلوتوث</td>
+                    <td>350 ₪</td>
+                    <td>0 ₪</td>
+                    <td><span class="status cancelled">ملغي</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>

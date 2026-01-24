@@ -1,0 +1,52 @@
+[01-Aug-2025 03:18:38 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/adshop/lam3.ps/config/database.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/adshop/lam3.ps/config/database.php on line 18
+[04-Aug-2025 20:32:54 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/adshop/lam3.ps/config/database.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/adshop/lam3.ps/config/database.php on line 18
+[10-Aug-2025 14:06:59 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/adshop/lam3.ps/config/database.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/adshop/lam3.ps/config/database.php on line 18
+[10-Aug-2025 14:06:59 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/adshop/lam3.ps/config/mail.php:16
+Stack trace:
+#0 {main}
+  thrown in /home/adshop/lam3.ps/config/mail.php on line 16
+[10-Aug-2025 14:06:59 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/adshop/lam3.ps/config/app.php:19
+Stack trace:
+#0 {main}
+  thrown in /home/adshop/lam3.ps/config/app.php on line 19
+[10-Aug-2025 14:06:59 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/adshop/lam3.ps/config/services.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/adshop/lam3.ps/config/services.php on line 18
+[14-Aug-2025 03:54:26 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/adshop/lam3.ps/config/services.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/adshop/lam3.ps/config/services.php on line 18
+[14-Aug-2025 03:55:08 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/adshop/lam3.ps/config/database.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/adshop/lam3.ps/config/database.php on line 18
+[14-Aug-2025 22:40:52 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/adshop/lam3.ps/config/services.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/adshop/lam3.ps/config/services.php on line 18
+[14-Aug-2025 22:41:48 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/adshop/lam3.ps/config/database.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/adshop/lam3.ps/config/database.php on line 18
+[31-Dec-2025 12:31:07 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/adshop/lam3.ps/config/mail.php:16
+Stack trace:
+#0 {main}
+  thrown in /home/adshop/lam3.ps/config/mail.php on line 16
+[31-Dec-2025 12:31:07 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/adshop/lam3.ps/config/broadcasting.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/adshop/lam3.ps/config/broadcasting.php on line 18
+[31-Dec-2025 19:35:22 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function env() in /home/adshop/lam3.ps/config/database.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/adshop/lam3.ps/config/database.php on line 18
