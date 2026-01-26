@@ -223,5 +223,186 @@
 @toastifyJs
 @yield('js')
 
+<script>
+    // وظيفة جلب السعر في النافذة المنبثقة (Quick View)
+    function fetchPriceModal() {
+        let form = document.getElementById('addToCart-modal');
+        if (!form) return;
+        let formData = new FormData(form);
+        let productId = formData.get('product_id');
+
+        fetch(`/product/${productId}/get-price`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const priceValue = document.getElementById('price-value-modal');
+                const discountSection = document.getElementById('discount-section-modal');
+                const discountedPrice = document.getElementById('discounted-price-modal');
+
+                if (priceValue) {
+                    priceValue.innerText = data.price ? data.price + ' {{ $storeCurrency ?? "" }}' : 'غير متوفر';
+                }
+
+                if (data.discount && data.discount > 0) {
+                    if (discountedPrice) discountedPrice.innerText = data.discount + ' {{ $storeCurrency ?? "" }}';
+                    if (discountSection) discountSection.style.display = 'block';
+                    if (priceValue) priceValue.style.textDecoration = "line-through";
+                } else {
+                    if (discountSection) discountSection.style.display = 'none';
+                    if (priceValue) priceValue.style.textDecoration = "none";
+                }
+
+                if (document.getElementById('hidden-variation-modal')) document.getElementById('hidden-variation-modal').value = data.variation_id;
+                if (document.getElementById('hidden-price-modal')) document.getElementById('hidden-price-modal').value = data.price;
+                if (document.getElementById('hidden-discount-modal')) document.getElementById('hidden-discount-modal').value = data.discount || '';
+
+                if (data.image) {
+                    const modalImg = document.getElementById('main-product-image-modal');
+                    if (modalImg) modalImg.src = data.image;
+                }
+
+                // تحديث حالة المخزون في النافذة المنبثقة
+                let stockStatus = document.getElementById('stock-status-modal');
+                let addToCartBtn = document.getElementById('addtocartbutton-modal');
+                
+                if (data.stock !== undefined) {
+                    if (data.stock > 0) {
+                        if (stockStatus) stockStatus.innerHTML = `<span class="badge bg-success">متوفر: ${data.stock}</span>`;
+                        if (addToCartBtn) {
+                            addToCartBtn.disabled = false;
+                            addToCartBtn.style.backgroundColor = "";
+                            addToCartBtn.style.cursor = "";
+                            addToCartBtn.querySelector('span').innerText = "اضف الي السلة";
+                        }
+                    } else {
+                        if (stockStatus) stockStatus.innerHTML = `<span class="badge bg-danger">غير متوفر حالياً</span>`;
+                        if (addToCartBtn) {
+                            addToCartBtn.disabled = true;
+                            addToCartBtn.style.backgroundColor = "#ccc";
+                            addToCartBtn.style.cursor = "not-allowed";
+                            addToCartBtn.querySelector('span').innerText = "غير متوفر";
+                        }
+                    }
+                }
+            })
+            .catch(error => console.error('Error fetching price modal:', error));
+    }
+
+    // تهيئة أزرار التحكم بالكمية
+    function initializeQuantityButtons() {
+        document.querySelectorAll('.plus-btn').forEach(button => {
+            button.onclick = function() {
+                const input = this.previousElementSibling;
+                input.value = parseInt(input.value) + 1;
+            };
+        });
+
+        document.querySelectorAll('.minus-btn').forEach(button => {
+            button.onclick = function() {
+                const input = this.nextElementSibling;
+                if (parseInt(input.value) > 1) {
+                    input.value = parseInt(input.value) - 1;
+                }
+            };
+        });
+    }
+
+    // مستمع عام لأزرار المشاهدة السريعة
+    $(document).on('click', '.btn-quick-view', function(e) {
+        e.preventDefault();
+        const productId = $(this).data('id');
+        const modalContent = $('#modal-content');
+
+        fetch(`/product/quick-view/${productId}`)
+            .then(response => response.text())
+            .then(html => {
+                modalContent.html(html);
+                const modalElement = document.getElementById('quick_view');
+                const modal = new bootstrap.Modal(modalElement);
+                modal.show();
+
+                // تهيئة Swiper
+                new Swiper('.tf-single-slide', {
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                });
+
+                // تهيئة أزرار الكمية
+                initializeQuantityButtons();
+            })
+            .catch(error => console.error('Error details:', error));
+    });
+
+    // مستمع عام لجميع أزرار الإضافة للسلة (الصفحة الأساسية والمودال)
+    $(document).on('click', '#addtocartbutton, #addtocartbutton-modal', function(e) {
+        e.preventDefault();
+        const isModal = this.id === 'addtocartbutton-modal';
+        const formId = isModal ? '#addToCart-modal' : '#addToCart';
+        const form = $(formId);
+
+        if (form.length === 0) {
+            // في حالة وجود معرفات ديناميكية (كما في صفحة index)
+            // سنحاول العثور على النموذج الأب
+            const dynamicForm = $(this).closest('form');
+            if (dynamicForm.length > 0) {
+                submitAddToCart(dynamicForm);
+            }
+            return;
+        }
+
+        submitAddToCart(form);
+    });
+
+    function submitAddToCart(form) {
+        $.ajax({
+            url: '/cart/add',
+            method: 'POST',
+            data: form.serialize(),
+            success: function(response) {
+                Toastify({
+                    text: response.message,
+                    duration: 3000,
+                    gravity: "top",
+                    position: "right",
+                    backgroundColor: "#4CAF50",
+                }).showToast();
+
+                if (response.cartCount) {
+                    $('.nav-cart .count-box').text(response.cartCount);
+                    $('.count-box').text(response.cartCount);
+                }
+
+                // تحديث السلة وإظهارها
+                updateCartModalGlobal();
+                $('#shoppingCart').modal('show');
+                $('#quick_view').modal('hide');
+            },
+            error: function(xhr) {
+                console.error("Cart error:", xhr.responseText);
+            }
+        });
+    }
+
+    function updateCartModalGlobal() {
+        $.ajax({
+            url: '/cart/items',
+            method: 'GET',
+            success: function(response) {
+                $('#shoppingCart .wrap').html(response.html || response);
+                if (response.cartCount) {
+                    $('.nav-cart .count-box').text(response.cartCount);
+                }
+            }
+        });
+    }
+</script>
+
 </body>
 </html>

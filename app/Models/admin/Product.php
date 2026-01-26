@@ -38,4 +38,29 @@ class Product extends Model
     {
         return $this->hasMany(ProductGallary::class, 'product_id');
     }
+
+    /**
+     * Deduct stock for the product.
+     */
+    public function deductStock($qty)
+    {
+        $this->quantity -= $qty;
+        if ($this->quantity <= 0) {
+            $this->quantity = 0;
+            $this->status = 0; // Out of stock / Archived
+        }
+        $this->save();
+    }
+
+    /**
+     * Restore stock for the product.
+     */
+    public function restoreStock($qty)
+    {
+        $this->quantity += $qty;
+        if ($this->quantity > 0) {
+            $this->status = 1; // Back in stock
+        }
+        $this->save();
+    }
 }

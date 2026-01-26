@@ -108,8 +108,7 @@ if ($(".thumbs-default").length > 0) {
   var thumbsSlider = new Swiper(".tf-product-media-thumbs-default", {
     spaceBetween: 10,
     slidesPerView: "auto",
-    // slidesPerView: 2,
-    direction: "vertical",
+    direction: direction || "vertical",
     freeMode: true,
     watchSlidesVisibility: true,
     watchSlidesProgress: true,
@@ -119,12 +118,8 @@ if ($(".thumbs-default").length > 0) {
         slidesPerView: 5,
       },
       1150: {
-        direction: "vertical",
-        direction: direction,
+        direction: direction || "vertical",
       },
-    },
-    450: {
-      direction: "vertical",
     },
   });
   var mainSlider = new Swiper(".tf-product-media-main-default", {

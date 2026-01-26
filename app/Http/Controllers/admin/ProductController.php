@@ -142,12 +142,13 @@ class ProductController extends Controller
                 if ($data['type'] == 'متغير') {
                     // حفظ المتغيرات
                     foreach ($request->variant_name as $index => $variantName) {
+                        $vartiantImage = $this->saveImage($request->variant_image[$index],public_path('assets/uploads/product_images'));
                         // حفظ كل متغير في جدول product_variations
                         $productVariation = new ProductVartions();
                         $productVariation->product_id = $product->id;
                         $productVariation->price = $request->variant_price[$index];
                         $productVariation->discount = $request->variant_discount[$index];
-                        $productVariation->image = $request->variant_image[$index]->store('images');
+                        $productVariation->image = $vartiantImage;
                         $productVariation->stock = $request->variant_stock[$index];
                         $productVariation->save();
                         // حفظ القيم المرتبطة بهذا المتغير
@@ -271,11 +272,16 @@ class ProductController extends Controller
                             // حفظ كل متغير في جدول product_variations
                             // حفظ كل متغير في جدول product_variations باستخدام create
                             //dd($request->variant_name);
+                            $vartiantImage = null;
+                            if (isset($request->variant_new_image[$index])) {
+                                $vartiantImage = $this->saveImage($request->variant_new_image[$index], 'assets/uploads/product_images');
+                            }
+
                             $productVariation = ProductVartions::create([
                                 'product_id' => $product->id,
                                 'price' => $request->variant_new_price[$index],
                                 'discount' => $request->variant_new_discount[$index],
-                                //  'image' => $request->variant_new_image[$index]->store('images'),
+                                'image' => $vartiantImage,
                                 'stock' => $request->variant_new_stock[$index],
                             ]);
 
@@ -311,7 +317,8 @@ class ProductController extends Controller
                             $productVariation->discount = $request->variant_discount[$index];
 
                             if (isset($request->variant_image[$index])) {
-                                $productVariation->image = $request->variant_image[$index]->store('images');
+                                $vartiantImage = $this->saveImage($request->variant_image[$index], 'assets/uploads/product_images');
+                                $productVariation->image = $vartiantImage;
                             }
 
                             $productVariation->stock = $request->variant_stock[$index];

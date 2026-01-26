@@ -400,92 +400,9 @@
         });
     </script>
 
-    <script>
-        $(document).ready(function() {
-            $('body').on('click', '#addtocartbutton', function(e) {
-                e.preventDefault();
-                $.ajax({
-                    url: '/cart/add',
-                    method: 'POST',
-                    data: $("#addToCart").serialize(),
-                    success: function(response) {
-                        Toastify({
-                            text: response.message,
-                            duration: 3000,
-                            gravity: "top",
-                            position: "right",
-                            backgroundColor: "#4CAF50",
-                        }).showToast();
-
-                        if (response.cartCount) {
-                            $('.nav-cart .count-box').text(response.cartCount);
-                        }
-                        updateCartModal();
-                        $('#shoppingCart').modal('show');
-                        $('#quick_view').modal('hide');
-                    }
-                });
-            });
-
-            function updateCartModal() {
-                $.ajax({
-                    url: '/cart/items',
-                    method: 'GET',
-                    success: function(response) {
-                        $('#shoppingCart .wrap').html(response.html);
-                        $('.nav-cart .count-box').text(response.cartCount);
-                        window.cartCount = response.cartCount;
-                    }
-                });
-            }
         });
     </script>
 
-    <script>
-        document.querySelectorAll('.btn-quick-view').forEach(button => {
-            button.addEventListener('click', function() {
-                const productId = this.getAttribute('data-id');
-
-                fetch(`/product/quick-view/${productId}`)
-                    .then(response => response.text())
-                    .then(html => {
-                        document.getElementById('modal-content').innerHTML = html;
-                        const modal = new bootstrap.Modal(document.getElementById('quick_view'));
-                        modal.show();
-
-                        var swiper = new Swiper('.tf-single-slide', {
-                            navigation: {
-                                nextEl: '.swiper-button-next',
-                                prevEl: '.swiper-button-prev',
-                            },
-                        });
-
-                        initializeQuantityButtons();
-                    });
-            });
-        });
-
-        function initializeQuantityButtons() {
-            document.querySelectorAll('.plus-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const input = this.previousElementSibling;
-                    input.value = parseInt(input.value) + 1;
-                });
-            });
-
-            document.querySelectorAll('.minus-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const input = this.nextElementSibling;
-                    if (parseInt(input.value) > 1) {
-                        input.value = parseInt(input.value) - 1;
-                    }
-                });
-            });
-        }
-
-        document.addEventListener('hidden.bs.modal', function() {
-            document.querySelectorAll('.modal-backdrop').forEach(overlay => overlay.remove());
-            document.body.classList.remove('modal-open');
         });
     </script>
 

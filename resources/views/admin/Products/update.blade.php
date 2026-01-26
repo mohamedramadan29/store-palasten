@@ -265,10 +265,16 @@
                                                     <div class="form-group">
                                                         <label>صورة المتغير</label>
                                                         <input type="file" name="variant_image[]" class="form-control">
-                                                        @if ($variation->image)
-                                                            <img src="{{ asset($variation->image) }}" alt="" style="max-width: 100px; margin-top: 8px; border-radius: 4px;">
-                                                        @endif
                                                     </div>
+
+                                                    @if ($variation->image)
+                                                        <div class="form-group">
+                                                            <label>الصورة الحالية</label>
+                                                            <div>
+                                                                <img src="{{ asset('assets/uploads/product_images/' . $variation->image) }}" alt="" style="max-width: 80px; height: 80px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd;">
+                                                            </div>
+                                                        </div>
+                                                    @endif
                                                 </div>
                                             @endforeach
                                         </div>

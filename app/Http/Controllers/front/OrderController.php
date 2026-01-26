@@ -4,6 +4,7 @@ namespace App\Http\Controllers\front;
 
 use App\Http\Controllers\Controller;
 use App\Http\Traits\Message_Trait;
+use App\Models\admin\ProductVartions;
 use App\Models\admin\admins;
 use App\Models\admin\Product;
 use App\Models\admin\PublicSetting;
@@ -49,6 +50,22 @@ class OrderController extends Controller
         if ($validator->fails()) {
             return Redirect::back()->withInput()->withErrors($validator);
         }
+
+        // Check stock availability for all items before starting
+        foreach ($cartItems as $item) {
+            if ($item['product_variation_id']) {
+                $variation = ProductVartions::find($item['product_variation_id']);
+                if (!$variation || $variation->stock < $item['qty']) {
+                    return Redirect::back()->withInput()->withErrors(['stock_error' => 'الكمية المطلوبة من المنتج ' . ($variation->product->name ?? '') . ' غير متوفرة حالياً']);
+                }
+            } else {
+                $product = Product::find($item['product_id']);
+                if (!$product || $product->quantity < $item['qty']) {
+                    return Redirect::back()->withInput()->withErrors(['stock_error' => 'الكمية المطلوبة من المنتج ' . ($product->name ?? '') . ' غير متوفرة حالياً']);
+                }
+            }
+        }
+
         DB::beginTransaction();
         $order = new Order();
         $order->name = $data['name'] . '' . $data['name2'];

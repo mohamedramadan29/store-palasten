@@ -1,190 +1,253 @@
 @extends('front.layouts.master')
 @section('title')
-    {{ $product['name'] }}
+{{ $product['name'] }}
 @endsection
 
 @section('content')
-    <div class="page_content">
-        @if (Session::has('Success_message'))
-            @php
-                toastify()->success(\Illuminate\Support\Facades\Session::get('Success_message'));
-            @endphp
-        @endif
-        @if ($errors->any())
-            @foreach ($errors->all() as $error)
-                @php
-                    toastify()->error($error);
-                @endphp
-            @endforeach
-        @endif
-        <!-- page-title -->
-        <div class="tf-page-title">
-            <div class="container-full">
-                <div class="tf-breadcrumb-wrap d-flex justify-content-between flex-wrap align-items-center">
-                    <div class="tf-breadcrumb-list">
-                        <a href="{{ url('/') }}" class="text"> الرئيسية </a>
-                        <i class="icon icon-arrow-right"></i>
-                        <a href="{{ url('collection/' . $product['Main_Category']['slug']) }}"
-                            class="text">{{ $product['Main_Category']['name'] }}</a>
-                        <i class="icon icon-arrow-right"></i>
-                        <span class="text"> {{ $product['name'] }} </span>
-                    </div>
+<div class="page_content">
+    @if (Session::has('Success_message'))
+    @php
+    toastify()->success(\Illuminate\Support\Facades\Session::get('Success_message'));
+    @endphp
+    @endif
+    @if ($errors->any())
+    @foreach ($errors->all() as $error)
+    @php
+    toastify()->error($error);
+    @endphp
+    @endforeach
+    @endif
+    <!-- page-title -->
+    <div class="tf-page-title">
+        <div class="container-full">
+            <div class="flex-wrap tf-breadcrumb-wrap d-flex justify-content-between align-items-center">
+                <div class="tf-breadcrumb-list">
+                    <a href="{{ url('/') }}" class="text"> الرئيسية </a>
+                    <i class="icon icon-arrow-right"></i>
+                    <a href="{{ url('collection/' . $product['Main_Category']['slug']) }}" class="text">{{
+                        $product['Main_Category']['name'] }}</a>
+                    <i class="icon icon-arrow-right"></i>
+                    <span class="text"> {{ $product['name'] }} </span>
                 </div>
-                <div class="heading text-center">{{ $product['name'] }}</div>
             </div>
+            <div class="text-center heading">{{ $product['name'] }}</div>
         </div>
-        <!-- /page-title -->
-        <!-- /breadcrumb -->
-        <!-- default -->
-        <section class="flat-spacing-4 pt_0">
-            <div class="tf-main-product">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="tf-product-media-wrap sticky-top">
-                                <div class="thumbs-slider thumbs-default">
-                                    <div class="swiper tf-product-media-thumbs tf-product-media-thumbs-default"
-                                        data-direction="vertical">
-                                        <div class="swiper-wrapper stagger-wrap">
-                                        </div>
-                                    </div>
-                                    <div class="swiper tf-product-media-main tf-product-media-main-default">
+    </div>
+    <!-- /page-title -->
+    <!-- /breadcrumb -->
+    <!-- default -->
+    <section class="flat-spacing-4 pt_0">
+        <div class="tf-main-product">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="tf-product-media-wrap sticky-top">
+                            <div class="thumbs-bottom">
+                                <div class="thumbs-slider thumbs-default"
+                                    style="display: flex !important; flex-direction: column !important; gap: 20px !important;">
+                                    <div class="swiper tf-product-media-main tf-product-media-main-default"
+                                        style="width: 100% !important; min-height: 400px !important;">
                                         <div class="swiper-wrapper">
                                             <div class="swiper-slide">
-                                                <a href="#" class="item">
-                                                    <img class="lazyload"
-                                                        data-src="{{ asset('assets/uploads/product_images/' . $product['image']) }}"
+                                                <a href="javascript:void(0);" class="item">
+                                                    <img id="main-product-image"
                                                         src="{{ asset('assets/uploads/product_images/' . $product['image']) }}"
-                                                        alt="{{ $product['name'] }}">
+                                                        alt="{{ $product['name'] }}"
+                                                        style="width: 100%; height: 400px; display: block; border: 1px solid #ccc;">
                                                 </a>
                                             </div>
-                                            @if ($product['gallary'] && $product['gallary'] != '')
-                                                @foreach ($product['gallary'] as $gallary)
-                                                    <div class="swiper-slide">
-                                                        <a href="#" class="item">
-                                                            <img class="lazyload"
-                                                                data-src="{{ asset('assets/uploads/product_gallery/' . $gallary['image']) }}"
-                                                                src="{{ asset('assets/uploads/product_gallary/' . $gallary['image']) }}"
-                                                                alt="{{ $product['name'] }}">
-                                                        </a>
-                                                    </div>
-                                                @endforeach
+                                            @if (isset($gallary) && count($gallary) > 0)
+                                            @foreach ($gallary as $gallary_item)
+                                            <div class="swiper-slide">
+                                                <a href="javascript:void(0);" class="item">
+                                                    <img src="{{ asset('assets/uploads/product_gallery/' . $gallary_item['image']) }}"
+                                                        alt="{{ $product['name'] }}"
+                                                        style="width: 100%; height: 400px; display: block; border: 1px solid #ccc;">
+                                                </a>
+                                            </div>
+                                            @endforeach
                                             @endif
+                                            @foreach ($productVariations as $variation)
+                                            @if ($variation['image'])
+                                            <div class="swiper-slide" data-variation-id="{{ $variation['id'] }}">
+                                                <a href="javascript:void(0);" class="item">
+                                                    <img src="{{ asset('assets/uploads/product_images/' . $variation['image']) }}"
+                                                        alt="{{ $product['name'] }}"
+                                                        style="width: 100%; height: 400px; display: block; border: 1px solid #ccc;">
+                                                </a>
+                                            </div>
+                                            @endif
+                                            @endforeach
                                         </div>
                                         <div class="swiper-button-next button-style-arrow thumbs-next"></div>
                                         <div class="swiper-button-prev button-style-arrow thumbs-prev"></div>
                                     </div>
+                                    <div class="swiper tf-product-media-thumbs tf-product-media-thumbs-default"
+                                        data-direction="horizontal"
+                                        style="width: 100% !important; min-height: 100px !important;">
+                                        <div class="swiper-wrapper">
+                                            <div class="swiper-slide">
+                                                <div class="item">
+                                                    <img src="{{ asset('assets/uploads/product_images/' . $product['image']) }}"
+                                                        alt="{{ $product['name'] }}"
+                                                        style="width: 100px; height: 100px; object-fit: cover; border: 1px solid #eee;">
+                                                </div>
+                                            </div>
+                                            @if (isset($gallary) && count($gallary) > 0)
+                                            @foreach ($gallary as $gallary_item)
+                                            <div class="swiper-slide">
+                                                <div class="item">
+                                                    <img src="{{ asset('assets/uploads/product_gallery/' . $gallary_item['image']) }}"
+                                                        alt="{{ $product['name'] }}"
+                                                        style="width: 100px; height: 100px; object-fit: cover; border: 1px solid #eee;">
+                                                </div>
+                                            </div>
+                                            @endforeach
+                                            @endif
+                                            @foreach ($productVariations as $variation)
+                                            @if ($variation['image'])
+                                            <div class="swiper-slide" data-variation-id="{{ $variation['id'] }}">
+                                                <div class="item">
+                                                    <img src="{{ asset('assets/uploads/product_images/' . $variation['image']) }}"
+                                                        alt="{{ $product['name'] }}"
+                                                        style="width: 100px; height: 100px; object-fit: cover; border: 1px solid #eee;">
+                                                </div>
+                                            </div>
+                                            @endif
+                                            @endforeach
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+
+
                         </div>
-                        <div class="col-md-6">
-                            <div class="tf-product-info-wrap position-relative">
-                                <div class="tf-zoom-main"></div>
-                                <div class="tf-product-info-list">
-                                    <div class="tf-product-info-title">
-                                        <h5> {{ $product['name'] }} </h5>
-                                    </div>
-                                    {{--                                    <div class="tf-product-info-badges"> --}}
-                                    {{--                                        <div class="product-status-content"> --}}
-                                    {{--                                            <p class="fw-6">{{$product['short_description']}}</p> --}}
-                                    {{--                                        </div> --}}
-                                    {{--                                    </div> --}}
-                                    <!-- عرض خيارات السمات -->
-                                    <form id="addToCart_{{ $product['id'] }}" class="" method="post"
-                                        action="{{ url('cart/add') }}">
-                                        @csrf
-                                        <div class="tf-product-info-variant-picker">
-                                            @if ($productVariations->count() > 0)
-                                                @foreach ($variationAttributes as $attributeId => $attribute)
-                                                    <div class="form-group">
-                                                        <label
-                                                            for="attribute_{{ $attributeId }}">{{ $attribute['name'] }}</label>
-                                                        <select name="attribute_values[{{ $attributeId }}]"
-                                                            class="form-control" onchange="fetchPrice2()">
-                                                            <option value="">اختر {{ $attribute['name'] }}</option>
-                                                            @foreach ($attribute['values'] as $value)
-                                                                <option value="{{ $value }}">{{ $value }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
+
+                    </div>
+                    <div class="col-md-6">
+                        <div class="tf-product-info-wrap position-relative">
+                            <div class="tf-zoom-main"></div>
+                            <div class="tf-product-info-list">
+                                <div class="tf-product-info-title">
+                                    <h5> {{ $product['name'] }} </h5>
+                                </div>
+                                {{-- <div class="tf-product-info-badges"> --}}
+                                    {{-- <div class="product-status-content"> --}}
+                                        {{-- <p class="fw-6">{{$product['short_description']}}</p> --}}
+                                        {{-- </div> --}}
+                                    {{-- </div> --}}
+                                <!-- عرض خيارات السمات -->
+                                <form id="addToCart_{{ $product['id'] }}" class="" method="post"
+                                    action="{{ url('cart/add') }}">
+                                    @csrf
+                                    <div class="tf-product-info-variant-picker">
+                                        @if ($productVariations->count() > 0)
+                                        @foreach ($variationAttributes as $attributeId => $attribute)
+                                        <div class="form-group">
+                                            <label for="attribute_{{ $attributeId }}">{{ $attribute['name'] }}</label>
+                                            <select name="attribute_values[{{ $attributeId }}]" class="form-control"
+                                                onchange="fetchPrice2()">
+                                                <option value="">اختر {{ $attribute['name'] }}</option>
+                                                @foreach ($attribute['values'] as $value)
+                                                <option value="{{ $value }}">{{ $value }}
+                                                </option>
                                                 @endforeach
-                                                <!-- عرض السعر هنا -->
-                                                <div id="product-price" class="tf-product-info-price">
-                                                    <p class="quantity-title fw-6">السعر: <span id="price-value"
-                                                            class="price-on-sale"> </span>
-                                                    </p>
-                                                    <p id="discount-section" style="display: none;">
-                                                        <span id="discounted-price" class="price-on-sale"> </span>
-                                                    </p>
-                                                </div>
-                                                <br>
-                                                <!-- حقول مخفية للسعر والمتغيرات -->
-                                                <input type="hidden" placeholder="سعر المتغير " id="hidden-price"
-                                                    name="price" value="">
-                                                <input type="hidden" id="hidden-discount" placeholder=" سعر خصم المتغير "
-                                                    name="discount" value="">
-                                                <input type="hidden" id="hidden-variation" placeholder=" "
-                                                    name="hidden-variation" value="">
+                                            </select>
+                                        </div>
+                                        @endforeach
+                                        <!-- عرض السعر هنا -->
+                                        <div id="product-price" class="tf-product-info-price">
+                                            <p class="quantity-title fw-6">السعر: <span id="price-value"
+                                                    class="price-on-sale"> </span>
+                                            </p>
+                                            <p id="discount-section" style="display: none;">
+                                                <span id="discounted-price" class="price-on-sale"> </span>
+                                            </p>
+                                        </div>
+                                        <div id="stock-status" class="tf-product-info-stock mt-2">
+                                            <!-- سيتم تحديث حالة المخزون هنا -->
+                                        </div>
+                                        <br>
+                                        <!-- حقول مخفية للسعر والمتغيرات -->
+                                        <input type="hidden" placeholder="سعر المتغير " id="hidden-price" name="price"
+                                            value="">
+                                        <input type="hidden" id="hidden-discount" placeholder=" سعر خصم المتغير "
+                                            name="discount" value="">
+                                        <input type="hidden" id="hidden-variation" placeholder=" "
+                                            name="hidden-variation" value="">
+                                        @else
+                                        <input type="hidden" id="hidden-variation" placeholder="دشقفهخر "
+                                            name="hidden-variation" value="">
+                                        <div class="tf-product-info-price">
+                                            @if (isset($product['discount']) && $product['discount'] != null)
+                                            <div class="price-on-sale">{{ $product['discount'] }}
+                                                {{ $storeCurrency }} </div>
+                                            <div class="compare-at-price">{{ $product['price'] }}
+                                                {{ $storeCurrency }}</div>
                                             @else
-                                                <input type="hidden" id="hidden-variation" placeholder="دشقفهخر "
-                                                    name="hidden-variation" value="">
-                                                <div class="tf-product-info-price">
-                                                    @if (isset($product['discount']) && $product['discount'] != null)
-                                                        <div class="price-on-sale">{{ $product['discount'] }}
-                                                            {{ $storeCurrency }} </div>
-                                                        <div class="compare-at-price">{{ $product['price'] }}
-                                                            {{ $storeCurrency }}</div>
-                                                    @else
-                                                        <div class="price-on-sale">{{ $product['price'] }}
-                                                            {{ $storeCurrency }}</div>
-                                                    @endif
-                                                </div>
-                                                @if (isset($product['discount']) && $product['discount'] != null)
-                                                    <input type="hidden" name="price"
-                                                        value="{{ $product['discount'] }}">
-                                                @else
-                                                    <input type="hidden" name="price" value="{{ $product['price'] }}">
-                                                @endif
+                                            <div class="price-on-sale">{{ $product['price'] }}
+                                                {{ $storeCurrency }}</div>
                                             @endif
-
                                         </div>
-                                        <div class="tf-product-info-quantity">
-                                            <div class="quantity-title fw-6"> الكمية</div>
-                                            <div class="wg-quantity">
-                                                <span class="btn-quantity minus-btn">-</span>
-                                                <input type="text" name="number" value="1">
-                                                <span class="btn-quantity plus-btn">+</span>
-                                            </div>
-                                        </div>
-                                        <div class="tf-product-info-buy-button">
-                                            <input type="hidden" name="product_id" value="{{ $product['id'] }}">
 
-
-                                            <button id="addtocartbutton_{{ $product['id'] }}" href="javascript:void(0);"
-                                                class="tf-btn btn-fill justify-content-center fw-6 fs-16 flex-grow-1 animate-hover-btn btn-add-to-cart">
-                                                <span> اضف الي السلة </span></button>
+                                        <div id="stock-status" class="tf-product-info-stock mt-2">
+                                            @if($product->quantity > 0)
+                                                <span class="badge bg-success">متوفر: {{ $product->quantity }}</span>
+                                            @else
+                                                <span class="badge bg-danger">غير متوفر حالياً</span>
+                                            @endif
                                         </div>
-                                    </form>
+                                        @if (isset($product['discount']) && $product['discount'] != null)
+                                        <input type="hidden" name="price" value="{{ $product['discount'] }}">
+                                        @else
+                                        <input type="hidden" name="price" value="{{ $product['price'] }}">
+                                        @endif
+                                        @endif
 
-                                    <!-- AddToAny BEGIN -->
-                                    <div class="share_button">
-                                        <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
-                                            <!-- <a class="a2a_dd" href="https://www.addtoany.com/share"></a> -->
-                                            <a href="" class="a2a_button_facebook"></a>
-                                            <a href="" class="a2a_button_whatsapp"></a>
-                                            <a href="" class="a2a_button_linkedin"></a>
-                                            <a href="" class="a2a_button_twitter"></a>
-                                            <a href="" class="a2a_button_x"></a>
-                                            <a href="" class="a2a_button_telegram"></a>
-                                        </div>
-                                        <script async src="https://static.addtoany.com/menu/page.js"></script>
-                                        <!-- AddToAny END -->
                                     </div>
-                                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                                    <div class="tf-product-info-quantity">
+                                        <div class="quantity-title fw-6"> الكمية</div>
+                                        <div class="wg-quantity">
+                                            <span class="btn-quantity minus-btn">-</span>
+                                            <input type="text" name="number" value="1">
+                                            <span class="btn-quantity plus-btn">+</span>
+                                        </div>
+                                    </div>
+                                    <div class="tf-product-info-buy-button">
+                                        <input type="hidden" name="product_id" value="{{ $product['id'] }}">
 
-                                    <script>
-                                        $(document).ready(function() {
+
+                                        <button id="addtocartbutton_{{ $product['id'] }}" href="javascript:void(0);"
+                                            class="tf-btn btn-fill justify-content-center fw-6 fs-16 flex-grow-1 animate-hover-btn btn-add-to-cart"
+                                            @if($productVariations->count() == 0 && $product->quantity <= 0) disabled style="background-color: #ccc; cursor: not-allowed;" @endif>
+                                            <span> 
+                                                @if($productVariations->count() == 0 && $product->quantity <= 0)
+                                                    غير متوفر
+                                                @else
+                                                    اضف الي السلة 
+                                                @endif
+                                            </span></button>
+                                    </div>
+                                </form>
+
+                                <!-- AddToAny BEGIN -->
+                                <div class="share_button">
+                                    <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
+                                        <!-- <a class="a2a_dd" href="https://www.addtoany.com/share"></a> -->
+                                        <a href="" class="a2a_button_facebook"></a>
+                                        <a href="" class="a2a_button_whatsapp"></a>
+                                        <a href="" class="a2a_button_linkedin"></a>
+                                        <a href="" class="a2a_button_twitter"></a>
+                                        <a href="" class="a2a_button_x"></a>
+                                        <a href="" class="a2a_button_telegram"></a>
+                                    </div>
+                                    <script async src="https://static.addtoany.com/menu/page.js"></script>
+                                    <!-- AddToAny END -->
+                                </div>
+                                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+                                <script>
+                                    $(document).ready(function() {
                                             $("#addtocartbutton_{{ $product['id'] }}").on('click', function(e) {
                                                 e.preventDefault();
                                                 $.ajax({
@@ -245,14 +308,15 @@
                                                 });
                                             }
                                         });
-                                    </script>
+                                </script>
 
-                                    <script>
+                                <script>
                                         function fetchPrice2() {
                                             let form = document.getElementById('addToCart_{{ $product['id'] }}');
                                             let formData = new FormData(form);
+                                            let productId = formData.get('product_id');
 
-                                            fetch('{{ route('product.getPrice', $product->id) }}', {
+                                            fetch(`/product/${productId}/get-price`, {
                                                     method: 'POST',
                                                     headers: {
                                                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -279,133 +343,180 @@
                                                     document.getElementById('hidden-variation').value = data.variation_id;
                                                     document.getElementById('hidden-price').value = data.price;
                                                     document.getElementById('hidden-discount').value = data.discount ? data.discount : '';
+
+                                                    // تحديث حالة المخزون
+                                                    let stockStatus = document.getElementById('stock-status');
+                                                    let addToCartBtn = document.getElementById('addtocartbutton_{{ $product['id'] }}');
+                                                    
+                                                    if (data.stock !== undefined) {
+                                                        if (data.stock > 0) {
+                                                            stockStatus.innerHTML = `<span class="badge bg-success">متوفر: ${data.stock}</span>`;
+                                                            addToCartBtn.disabled = false;
+                                                            addToCartBtn.style.backgroundColor = "";
+                                                            addToCartBtn.style.cursor = "";
+                                                            addToCartBtn.querySelector('span').innerText = "اضف الي السلة";
+                                                        } else {
+                                                            stockStatus.innerHTML = `<span class="badge bg-danger">غير متوفر حالياً</span>`;
+                                                            addToCartBtn.disabled = true;
+                                                            addToCartBtn.style.backgroundColor = "#ccc";
+                                                            addToCartBtn.style.cursor = "not-allowed";
+                                                            addToCartBtn.querySelector('span').innerText = "غير متوفر";
+                                                        }
+                                                    }
+
+                                                    // التوجه للصورة المناسبة في السليدر
+                                                    if (data.variation_id) {
+                                                        const mainSwiperEl = document.querySelector('.tf-product-media-main-default');
+                                                        if (mainSwiperEl && mainSwiperEl.swiper) {
+                                                            const swiper = mainSwiperEl.swiper;
+                                                            const slides = swiper.slides;
+                                                            let targetIndex = -1;
+
+                                                            for (let i = 0; i < slides.length; i++) {
+                                                                if (slides[i].getAttribute('data-variation-id') == data.variation_id) {
+                                                                    targetIndex = i;
+                                                                    break;
+                                                                }
+                                                            }
+
+                                                            if (targetIndex !== -1) {
+                                                                swiper.slideTo(targetIndex);
+                                                            } else if (data.image) {
+                                                                // إذا لم نجد سلايد خاص، نغير الصورة في السلايد الأول
+                                                                const mainImg = document.getElementById('main-product-image');
+                                                                if (mainImg) {
+                                                                    mainImg.src = data.image;
+                                                                    mainImg.setAttribute('data-src', data.image);
+                                                                    swiper.slideTo(0);
+                                                                }
+                                                            }
+                                                        }
+                                                    }
                                                 })
                                                 .catch(error => console.error('Error:', error));
                                         }
-                                    </script>
-                                </div>
+                                </script>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
-        <!-- /default -->
-        <!-- tabs -->
-        <section class="flat-spacing-17 pt_0">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="widget-tabs style-has-border">
-                            <ul class="widget-menu-tab">
-                                <li class="item-title active">
-                                    <span class="inner"> وصف المنتج </span>
-                                </li>
-                                {{-- <li class="item-title">
-                                    <span class="inner"> التقيمات </span>
-                                </li> --}}
-                                @if ($product['video'] != null)
-                                    <li class="item-title">
-                                        <span class="inner"> فيديو المنتج </span>
-                                    </li>
-                                @endif
+        </div>
+    </section>
+    <!-- /default -->
+    <!-- tabs -->
+    <section class="flat-spacing-17 pt_0">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="widget-tabs style-has-border">
+                        <ul class="widget-menu-tab">
+                            <li class="item-title active">
+                                <span class="inner"> وصف المنتج </span>
+                            </li>
+                            {{-- <li class="item-title">
+                                <span class="inner"> التقيمات </span>
+                            </li> --}}
+                            @if ($product['video'] != null)
+                            <li class="item-title">
+                                <span class="inner"> فيديو المنتج </span>
+                            </li>
+                            @endif
 
-                            </ul>
-                            <div class="widget-content-tab">
-                                <div class="widget-content-inner active">
-                                    <div class="">
-                                        <p class="mb_30"> 
+                        </ul>
+                        <div class="widget-content-tab">
+                            <div class="widget-content-inner active">
+                                <div class="">
+                                    <p class="mb_30">
                                         {!! $product['description'] !!}
-                                        </p>
-                                    </div>
+                                    </p>
                                 </div>
-                                {{--
-                                <div class="widget-content-inner">
-                                    <table class="tf-pr-attrs">
-                                        <tbody>
-                                            <tr class="tf-attr-pa-color">
-                                                <th class="tf-attr-label">Color</th>
-                                                <td class="tf-attr-value">
-                                                    <p>White, Pink, Black</p>
-                                                </td>
-                                            </tr>
-                                            <tr class="tf-attr-pa-size">
-                                                <th class="tf-attr-label">Size</th>
-                                                <td class="tf-attr-value">
-                                                    <p>S, M, L, XL</p>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div> --}}
-                                @if ($product->video)
-                                    <div class="widget-content-inner">
-                                        <div class="">
-                                            <video controls style="max-width: 100%; height: auto;">
-                                                <source
-                                                    src="{{ asset('assets/uploads/product_videos/' . $product->video) }}"
-                                                    type="video/mp4">
-                                                المتصفح الخاص بك لا يدعم تشغيل الفيديو.
-                                            </video>
-                                        </div>
-                                    </div>
-                                @endif
                             </div>
+                            {{--
+                            <div class="widget-content-inner">
+                                <table class="tf-pr-attrs">
+                                    <tbody>
+                                        <tr class="tf-attr-pa-color">
+                                            <th class="tf-attr-label">Color</th>
+                                            <td class="tf-attr-value">
+                                                <p>White, Pink, Black</p>
+                                            </td>
+                                        </tr>
+                                        <tr class="tf-attr-pa-size">
+                                            <th class="tf-attr-label">Size</th>
+                                            <td class="tf-attr-value">
+                                                <p>S, M, L, XL</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div> --}}
+                            @if ($product->video)
+                            <div class="widget-content-inner">
+                                <div class="">
+                                    <video controls style="max-width: 100%; height: auto;">
+                                        <source src="{{ asset('assets/uploads/product_videos/' . $product->video) }}"
+                                            type="video/mp4">
+                                        المتصفح الخاص بك لا يدعم تشغيل الفيديو.
+                                    </video>
+                                </div>
+                            </div>
+                            @endif
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
-        <!-- /tabs -->
-        <!-- product -->
-        <section class="flat-spacing-1 pt_0" style="overflow-y:hidden">
-            <div class="container">
-                <div class="flat-title">
-                    <span class="title"> ربما يعجبك أيضا </span>
-                </div>
-                <div class="hover-sw-nav hover-sw-2">
-                    <div class="swiper tf-sw-product-sell wrap-sw-over" data-preview="4" data-tablet="3" data-mobile="2"
-                        data-space-lg="30" data-space-md="15" data-pagination="2" data-pagination-md="3"
-                        data-pagination-lg="3">
-                        <div class="swiper-wrapper">
-                            @foreach ($similar_products as $product)
-                                <div class="swiper-slide" lazy="true">
-                                    <div class="card-product">
-                                        <div class="card-product-wrapper">
-                                            <a href="{{ url('product/' . $product['slug']) }}" class="product-img">
-                                                <img class="lazyload img-product"
-                                                    data-src="{{ asset('assets/uploads/product_images/' . $product['image']) }}"
-                                                    src="{{ asset('assets/uploads/product_images/' . $product['image']) }}"
-                                                    alt="{{ $product['name'] }}">
-                                                @if ($product->gallary && $product->gallary->first())
-                                                    <img class="lazyload img-hover"
-                                                        data-src="{{ asset('assets/uploads/product_gallery/' . $product->gallary->first()->image) }}"
-                                                        src="{{ asset('assets/uploads/product_gallery/' . $product->gallary->first()->image) }}"
-                                                        alt="{{ $product['name'] }}">
-                                                @else
-                                                    <img class="lazyload img-hover"
-                                                        data-src="{{ asset('assets/uploads/product_images/' . $product['image']) }}"
-                                                        src="{{ asset('assets/uploads/product_images/' . $product['image']) }}"
-                                                        alt="{{ $product['name'] }}">
-                                                @endif
+        </div>
+    </section>
+    <!-- /tabs -->
+    <!-- product -->
+    <section class="flat-spacing-1 pt_0" style="overflow-y:hidden">
+        <div class="container">
+            <div class="flat-title">
+                <span class="title"> ربما يعجبك أيضا </span>
+            </div>
+            <div class="hover-sw-nav hover-sw-2">
+                <div class="swiper tf-sw-product-sell wrap-sw-over" data-preview="4" data-tablet="3" data-mobile="2"
+                    data-space-lg="30" data-space-md="15" data-pagination="2" data-pagination-md="3"
+                    data-pagination-lg="3">
+                    <div class="swiper-wrapper">
+                        @foreach ($similar_products as $product)
+                        <div class="swiper-slide" lazy="true">
+                            <div class="card-product">
+                                <div class="card-product-wrapper">
+                                    <a href="{{ url('product/' . $product['slug']) }}" class="product-img">
+                                        <img class="lazyload img-product"
+                                            data-src="{{ asset('assets/uploads/product_images/' . $product['image']) }}"
+                                            src="{{ asset('assets/uploads/product_images/' . $product['image']) }}"
+                                            alt="{{ $product['name'] }}">
+                                        @if ($product->gallary && $product->gallary->first())
+                                        <img class="lazyload img-hover"
+                                            data-src="{{ asset('assets/uploads/product_gallery/' . $product->gallary->first()->image) }}"
+                                            src="{{ asset('assets/uploads/product_gallery/' . $product->gallary->first()->image) }}"
+                                            alt="{{ $product['name'] }}">
+                                        @else
+                                        <img class="lazyload img-hover"
+                                            data-src="{{ asset('assets/uploads/product_images/' . $product['image']) }}"
+                                            src="{{ asset('assets/uploads/product_images/' . $product['image']) }}"
+                                            alt="{{ $product['name'] }}">
+                                        @endif
 
-                                            </a>
-                                            <div class="list-product-btn">
-                                                <form id="wishlistForm_{{ $product['id'] }}" method="post"
-                                                    action="{{ url('wishlist/store') }}">
-                                                    @csrf
-                                                    <input type="hidden" name="product_id"
-                                                        value="{{ $product['id'] }}">
-                                                    <button type="button" id="addToWishlist_{{ $product['id'] }}"
-                                                        class="box-icon bg_white wishlist btn-icon-action">
-                                                        <span class="icon icon-heart"></span>
-                                                        <span class="tooltip"> اضف الي المفضلة </span>
-                                                        <span class="icon icon-heart"></span>
-                                                    </button>
-                                                </form>
-                                                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                                                <script>
-                                                    $(document).ready(function() {
+                                    </a>
+                                    <div class="list-product-btn">
+                                        <form id="wishlistForm_{{ $product['id'] }}" method="post"
+                                            action="{{ url('wishlist/store') }}">
+                                            @csrf
+                                            <input type="hidden" name="product_id" value="{{ $product['id'] }}">
+                                            <button type="button" id="addToWishlist_{{ $product['id'] }}"
+                                                class="box-icon bg_white wishlist btn-icon-action">
+                                                <span class="icon icon-heart"></span>
+                                                <span class="tooltip"> اضف الي المفضلة </span>
+                                                <span class="icon icon-heart"></span>
+                                            </button>
+                                        </form>
+                                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                                        <script>
+                                            $(document).ready(function() {
                                                         $('#addToWishlist_{{ $product['id'] }}').on('click', function(e) {
                                                             e.preventDefault();
                                                             $.ajax({
@@ -431,64 +542,59 @@
                                                             });
                                                         });
                                                     });
-                                                </script>
-                                                <button data-id="{{ $product->id }}" href=""
-                                                    data-bs-toggle="modal"
-                                                    class="box-icon bg_white quickview tf-btn-loading btn-quick-view">
-                                                    <span class="icon icon-view"></span>
-                                                    <span class="tooltip"> مشاهدة </span>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="card-product-info">
-                                            <a href="{{ url('product/' . $product['slug']) }}" class="title link">
-                                                {{ $product['name'] }} </a>
-                                            @if (isset($product['discount']) && $product['discount'] != null)
-                                                <div class="">
-                                                    <span class="price main_price"> {{ $product['discount'] }}
-                                                        {{ $storeCurrency }} </span>
-                                                    <span class="price old_price"> {{ $product['price'] }}
-                                                        {{ $storeCurrency }} </span>
-                                                </div>
-                                            @else
-                                                <span class="price main_price"> {{ $product['price'] }}
-                                                    {{ $storeCurrency }} </span>
-                                            @endif
+                                        </script>
+                                        <button data-id="{{ $product->id }}" href="" data-bs-toggle="modal"
+                                            class="box-icon bg_white quickview tf-btn-loading btn-quick-view">
+                                            <span class="icon icon-view"></span>
+                                            <span class="tooltip"> مشاهدة </span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-product-info">
+                                    <a href="{{ url('product/' . $product['slug']) }}" class="title link">
+                                        {{ $product['name'] }} </a>
+                                    @if (isset($product['discount']) && $product['discount'] != null)
+                                    <div class="">
+                                        <span class="price main_price"> {{ $product['discount'] }}
+                                            {{ $storeCurrency }} </span>
+                                        <span class="price old_price"> {{ $product['price'] }}
+                                            {{ $storeCurrency }} </span>
+                                    </div>
+                                    @else
+                                    <span class="price main_price"> {{ $product['price'] }}
+                                        {{ $storeCurrency }} </span>
+                                    @endif
 
-                                            @php
-                                                $productVariations = \App\Models\admin\ProductVartions::where(
-                                                    'product_id',
-                                                    $product['id'],
-                                                )->get();
-                                            @endphp
-                                            @if ($productVariations->count() > 0)
-                                                <a href="{{ url('product/' . $product['slug']) }}" class="add-to-cart">
-                                                    مشاهدة الاختيارات
-                                                </a>
-                                            @else
-                                                <form id="addToCart_{{ $product['id'] }}" class="" method="post"
-                                                    action="{{ url('cart/add') }}">
-                                                    @csrf
-                                                    <input type="hidden" name="product_id"
-                                                        value="{{ $product['id'] }}">
-                                                    <input type="hidden" name="number" value="1">
-                                                    @if (isset($product['discount']) && $product['discount'] != null)
-                                                        <input type="hidden" name="price"
-                                                            value="{{ $product['discount'] }}">
-                                                    @else
-                                                        <input type="hidden" name="price"
-                                                            value="{{ $product['price'] }}">
-                                                    @endif
-                                                    <input type="hidden" id="hidden-variation" placeholder="دشقفهخر "
-                                                        name="hidden-variation" value="">
+                                    @php
+                                    $productVariations = \App\Models\admin\ProductVartions::where(
+                                    'product_id',
+                                    $product['id'],
+                                    )->get();
+                                    @endphp
+                                    @if ($productVariations->count() > 0)
+                                    <a href="{{ url('product/' . $product['slug']) }}" class="add-to-cart">
+                                        مشاهدة الاختيارات
+                                    </a>
+                                    @else
+                                    <form id="addToCart_{{ $product['id'] }}" class="" method="post"
+                                        action="{{ url('cart/add') }}">
+                                        @csrf
+                                        <input type="hidden" name="product_id" value="{{ $product['id'] }}">
+                                        <input type="hidden" name="number" value="1">
+                                        @if (isset($product['discount']) && $product['discount'] != null)
+                                        <input type="hidden" name="price" value="{{ $product['discount'] }}">
+                                        @else
+                                        <input type="hidden" name="price" value="{{ $product['price'] }}">
+                                        @endif
+                                        <input type="hidden" id="hidden-variation" placeholder="دشقفهخر "
+                                            name="hidden-variation" value="">
 
-                                                    <button id="addtocartbutton_{{ $product['id'] }}"
-                                                        class="add-to-cart">
-                                                        اضف الي السلة
-                                                    </button>
-                                                </form>
-                                                <script>
-                                                    $(document).ready(function() {
+                                        <button id="addtocartbutton_{{ $product['id'] }}" class="add-to-cart">
+                                            اضف الي السلة
+                                        </button>
+                                    </form>
+                                    <script>
+                                        $(document).ready(function() {
                                                         $("#addtocartbutton_{{ $product['id'] }}").on('click', function(e) {
                                                             e.preventDefault();
                                                             $.ajax({
@@ -549,161 +655,39 @@
                                                             });
                                                         }
                                                     });
-                                                </script>
-                                            @endif
+                                    </script>
+                                    @endif
 
 
-                                        </div>
-                                    </div>
                                 </div>
-                            @endforeach
-
+                            </div>
                         </div>
+                        @endforeach
+
                     </div>
-                    <div class="nav-sw nav-next-slider nav-next-product box-icon w_46 round"><span
-                            class="icon icon-arrow-left"></span></div>
-                    <div class="nav-sw nav-prev-slider nav-prev-product box-icon w_46 round"><span
-                            class="icon icon-arrow-right"></span></div>
-                    <div class="sw-dots style-2 sw-pagination-product justify-content-center"></div>
                 </div>
+                <div class="nav-sw nav-next-slider nav-next-product box-icon w_46 round"><span
+                        class="icon icon-arrow-left"></span></div>
+                <div class="nav-sw nav-prev-slider nav-prev-product box-icon w_46 round"><span
+                        class="icon icon-arrow-right"></span></div>
+                <div class="sw-dots style-2 sw-pagination-product justify-content-center"></div>
             </div>
-        </section>
-        <!-- /product -->
-    </div>
+        </div>
+    </section>
+    <!-- /product -->
+</div>
 @endsection
 
 @section('js')
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('body').on('click', '#addtocartbutton', function(e) {
-                e.preventDefault(); // منع السلوك الافتراضي للنموذج
-                // إرسال الطلب باستخدام AJAX
-                $.ajax({
-                    url: '/cart/add',
-                    method: 'POST',
-                    data: $("#addToCart").serialize(), // البيانات المرسلة
-                    success: function(response) {
-                        // عرض الرسالة باستخدام Toastify
-                        Toastify({
-                            text: response.message,
-                            duration: 3000,
-                            gravity: "top",
-                            position: "right",
-                            backgroundColor: "#4CAF50",
-                        }).showToast();
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-                        if (response.cartCount) {
-                            $('.nav-cart .count-box').text(response.cartCount);
-                        }
-                        // تحديث عربة التسوق
-                        // تحديث محتويات الـ modal للسلة فورًا
-                        updateCartModal();
-
-                        // إظهار الـ modal بعد الإضافة
-                        $('#shoppingCart').modal('show');
-                        $('#quick_view').modal('hide');
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Error:", xhr.responseText); // عرض أي أخطاء
-                        $('#wishlistMessage').html('<p>حدث خطأ أثناء إضافة المنتج للسلة</p>');
-                    }
-                });
-            });
-
-            // تحديث عربة التسوق
-            function updateCartModal() {
-                $.ajax({
-                    url: '/cart/items', // رابط جلب العناصر المحدثة
-                    method: 'GET',
-                    success: function(response) {
-                        console.log('Cart modal response:',
-                            response); // طباعة استجابة السيرفر للتحقق من البيانات
-
-                        // استبدال محتويات الـ modal بالـ HTML المستلم من السيرفر
-                        $('#shoppingCart .wrap').html(response.html);
-
-                        // تحديث عداد السلة
-                        $('.nav-cart .count-box').text(response.cartCount); // تحديث العداد مباشرة
-
-                        // تحديث متغير $cartCount في الواجهة إذا كنت تستخدمه في أماكن أخرى
-                        window.cartCount = response.cartCount; // تخزين القيمة في متغير عالمي
-                        console.log(window.cartCount);
-                    },
-                    error: function(xhr, status, error) {
-                        console.log('خطأ في تحديث السلة');
-                    }
-                });
-            }
-        });
-    </script>
-
-    <script>
-        document.querySelectorAll('.btn-quick-view').forEach(button => {
-            button.addEventListener('click', function() {
-                const productId = this.getAttribute('data-id');
-
-                // طلب AJAX لجلب البيانات
-                fetch(`/product/quick-view/${productId}`)
-                    .then(response => response.text())
-                    .then(html => {
-                        // إدخال المحتوى في المودال
-                        document.getElementById('modal-content').innerHTML = html;
-
-                        // إعادة تهيئة المودال
-                        const modalElement = document.getElementById('quick_view');
-                        const modal = new bootstrap.Modal(modalElement);
-                        modal.show();
-
-                        // تهيئة Swiper بعد تحميل المحتوى
-                        var swiper = new Swiper('.tf-single-slide', {
-                            navigation: {
-                                nextEl: '.swiper-button-next',
-                                prevEl: '.swiper-button-prev',
-                            },
-                        });
-                        // تهيئة أزرار التحكم بالكمية
-                        initializeQuantityButtons();
-                    })
-                    .catch(error => console.error('Error fetching product details:', error));
-            });
-        });
-
-        // تهيئة أزرار التحكم بالكمية
-        function initializeQuantityButtons() {
-            document.querySelectorAll('.plus-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const input = this.previousElementSibling;
-                    input.value = parseInt(input.value) + 1;
-                });
-            });
-
-            document.querySelectorAll('.minus-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const input = this.nextElementSibling;
-                    if (parseInt(input.value) > 1) {
-                        input.value = parseInt(input.value) - 1;
-                    }
-                });
-            });
-        }
-
-        document.addEventListener('hidden.bs.modal', function() {
-            // إزالة أي عناصر overlay بقيت على الصفحة
-            document.querySelectorAll('.modal-backdrop').forEach(overlay => {
-                overlay.remove();
-            });
-            // إزالة فئة الـ modal-open من الـ body
-            document.body.classList.remove('modal-open');
-        });
-    </script>
-
-    <script>
-        function fetchPrice() {
+<script>
+    function fetchPrice() {
             let form = document.getElementById('addToCart');
             let formData = new FormData(form);
+            let productId = formData.get('product_id');
 
-            fetch('{{ route('product.getPrice', $product->id) }}', {
+            fetch(`/product/${productId}/get-price`, {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -729,8 +713,16 @@
                     document.getElementById('hidden-variation').value = data.variation_id;
                     document.getElementById('hidden-price').value = data.price;
                     document.getElementById('hidden-discount').value = data.discount || '';
+
+                    // تحديث الصورة في المودال (إذا وجد)
+                    if (data.image) {
+                        const modalImg = document.getElementById('main-product-image-modal');
+                        if (modalImg) {
+                            modalImg.src = data.image;
+                        }
+                    }
                 })
                 .catch(error => console.error('Error:', error));
         }
-    </script>
+</script>
 @endsection

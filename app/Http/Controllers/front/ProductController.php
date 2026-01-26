@@ -23,6 +23,10 @@ class ProductController extends Controller
             })
             ->limit(6)->get();
 
+    
+            $gallary = $product->gallary;
+         
+
 
         // جلب جميع المتغيرات الخاصة بالمنتج
 
@@ -53,7 +57,7 @@ class ProductController extends Controller
             }
         }
 
-        return view('front.product-details', compact('product', 'productVariations', 'variationAttributes', 'similar_products'));
+        return view('front.product-details', compact('product', 'productVariations', 'variationAttributes', 'similar_products','gallary'));
     }
 
     public function search(Request $request)
@@ -123,7 +127,10 @@ class ProductController extends Controller
             $variationAttributes = VartionsValues::where('product_variation_id', $variation->id)->get();
             // تحقق من مطابقة القيم
             foreach ($variationAttributes as $attribute) {
-                if (!isset($selectedAttributes[$attribute->attribute_id]) || $selectedAttributes[$attribute->attribute_id] !== $attribute->attribute_value_name) {
+                $attributeValue = trim($attribute->attribute_value_name);
+                $selectedPriceValue = isset($selectedAttributes[$attribute->attribute_id]) ? trim($selectedAttributes[$attribute->attribute_id]) : null;
+
+                if (!$selectedPriceValue || $selectedPriceValue !== $attributeValue) {
                     $matched = false;
                     break;
                 }
@@ -133,7 +140,9 @@ class ProductController extends Controller
                 return response()->json([
                     'variation_id' => $variation->id,
                     'price' => $variation->price,
-                    'discount' => $variation->discount > 0 ? $variation->discount : null
+                    'discount' => $variation->discount > 0 ? $variation->discount : null,
+                    'image' => $variation->image ? asset('assets/uploads/product_images/' . $variation->image) : null,
+                    'stock' => $variation->stock
                 ]);
             }
         }
@@ -144,7 +153,7 @@ class ProductController extends Controller
 
     public function quickView($id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::with('Main_Category', 'gallary')->findOrFail($id);
 
         // جلب جميع المتغيرات الخاصة بالمنتج
         $productVariations = ProductVartions::where('product_id', $id)->get();
