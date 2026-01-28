@@ -64,8 +64,16 @@ class ProductController extends Controller
                 $rules = [
                     'name' => 'required',
                     'category_id' => 'required',
-                    'description' => 'required'
+                    'description' => 'required',
+                    'type' => 'required|in:بسيط,متغير',
                 ];
+
+                // الكمية والسعر مطلوبين فقط إذا كان المنتج بسيط
+                if ($request->type == 'بسيط') {
+                    $rules['quantity'] = 'required|numeric|min:0';
+                    $rules['price'] = 'required|numeric|min:0';
+                }
+
                 if ($request->hasFile('image')) {
                     $rules['image'] = 'image|mimes:jpg,png,jpeg,webp';
                 }
@@ -77,6 +85,8 @@ class ProductController extends Controller
                     'name.required' => ' من فضلك ادخل اسم المنتج  ',
                     'category_id.required' => ' من فضلك حدد القسم الرئيسي للمنتج  ',
                     'description.required' => ' من فضلك ادخل الوصف الخاص بالمنتج ',
+                    'quantity.required' => 'من فضلك ادخل الكمية المتاحة',
+                    'price.required' => 'من فضلك ادخل سعر المنتج',
                     'image.mimes' =>
                     'من فضلك يجب ان يكون نوع الصورة jpg,png,jpeg,webp',
                     'image.image' => 'من فضلك ادخل الصورة بشكل صحيح',
@@ -117,15 +127,23 @@ class ProductController extends Controller
                 $product->status = $data['status'];
                 $product->short_description = $data['short_description'];
                 $product->description = $data['description'];
-                $product->quantity = $data['quantity'];
+                
+                // إذا كان المنتج متغير، الكمية الكلية هي مجموع كميات المتغيرات
+                if ($data['type'] == 'متغير') {
+                    $product->quantity = array_sum($request->variant_stock ?? [0]);
+                    $product->price = isset($request->variant_price[0]) ? $request->variant_price[0] : 0;
+                } else {
+                    $product->quantity = $data['quantity'];
+                    $product->price = $data['price'];
+                }
+
                 $product->type = $data['type'];
-                $product->purches_price = $data['purches_price'];
-                $product->price = $data['price'];
-                $product->discount = $data['discount'];
+                $product->purches_price = $data['purches_price'] ?? 0;
+                $product->discount = $data['discount'] ?? 0;
                 $product->meta_title = $data['meta_title'];
                 $product->meta_keywords = $data['meta_keywords'];
                 $product->meta_description = $data['meta_description'];
-                $product->image = $file_name;
+                $product->image = $file_name ?? null;
                 $product->video = $video_name; // تخزين اسم الفيديو
                 $product->save();
                 ///////// Check If Product Gallary Not Empty
@@ -140,17 +158,27 @@ class ProductController extends Controller
                     }
                 }
                 if ($data['type'] == 'متغير') {
+                    if (!isset($request->variant_name) || empty($request->variant_name)) {
+                        DB::rollback();
+                        return Redirect::back()->withInput()->withErrors('من فضلك قم بتأكيد المتغيرات أولاً');
+                    }
+
                     // حفظ المتغيرات
                     foreach ($request->variant_name as $index => $variantName) {
-                        $vartiantImage = $this->saveImage($request->variant_image[$index],public_path('assets/uploads/product_images'));
+                        $vartiantImage = null;
+                        if ($request->hasFile("variant_image.$index")) {
+                            $vartiantImage = $this->saveImage($request->file('variant_image')[$index], 'assets/uploads/product_images');
+                        }
+
                         // حفظ كل متغير في جدول product_variations
                         $productVariation = new ProductVartions();
                         $productVariation->product_id = $product->id;
                         $productVariation->price = $request->variant_price[$index];
-                        $productVariation->discount = $request->variant_discount[$index];
+                        $productVariation->discount = $request->variant_discount[$index] ?? 0;
                         $productVariation->image = $vartiantImage;
                         $productVariation->stock = $request->variant_stock[$index];
                         $productVariation->save();
+
                         // حفظ القيم المرتبطة بهذا المتغير
                         $attributes = explode(' - ', $variantName);
                         $attributesIds = $data['attributes'];  // مصفوفة attribute_ids
@@ -158,8 +186,8 @@ class ProductController extends Controller
                             if (isset($attributesIds[$attributeIndex])) {
                                 VartionsValues::create([
                                     'product_variation_id' => $productVariation->id,
-                                    'attribute_id' => $attributesIds[$attributeIndex], // ربط attribute_id بالقيمة الصحيحة
-                                    'attribute_value_name' => $attributeName
+                                    'attribute_id' => $attributesIds[$attributeIndex],
+                                    'attribute_value_name' => trim($attributeName)
                                 ]);
                             }
                         }
@@ -168,7 +196,8 @@ class ProductController extends Controller
                 DB::commit();
                 return $this->success_message(' تم اضافة المنتج بنجاح  ');
             } catch (\Exception $e) {
-                return $this->exception_message($e);
+                DB::rollback();
+                return Redirect::back()->withInput()->withErrors('حدث خطأ أثناء الحفظ: ' . $e->getMessage());
             }
         }
         return view('admin.Products.add', compact('MainCategories', 'SubCategories', 'brands', 'attributes', 'attributes_vartions'));

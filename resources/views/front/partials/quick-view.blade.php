@@ -5,7 +5,10 @@
     <div class="tf-product-media-wrap">
         <div class="swiper tf-single-slide">
             <div class="swiper-wrapper" style="align-items: center">
-                <div class="swiper-slide">
+                <div class="swiper-slide position-relative">
+                    <div id="variant-overlay-modal" 
+                         style="position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.7); padding: 3px 12px; border-radius: 5px; font-weight: 500; font-size: 14px; color: #000; z-index: 100; display: none; backdrop-filter: blur(2px); border: 1px solid rgba(255,255,255,0.3);">
+                    </div>
                     <div class="item">
                         <img id="main-product-image-modal" src="{{asset('assets/uploads/product_images/'.$product['image'])}}" alt="">
                     </div>
@@ -40,22 +43,31 @@
                 <div class="tf-product-info-variant-picker">
                     @if($productVariations->count() > 0)
                         @foreach($variationAttributes as $attributeId => $attribute)
-                            <div class="form-group">
-                                <label
-                                    for="attribute_{{ $attributeId }}">{{ $attribute['name'] }}</label>
-                                <select name="attribute_values[{{ $attributeId }}]"
-                                        class="form-control" onchange="fetchPriceModal()">
-                                    <option value="">اختر {{ $attribute['name'] }}</option>
-                                    @foreach($attribute['values'] as $value)
-                                        <option value="{{ $value }}">{{ $value }}</option>
+                            <div class="variant-group mb-3">
+                                <div class="variant-name fw-6 mb-2">{{ $attribute['name'] }}:</div>
+                                <div class="d-flex flex-wrap gap-2">
+                                    @foreach($attribute['values'] as $index => $value)
+                                        <div class="variant-item">
+                                            <input type="radio" 
+                                                   id="modal_attr_{{ $attributeId }}_{{ $index }}" 
+                                                   name="attribute_values[{{ $attributeId }}]" 
+                                                   value="{{ $value }}" 
+                                                   @if($index == 0) checked @endif
+                                                   onchange="fetchPriceModal()"
+                                                   class="btn-check">
+                                            <label class="btn btn-outline-dark btn-sm px-3" 
+                                                   for="modal_attr_{{ $attributeId }}_{{ $index }}">
+                                                {{ $value }}
+                                            </label>
+                                        </div>
                                     @endforeach
-                                </select>
+                                </div>
                             </div>
                         @endforeach
                         <!-- عرض السعر هنا -->
                         <div id="product-price-modal" class="tf-product-info-price">
                             <p class="quantity-title fw-6">السعر: <span id="price-value-modal"
-                                                                        class="price-on-sale"> </span>
+                                                                         class="price-on-sale"> </span>
                             </p>
                             <p id="discount-section-modal" style="display: none;">
                                 <span id="discounted-price-modal" class="price-on-sale"> </span></p>

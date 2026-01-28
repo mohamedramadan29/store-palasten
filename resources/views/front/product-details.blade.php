@@ -30,7 +30,7 @@
                     <span class="text"> {{ $product['name'] }} </span>
                 </div>
             </div>
-            <div class="text-center heading">{{ $product['name'] }}</div>
+            {{-- <div class="text-center heading">{{ $product['name'] }}</div> --}}
         </div>
     </div>
     <!-- /page-title -->
@@ -46,7 +46,11 @@
                                 <div class="thumbs-slider thumbs-default"
                                     style="display: flex !important; flex-direction: column !important; gap: 20px !important;">
                                     <div class="swiper tf-product-media-main tf-product-media-main-default"
-                                        style="width: 100% !important; min-height: 400px !important;">
+                                        style="width: 100% !important; min-height: 400px !important; position: relative;">
+                                        <!-- Overlay for variant name -->
+                                        <div id="variant-overlay"
+                                            style="position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.6); padding: 3px 12px; border-radius: 5px; font-weight: 500; font-size: 14px; color: #000; z-index: 100; display: none; backdrop-filter: blur(2px); border: 1px solid rgba(255,255,255,0.3);">
+                                        </div>
                                         <div class="swiper-wrapper">
                                             <div class="swiper-slide">
                                                 <a href="javascript:void(0);" class="item">
@@ -67,8 +71,15 @@
                                             </div>
                                             @endforeach
                                             @endif
+                                            @php
+                                            $uniqueVariationImages = [];
+                                            @endphp
                                             @foreach ($productVariations as $variation)
-                                            @if ($variation['image'])
+                                            @if ($variation['image'] && !in_array($variation['image'],
+                                            $uniqueVariationImages))
+                                            @php
+                                            $uniqueVariationImages[] = $variation['image'];
+                                            @endphp
                                             <div class="swiper-slide" data-variation-id="{{ $variation['id'] }}">
                                                 <a href="javascript:void(0);" class="item">
                                                     <img src="{{ asset('assets/uploads/product_images/' . $variation['image']) }}"
@@ -84,13 +95,13 @@
                                     </div>
                                     <div class="swiper tf-product-media-thumbs tf-product-media-thumbs-default"
                                         data-direction="horizontal"
-                                        style="width: 100% !important; min-height: 100px !important;">
+                                        style="width: 100% !important; min-height: 80px !important;">
                                         <div class="swiper-wrapper">
                                             <div class="swiper-slide">
                                                 <div class="item">
                                                     <img src="{{ asset('assets/uploads/product_images/' . $product['image']) }}"
                                                         alt="{{ $product['name'] }}"
-                                                        style="width: 100px; height: 100px; object-fit: cover; border: 1px solid #eee;">
+                                                        style="width: 80px; height: 80px; object-fit: cover; border: 1px solid #eee; border-radius: 5px;">
                                                 </div>
                                             </div>
                                             @if (isset($gallary) && count($gallary) > 0)
@@ -99,18 +110,25 @@
                                                 <div class="item">
                                                     <img src="{{ asset('assets/uploads/product_gallery/' . $gallary_item['image']) }}"
                                                         alt="{{ $product['name'] }}"
-                                                        style="width: 100px; height: 100px; object-fit: cover; border: 1px solid #eee;">
+                                                        style="width: 80px; height: 80px; object-fit: cover; border: 1px solid #eee; border-radius: 5px;">
                                                 </div>
                                             </div>
                                             @endforeach
                                             @endif
+                                            @php
+                                            $uniqueThumbImages = [];
+                                            @endphp
                                             @foreach ($productVariations as $variation)
-                                            @if ($variation['image'])
+                                            @if ($variation['image'] && !in_array($variation['image'],
+                                            $uniqueThumbImages))
+                                            @php
+                                            $uniqueThumbImages[] = $variation['image'];
+                                            @endphp
                                             <div class="swiper-slide" data-variation-id="{{ $variation['id'] }}">
                                                 <div class="item">
                                                     <img src="{{ asset('assets/uploads/product_images/' . $variation['image']) }}"
                                                         alt="{{ $product['name'] }}"
-                                                        style="width: 100px; height: 100px; object-fit: cover; border: 1px solid #eee;">
+                                                        style="width: 80px; height: 80px; object-fit: cover; border: 1px solid #eee; border-radius: 5px;">
                                                 </div>
                                             </div>
                                             @endif
@@ -143,16 +161,24 @@
                                     <div class="tf-product-info-variant-picker">
                                         @if ($productVariations->count() > 0)
                                         @foreach ($variationAttributes as $attributeId => $attribute)
-                                        <div class="form-group">
-                                            <label for="attribute_{{ $attributeId }}">{{ $attribute['name'] }}</label>
-                                            <select name="attribute_values[{{ $attributeId }}]" class="form-control"
-                                                onchange="fetchPrice2()">
-                                                <option value="">اختر {{ $attribute['name'] }}</option>
-                                                @foreach ($attribute['values'] as $value)
-                                                <option value="{{ $value }}">{{ $value }}
-                                                </option>
+                                        <div class="variant-picker-item">
+                                            <div class="mb-2 variant-picker-label">
+                                                {{ $attribute['name'] }}: <span class="fw-6 selected-value">{{
+                                                    $attribute['values'][0] }}</span>
+                                            </div>
+                                            <div class="variant-picker-values">
+                                                @foreach ($attribute['values'] as $index => $value)
+                                                <input type="radio" id="attribute_{{ $attributeId }}_{{ $index }}"
+                                                    name="attribute_values[{{ $attributeId }}]" value="{{ $value }}"
+                                                    @if($index==0) checked @endif
+                                                    onchange="fetchPrice2(); updateOverlayText(); this.closest('.variant-picker-item').querySelector('.selected-value').innerText = this.value;"
+                                                    class="d-none">
+                                                <label class="style-text"
+                                                    for="attribute_{{ $attributeId }}_{{ $index }}">
+                                                    <p>{{ $value }}</p>
+                                                </label>
                                                 @endforeach
-                                            </select>
+                                            </div>
                                         </div>
                                         @endforeach
                                         <!-- عرض السعر هنا -->
@@ -164,7 +190,7 @@
                                                 <span id="discounted-price" class="price-on-sale"> </span>
                                             </p>
                                         </div>
-                                        <div id="stock-status" class="tf-product-info-stock mt-2">
+                                        <div id="stock-status" class="mt-2 tf-product-info-stock">
                                             <!-- سيتم تحديث حالة المخزون هنا -->
                                         </div>
                                         <br>
@@ -190,11 +216,11 @@
                                             @endif
                                         </div>
 
-                                        <div id="stock-status" class="tf-product-info-stock mt-2">
+                                        <div id="stock-status" class="mt-2 tf-product-info-stock">
                                             @if($product->quantity > 0)
-                                                <span class="badge bg-success">متوفر: {{ $product->quantity }}</span>
+                                            <span class="badge bg-success">متوفر: {{ $product->quantity }}</span>
                                             @else
-                                                <span class="badge bg-danger">غير متوفر حالياً</span>
+                                            <span class="badge bg-danger">غير متوفر حالياً</span>
                                             @endif
                                         </div>
                                         @if (isset($product['discount']) && $product['discount'] != null)
@@ -205,28 +231,28 @@
                                         @endif
 
                                     </div>
-                                    <div class="tf-product-info-quantity">
-                                        <div class="quantity-title fw-6"> الكمية</div>
-                                        <div class="wg-quantity">
-                                            <span class="btn-quantity minus-btn">-</span>
-                                            <input type="text" name="number" value="1">
-                                            <span class="btn-quantity plus-btn">+</span>
+                                    <div class="quantity_and_addtocart">
+                                        <div class="tf-product-info-quantity">
+                                            <div class="quantity-title fw-6"> الكمية</div>
+                                            <div class="wg-quantity">
+                                                <span class="btn-quantity minus-btn">-</span>
+                                                <input type="text" name="number" value="1">
+                                                <span class="btn-quantity plus-btn">+</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="tf-product-info-buy-button">
-                                        <input type="hidden" name="product_id" value="{{ $product['id'] }}">
+                                        <div class="tf-product-info-buy-button">
+                                            <input type="hidden" name="product_id" value="{{ $product['id'] }}">
 
 
-                                        <button id="addtocartbutton_{{ $product['id'] }}" href="javascript:void(0);"
-                                            class="tf-btn btn-fill justify-content-center fw-6 fs-16 flex-grow-1 animate-hover-btn btn-add-to-cart"
-                                            @if($productVariations->count() == 0 && $product->quantity <= 0) disabled style="background-color: #ccc; cursor: not-allowed;" @endif>
-                                            <span> 
+                                            <button id="addtocartbutton_{{ $product['id'] }}" href="javascript:void(0);"
+                                                class="tf-btn btn-fill justify-content-center fw-6 fs-16 flex-grow-1 animate-hover-btn btn-add-to-cart"
                                                 @if($productVariations->count() == 0 && $product->quantity <= 0)
-                                                    غير متوفر
-                                                @else
-                                                    اضف الي السلة 
-                                                @endif
-                                            </span></button>
+                                                    disabled style="background-color: #ccc; cursor: not-allowed;"
+                                                    @endif>
+                                                    <span>
+                                                        @if($productVariations->count() == 0 && $product->quantity <= 0)
+                                                            غير متوفر @else اضف الي السلة @endif </span></button>
+                                        </div>
                                     </div>
                                 </form>
 
@@ -307,11 +333,65 @@
                                                     }
                                                 });
                                             }
+
+                                            // تهيئة Swiper للمصغرات كـ carousel
+                                            if (document.querySelector('.tf-product-media-thumbs-default')) {
+                                                var thumbSwiper = new Swiper('.tf-product-media-thumbs-default', {
+                                                    direction: 'horizontal',
+                                                    slidesPerView: 'auto',
+                                                    spaceBetween: 10,
+                                                    freeMode: true,
+                                                    watchSlidesProgress: true,
+                                                    breakpoints: {
+                                                        0: {
+                                                            slidesPerView: 4,
+                                                        },
+                                                        768: {
+                                                            slidesPerView: 5,
+                                                        },
+                                                        1024: {
+                                                            slidesPerView: 6,
+                                                        }
+                                                    }
+                                                });
+
+                                                var mainSwiper = new Swiper('.tf-product-media-main-default', {
+                                                    spaceBetween: 10,
+                                                    navigation: {
+                                                        nextEl: '.thumbs-next',
+                                                        prevEl: '.thumbs-prev',
+                                                    },
+                                                    thumbs: {
+                                                        swiper: thumbSwiper,
+                                                    },
+                                                });
+                                            }
+
+                                            // تحديث النص على الصورة
+                                            window.updateOverlayText = function() {
+                                                let selectedValues = [];
+                                                document.querySelectorAll('#addToCart_{{ $product['id'] }} .variant-picker-item input[type="radio"]:checked').forEach(input => {
+                                                    selectedValues.push(input.value);
+                                                });
+                                                let overlay = document.getElementById('variant-overlay');
+                                                if (selectedValues.length > 0) {
+                                                    overlay.innerText = selectedValues.join(' / ');
+                                                    overlay.style.display = 'block';
+                                                } else {
+                                                    overlay.style.display = 'none';
+                                                }
+                                            }
+
+                                            // جلب السعر عند التحميل إذا كان هناك متغيرات
+                                            if (document.querySelector('.variant-picker-item')) {
+                                                fetchPrice2();
+                                                updateOverlayText();
+                                            }
                                         });
                                 </script>
 
                                 <script>
-                                        function fetchPrice2() {
+                                    function fetchPrice2() {
                                             let form = document.getElementById('addToCart_{{ $product['id'] }}');
                                             let formData = new FormData(form);
                                             let productId = formData.get('product_id');

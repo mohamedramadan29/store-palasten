@@ -113,7 +113,7 @@
                                                 data-choices-groups data-placeholder="Select Categories" name="category_id">
                                                 <option value=""> -- حدد القسم --</option>
                                                 @foreach ($MainCategories as $maincat)
-                                                    <option value="{{ $maincat['id'] }}">{{ $maincat['name'] }}</option>
+                                                    <option value="{{ $maincat['id'] }}" {{ old('category_id') == $maincat['id'] ? 'selected' : '' }}>{{ $maincat['name'] }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -135,7 +135,7 @@
                                                 data-placeholder="Select Categories" name="brand_id">
                                                 <option value=""> -- حدد العلامة التجارية --</option>
                                                 @foreach ($brands as $brand)
-                                                    <option value="{{ $brand['id'] }}">{{ $brand['name'] }}</option>
+                                                    <option value="{{ $brand['id'] }}" {{ old('brand_id') == $brand['id'] ? 'selected' : '' }}>{{ $brand['name'] }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -146,8 +146,8 @@
                                             <select required class="form-control" id="status" data-choices
                                                 data-choices-groups data-placeholder="Select Categories" name="status">
                                                 <option value=""> -- حدد حالة المنتج --</option>
-                                                <option value="1" selected> مفعل</option>
-                                                <option value="0"> ارشيف</option>
+                                                <option value="1" {{ old('status', '1') == '1' ? 'selected' : '' }}> مفعل</option>
+                                                <option value="0" {{ old('status') == '0' ? 'selected' : '' }}> ارشيف</option>
                                             </select>
                                         </div>
                                     </div>
@@ -169,12 +169,12 @@
                                     </div>
                                 </div>
 
-                                <div class="row">
+                                <div class="row" id="quantity-field-container">
                                     <div class="col-lg-4">
                                         <div class="mb-3">
                                             <label for="quantity" class="form-label"> الكمية المتاحة </label>
-                                            <input required min="1" type="number" id="quantity" name="quantity"
-                                                class="form-control" placeholder="">
+                                            <input min="0" type="number" id="quantity" name="quantity"
+                                                class="form-control" placeholder="" value="{{ old('quantity') }}">
                                         </div>
                                     </div>
                                 </div>
@@ -221,26 +221,25 @@
                                     <div class="col-lg-6">
                                         <div class="mb-3">
                                             <label for="type">نوع المنتج:</label>
-                                            <select class="form-control" name="type" id="product-type" required>
-                                                <option selected value="بسيط">بسيط</option>
-                                                <option value="متغير">متغير</option>
+                                            <select class="form-select" name="type" id="product-type" required>
+                                                <option value="بسيط" {{ old('type') == 'بسيط' ? 'selected' : '' }}>بسيط</option>
+                                                <option value="متغير" {{ old('type') == 'متغير' ? 'selected' : '' }}>متغير</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div id="variable-product-fields" style="display: none">
+                                <div id="variable-product-fields" style="display: {{ old('type') == 'متغير' ? 'block' : 'none' }}">
                                     <div id="attribute-container">
-                                        <div class="row d-flex align-items-center" id="attribute-row-template"
-                                            style="display: none">
+                                        <!-- Template for hidden attribute row -->
+                                        <div class="row" id="attribute-row-template" style="display: none">
                                             <div class="col-lg-4 col-12">
                                                 <div class="mb-3">
                                                     <label for="attribute">اختر السمة:</label>
                                                     <select class="form-control" name="attributes[]">
                                                         <option value=""> -- حدد السمة --</option>
                                                         @foreach ($attributes as $attribute)
-                                                            <option value="{{ $attribute->id }}">{{ $attribute->name }}
-                                                            </option>
+                                                            <option value="{{ $attribute->id }}">{{ $attribute->name }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -248,28 +247,106 @@
                                             <div class="col-lg-6 col-12">
                                                 <div class="mb-3">
                                                     <label for="variations">حدد المتغيرات:</label>
-                                                    <input type="text" class="form-control" name="variations[]"
-                                                        placeholder="ادخل المتغيرات وافصل بين كل متغير بـ(-)">
+                                                    <input type="text" class="form-control" name="variations[]" placeholder="ادخل المتغيرات وافصل بين كل متغير بـ(-)">
                                                 </div>
                                             </div>
                                             <div class="mb-3 col-2">
-                                                <button style="margin-top: 20px"
-                                                    class="btn btn-sm btn-danger delete-attribute"><i
-                                                        class="ti ti-x"></i></button>
+                                                <button type="button" style="margin-top: 20px" class="btn btn-sm btn-danger delete-attribute"><i class="ti ti-x"></i></button>
                                             </div>
                                         </div>
+
+                                        @if(old('attributes'))
+                                            @foreach(old('attributes') as $index => $oldAttrId)
+                                                <div class="row d-flex align-items-center">
+                                                    <div class="col-lg-4 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="attribute">اختر السمة:</label>
+                                                            <select class="form-control" name="attributes[]">
+                                                                <option value=""> -- حدد السمة --</option>
+                                                                @foreach ($attributes as $attribute)
+                                                                    <option value="{{ $attribute->id }}" {{ $oldAttrId == $attribute->id ? 'selected' : '' }}>{{ $attribute->name }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6 col-12">
+                                                        <div class="mb-3">
+                                                            <label for="variations">حدد المتغيرات:</label>
+                                                            <input type="text" class="form-control" name="variations[]" value="{{ old('variations.'.$index) }}" placeholder="ادخل المتغيرات وافصل بين كل متغير بـ(-)">
+                                                        </div>
+                                                    </div>
+                                                    <div class="mb-3 col-2">
+                                                        <button type="button" style="margin-top: 20px" class="btn btn-sm btn-danger delete-attribute"><i class="ti ti-x"></i></button>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        @else
+                                            <!-- Default first row -->
+                                            <div class="row d-flex align-items-center">
+                                                <div class="col-lg-4 col-12">
+                                                    <div class="mb-3">
+                                                        <label for="attribute">اختر السمة:</label>
+                                                        <select class="form-control" name="attributes[]">
+                                                            <option value=""> -- حدد السمة --</option>
+                                                            @foreach ($attributes as $attribute)
+                                                                <option value="{{ $attribute->id }}">{{ $attribute->name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-12">
+                                                    <div class="mb-3">
+                                                        <label for="variations">حدد المتغيرات:</label>
+                                                        <input type="text" class="form-control" name="variations[]" placeholder="ادخل المتغيرات وافصل بين كل متغير بـ(-)">
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3 col-2">
+                                                    <button type="button" style="margin-top: 20px" class="btn btn-sm btn-danger delete-attribute"><i class="ti ti-x"></i></button>
+                                                </div>
+                                            </div>
+                                        @endif
                                     </div>
 
-                                    <button id="add_new_vartion" class="btn btn-primary btn-sm"><i
+                                    <button type="button" id="add_new_vartion" class="btn btn-primary btn-sm"><i
                                             class="ti ti-plus"></i> اضافة متغير جديد
                                     </button>
 
-                                    <button id="confirm-variations" class="btn btn-success btn-sm">تأكيد المتغيرات
+                                    <button type="button" id="confirm-variations" class="btn btn-success btn-sm">تأكيد المتغيرات
                                     </button>
 
                                     <br>
 
-                                    <div id="product-variants"></div>
+                                    <div id="product-variants">
+                                        @if(old('variant_name'))
+                                            @foreach(old('variant_name') as $index => $vName)
+                                                <div class="mb-3 variant-inputs d-flex align-items-center justify-content-between">
+                                                    <div class="form-group">
+                                                        <label>اسم المتغير</label>
+                                                        <input name='variant_name[]' class="form-control" type="text" value="{{ $vName }}">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>سعر المنتج</label>
+                                                        <input placeholder="السعر" class="form-control" type="number" name='variant_price[]' value="{{ old('variant_price.'.$index) }}">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>السعر بعد التخفيض</label>
+                                                        <input placeholder="السعر" class="form-control" type="number" name='variant_discount[]' value="{{ old('variant_discount.'.$index) }}">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>الكمية المتاحة</label>
+                                                        <input placeholder="الكمية" class="form-control" type="number" name='variant_stock[]' value="{{ old('variant_stock.'.$index) }}">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>صورة المتغير</label>
+                                                        <input type='file' class='form-control' name='variant_image[]'>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <button type="button" style="margin-top: 20px" class="btn btn-sm btn-danger delete-variant"><i class="ti ti-x"></i></button>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        @endif
+                                    </div>
                                 </div>
 
                             </div>
@@ -286,7 +363,7 @@
                                         <div class="mb-3 input-group">
                                             <span class="input-group-text fs-20"><i class='bx bx-dollar'></i></span>
                                             <input type="number" id="purches_price" name="purches_price"
-                                                class="form-control" placeholder="000">
+                                                class="form-control" placeholder="000" value="{{ old('purches_price') }}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
@@ -294,7 +371,7 @@
                                         <div class="mb-3 input-group">
                                             <span class="input-group-text fs-20"><i class='bx bx-dollar'></i></span>
                                             <input type="number" id="price" name="price" class="form-control"
-                                                placeholder="000">
+                                                placeholder="000" value="{{ old('price') }}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
@@ -302,7 +379,7 @@
                                         <div class="mb-3 input-group">
                                             <span class="input-group-text fs-20"><i class='bx bxs-discount'></i></span>
                                             <input type="number" id="discount" name="discount" class="form-control"
-                                                placeholder="000">
+                                                placeholder="000" value="{{ old('discount') }}">
                                         </div>
                                     </div>
                                 </div>
@@ -363,117 +440,168 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        document.getElementById('product-type').addEventListener('change', function() {
-            if (this.value === 'بسيط') {
-                document.getElementById('simple-product-fields').style.display = 'block';
-                document.getElementById('variable-product-fields').style.display = 'none';
-            } else {
-                document.getElementById('simple-product-fields').style.display = 'none';
-                document.getElementById('variable-product-fields').style.display = 'block';
-            }
-        });
+        // Prevent multiple initializations
+        (function() {
+            let initialized = false;
+            
+            function initializeProductForm() {
+                if (initialized) return;
+                initialized = true;
 
-        document.getElementById('add_new_vartion').addEventListener('click', function(e) {
-            e.preventDefault();
+                function toggleStockField() {
+                    const productType = document.getElementById('product-type').value;
+                    const quantityContainer = document.getElementById('quantity-field-container');
+                    const simpleFields = document.getElementById('simple-product-fields');
+                    const variableFields = document.getElementById('variable-product-fields');
+                    const quantityInput = document.getElementById('quantity');
 
-            let template = document.getElementById('attribute-row-template');
-            let clone = template.cloneNode(true);
-
-            clone.removeAttribute('id');
-            clone.style.display = 'flex';
-
-            clone.querySelector('input[name="variations[]"]').value = '';
-
-            document.getElementById('attribute-container').appendChild(clone);
-        });
-
-        document.getElementById('attribute-container').addEventListener('click', function(e) {
-            if (e.target.classList.contains('delete-attribute')) {
-                let allRows = document.querySelectorAll('#attribute-container .row');
-                if (allRows.length > 1) {
-                    e.target.closest('.row').remove();
-                } else {
-                    alert('لا يمكنك حذف العنصر الأخير.');
+                    if (productType === 'بسيط') {
+                        if(simpleFields) simpleFields.style.display = 'block';
+                        if(variableFields) variableFields.style.display = 'none';
+                        if(quantityContainer) quantityContainer.style.display = 'block';
+                        if(quantityInput) quantityInput.setAttribute('required', 'required');
+                    } else {
+                        if(simpleFields) simpleFields.style.display = 'none';
+                        if(variableFields) variableFields.style.display = 'block';
+                        if(quantityContainer) quantityContainer.style.display = 'none';
+                        if(quantityInput) quantityInput.removeAttribute('required');
+                    }
                 }
-            }
-        });
 
-        document.getElementById('confirm-variations').addEventListener('click', function(e) {
-            e.preventDefault();
-            const attributes = document.querySelectorAll('select[name="attributes[]"]');
-            const variations = document.querySelectorAll('input[name="variations[]"]');
+                document.getElementById('product-type').addEventListener('change', toggleStockField);
+                toggleStockField(); // Initial call
 
-            let selectedValues = [];
+                document.getElementById('add_new_vartion').addEventListener('click', function(e) {
+                    e.preventDefault();
 
-            attributes.forEach((attribute, index) => {
-                const selectedAttribute = attribute.value;
-                if (selectedAttribute) {
-                    const variationValues = variations[index].value.split('-').map(v => v.trim());
-                    selectedValues.push(variationValues);
-                }
-            });
+                    let template = document.getElementById('attribute-row-template');
+                    let clone = template.cloneNode(true);
 
-            const productVariants = cartesianProduct(selectedValues);
-            let productVariantsHTML = '';
+                    clone.removeAttribute('id');
+                    clone.style.display = 'flex';
 
-            productVariants.forEach(variant => {
-                const variantText = variant.join(' - ');
-                const variationInputsHTML = `
-            <div class="variant-inputs d-flex align-items-center justify-content-between">
+                    let variationInput = clone.querySelector('input[name="variations[]"]');
+                    if(variationInput) variationInput.value = '';
+
+                    document.getElementById('attribute-container').appendChild(clone);
+                });
+
+                document.getElementById('attribute-container').addEventListener('click', function(e) {
+                    if (e.target.closest('.delete-attribute')) {
+                        let allRows = document.querySelectorAll('#attribute-container .row');
+                        // Don't count the hidden template row
+                        let visibleRows = Array.from(allRows).filter(row => row.style.display !== 'none');
+                        
+                        if (visibleRows.length > 1) {
+                            e.target.closest('.row').remove();
+                        } else {
+                            alert('لا يمكنك حذف العنصر الأخير.');
+                        }
+                    }
+                });
+
+                document.getElementById('confirm-variations').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const attributes = document.querySelectorAll('#attribute-container .row:not(#attribute-row-template) select[name="attributes[]"]');
+                    const variations = document.querySelectorAll('#attribute-container .row:not(#attribute-row-template) input[name="variations[]"]');
+
+                    let selectedValues = [];
+                    let isValid = true;
+
+                    attributes.forEach((attribute, index) => {
+                        const selectedAttribute = attribute.value;
+                        if (selectedAttribute) {
+                            const variationValuesString = variations[index].value.trim();
+                            if (!variationValuesString) {
+                                isValid = false;
+                                return;
+                            }
+                            const variationValues = variationValuesString.split('-').map(v => v.trim()).filter(v => v !== '');
+                            if (variationValues.length === 0) {
+                                isValid = false;
+                                return;
+                            }
+                            selectedValues.push(variationValues);
+                        }
+                    });
+
+                    if (!isValid || selectedValues.length === 0) {
+                        alert('من فضلك حدد السمة وادخل المتغيرات مفصولة بـ (-) لكل سطر.');
+                        return;
+                    }
+
+                    const productVariants = cartesianProduct(selectedValues);
+                    let productVariantsHTML = '';
+
+                    productVariants.forEach(variant => {
+                        const variantText = variant.join(' - ');
+                        const variationInputsHTML = `
+            <div class="mb-3 variant-inputs d-flex align-items-center justify-content-between">
                 <div class="form-group">
                     <label>اسم المتغير</label>
-                    <input name='variant_name[]' class="form-control" type="text" value="${variantText}">
+                    <input name='variant_name[]' class="form-control" type="text" value="${variantText}" readonly>
                 </div>
                 <div class="form-group">
                     <label>سعر المنتج</label>
-                    <input placeholder="السعر" class="form-control" type="number" name='variant_price[]'>
+                    <input placeholder="السعر" required class="form-control" type="number" name='variant_price[]' min="0">
                 </div>
                 <div class="form-group">
                     <label>السعر بعد التخفيض</label>
-                    <input placeholder="السعر" class="form-control" type="number" name='variant_discount[]'>
+                    <input placeholder="السعر" class="form-control" type="number" name='variant_discount[]' min="0">
                 </div>
                 <div class="form-group">
                     <label>الكمية المتاحة</label>
-                    <input placeholder="الكمية" class="form-control" type="number" name='variant_stock[]'>
+                    <input placeholder="الكمية" required class="form-control" type="number" name='variant_stock[]' min="0">
                 </div>
                 <div class="form-group">
                     <label>صورة المتغير</label>
-                    <input type='file' class='form-control' name='variant_image[]'>
+                    <input type='file' class='form-control' name='variant_image[]' accept="image/*">
                 </div>
                 <div class="form-group">
-                    <button style="margin-top: 20px" class="btn btn-sm btn-danger delete-variant"><i class="ti ti-x"></i></button>
+                    <button type="button" style="margin-top: 20px" class="btn btn-sm btn-danger delete-variant"><i class="ti ti-x"></i></button>
                 </div>
             </div>
         `;
-                productVariantsHTML += variationInputsHTML;
-            });
-
-            document.getElementById('product-variants').innerHTML = productVariantsHTML;
-
-            attachDeleteEventListeners();
-        });
-
-        function cartesianProduct(arrays) {
-            return arrays.reduce(function(a, b) {
-                var result = [];
-                a.forEach(function(a) {
-                    b.forEach(function(b) {
-                        result.push(a.concat([b]));
+                        productVariantsHTML += variationInputsHTML;
                     });
-                });
-                return result;
-            }, [[]]);
-        }
 
-        function attachDeleteEventListeners() {
-            const deleteButtons = document.querySelectorAll('.delete-variant');
-            deleteButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const variantRow = this.closest('.variant-inputs');
-                    variantRow.remove();
+                    document.getElementById('product-variants').innerHTML = productVariantsHTML;
+                    attachDeleteEventListeners();
                 });
-            });
-        }
+
+                function cartesianProduct(arrays) {
+                    return arrays.reduce(function(a, b) {
+                        var result = [];
+                        a.forEach(function(a) {
+                            b.forEach(function(b) {
+                                result.push(a.concat([b]));
+                            });
+                        });
+                        return result;
+                    }, [[]]);
+                }
+
+                function attachDeleteEventListeners() {
+                    const container = document.getElementById('product-variants');
+                    container.onclick = function(e) {
+                        if (e.target.closest('.delete-variant')) {
+                            const variantRow = e.target.closest('.variant-inputs');
+                            variantRow.remove();
+                        }
+                    };
+                }
+                
+                // Call once for old values
+                attachDeleteEventListeners();
+            }
+
+            // Initialize when DOM is ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initializeProductForm);
+            } else {
+                initializeProductForm();
+            }
+        })();
     </script>
 
     <script src="{{ asset('assets/admin/js/components/form-quilljs.js') }}"></script>

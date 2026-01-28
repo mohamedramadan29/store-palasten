@@ -1,14 +1,22 @@
 @foreach($variationAttributes as $attributeId => $attribute)
-    <div class="form-group">
-        <label
-            for="attribute_{{ $attributeId }}">{{ $attribute['name'] }}</label>
-        <select name="attribute_values[{{ $attributeId }}]"
-                class="form-control" onchange="fetchPrice()">
-            <option value="">اختر {{ $attribute['name'] }}</option>
-            @foreach($attribute['values'] as $value)
-                <option value="{{ $value }}">{{ $value }}</option>
+    <div class="variant-picker-item">
+        <div class="variant-picker-label mb-2">
+            {{ $attribute['name'] }}: <span class="fw-6 selected-value">{{ $attribute['values'][0] }}</span>
+        </div>
+        <div class="variant-picker-values">
+            @foreach($attribute['values'] as $index => $value)
+                <input type="radio" 
+                       id="attribute_{{ $attributeId }}_{{ $index }}" 
+                       name="attribute_values[{{ $attributeId }}]" 
+                       value="{{ $value }}" 
+                       @if($index == 0) checked @endif
+                       onchange="fetchPrice(); this.closest('.variant-picker-item').querySelector('.selected-value').innerText = this.value;"
+                       class="d-none">
+                <label class="style-text" for="attribute_{{ $attributeId }}_{{ $index }}">
+                    <p>{{ $value }}</p>
+                </label>
             @endforeach
-        </select>
+        </div>
     </div>
 @endforeach
 <!-- عرض السعر هنا -->

@@ -37,7 +37,7 @@
                                 <p>رقم الهاتف : <a href="tel:{{ $public_setting['website_phone'] }}">{{ $public_setting['website_phone'] }}</a></p>
                             </li>
                         </ul>
-                        <ul class="tf-social-icon d-flex gap-10">
+                        <ul class="gap-10 tf-social-icon d-flex">
                             @if ($socialmedia['facebook'] != '')
                                 <li><a href="{{ $socialmedia['facebook'] }}" class="box-icon w_34 round social-facebook social-line"><i class="icon fs-14 icon-fb"></i></a></li>
                             @endif
@@ -72,7 +72,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                        <div class="footer-bottom-wrap d-flex gap-20 flex-wrap justify-content-between align-items-center">
+                        <div class="flex-wrap gap-20 footer-bottom-wrap d-flex justify-content-between align-items-center">
                             <div class="footer-menu_item">جميع الحقوق محفوظة © 2024 {{ $public_setting['website_name'] }} .</div>
                         </div>
                     </div>
@@ -224,6 +224,152 @@
 @yield('js')
 
 <script>
+    // وظيفة جلب السعر لبطاقة المنتج (Product Card)
+    function fetchCardPrice(productId) {
+        let card = document.getElementById(`product-card-${productId}`);
+        let form = document.getElementById(`addToCartForm_${productId}`);
+        let formData = new FormData(form);
+
+        fetch(`/product/${productId}/get-price`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // تحديث السعر
+                const priceElem = card.querySelector('.card-price');
+                const oldPriceElem = card.querySelector('.card-old-price');
+                
+                if (priceElem) {
+                    if (data.discount && data.discount > 0) {
+                        priceElem.innerText = data.discount + ' {{ $storeCurrency ?? "" }}';
+                        if (oldPriceElem) {
+                            oldPriceElem.innerText = data.price + ' {{ $storeCurrency ?? "" }}';
+                            oldPriceElem.style.display = 'inline';
+                        }
+                    } else if (data.price) {
+                        priceElem.innerText = data.price + ' {{ $storeCurrency ?? "" }}';
+                        if (oldPriceElem) oldPriceElem.style.display = 'none';
+                    } else {
+                        priceElem.innerText = 'غير متوفر';
+                        if (oldPriceElem) oldPriceElem.style.display = 'none';
+                    }
+                }
+
+                // تحديث الحقول المخفية
+                card.querySelector('.hidden-price').value = data.discount || data.price || '';
+                card.querySelector('.hidden-variation-id').value = data.hidden_variation || data.variation_id || '';
+
+                // تحديث الصورة إذا وجدت
+                if (data.image) {
+                    const img = card.querySelector('.main-card-img');
+                    if (img) img.src = data.image;
+                }
+
+                // تحديث حالة زر الإضافة للسلة
+                const addBtn = card.querySelector('.add-to-cart');
+                if (addBtn) {
+                    if (data.stock !== undefined && data.stock <= 0) {
+                        addBtn.disabled = true;
+                        addBtn.innerText = "غير متوفر";
+                        addBtn.style.backgroundColor = "#ccc";
+                    } else {
+                        addBtn.disabled = false;
+                        addBtn.innerText = "اضف الي السلة";
+                        addBtn.style.backgroundColor = "";
+                    }
+                }
+
+                // تحديث اسم المتغير المختار على الصورة
+                const overlay = card.querySelector('.card-variant-overlay');
+                if (overlay) {
+                    let selectedValues = [];
+                    form.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
+                        selectedValues.push(radio.value);
+                    });
+                    if (selectedValues.length > 0) {
+                        overlay.innerText = selectedValues.join(' / ');
+                        overlay.style.display = 'block';
+                    } else {
+                        overlay.style.display = 'none';
+                    }
+                }
+            })
+            .catch(error => console.error('Error fetching card price:', error));
+    }
+
+    // تهيئة جميع البطاقات عند تحميل الصفحة
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.card-product.has-variants').forEach(card => {
+            const productId = card.id.replace('product-card-', '');
+            if (productId) {
+                fetchCardPrice(productId);
+            }
+        });
+    });
+    function addToCart(productId) {
+        let form = $(`#addToCartForm_${productId}`);
+        $.ajax({
+            url: '/cart/add',
+            method: 'POST',
+            data: form.serialize(),
+            success: function(response) {
+                Toastify({
+                    text: response.message,
+                    duration: 3000,
+                    gravity: "top",
+                    position: "right",
+                    backgroundColor: "#4CAF50",
+                }).showToast();
+
+                if (response.cartCount) {
+                    $('.nav-cart .count-box').text(response.cartCount);
+                }
+
+                updateCartModalGlobal();
+                $('#shoppingCart').modal('show');
+            },
+            error: function(xhr) {
+                const msg = xhr.responseJSON ? xhr.responseJSON.message : "حدث خطأ أثناء الإضافة للسلة";
+                Toastify({
+                    text: msg,
+                    duration: 3000,
+                    gravity: "top",
+                    position: "right",
+                    backgroundColor: "#FF5722",
+                }).showToast();
+            }
+        });
+    }
+
+    // وظيفة المفضلة
+    function toggleWishlist(btn, productId) {
+        let form = $(`#wishlistForm_${productId}`);
+        $.ajax({
+            method: 'POST',
+            url: '{{ url('wishlist/store') }}',
+            data: form.serialize() + '&cookie_id={{ Cookie::get('cookie_id') }}',
+            success: function(response) {
+                Toastify({
+                    text: response.message,
+                    duration: 3000,
+                    gravity: "top",
+                    position: "right",
+                    backgroundColor: "#4CAF50",
+                }).showToast();
+
+                if (response.wishlistCount !== undefined) {
+                    $('.nav-wishlist .count-box').text(response.wishlistCount);
+                }
+
+                $(btn).toggleClass('in-wishlist');
+            }
+        });
+    }
+
     // وظيفة جلب السعر في النافذة المنبثقة (Quick View)
     function fetchPriceModal() {
         let form = document.getElementById('addToCart-modal');
@@ -264,6 +410,21 @@
                 if (data.image) {
                     const modalImg = document.getElementById('main-product-image-modal');
                     if (modalImg) modalImg.src = data.image;
+                }
+
+                // تحديث اسم المتغير المختار على الصورة في النافذة المنبثقة
+                const overlayModal = document.getElementById('variant-overlay-modal');
+                if (overlayModal) {
+                    let selectedValues = [];
+                    form.querySelectorAll('input[type="radio"]:checked').forEach(radio => {
+                        selectedValues.push(radio.value);
+                    });
+                    if (selectedValues.length > 0) {
+                        overlayModal.innerText = selectedValues.join(' / ');
+                        overlayModal.style.display = 'block';
+                    } else {
+                        overlayModal.style.display = 'none';
+                    }
                 }
 
                 // تحديث حالة المخزون في النافذة المنبثقة
@@ -336,6 +497,9 @@
 
                 // تهيئة أزرار الكمية
                 initializeQuantityButtons();
+
+                // جلب السعر الأولي للمتغير المحدد افتراضياً
+                fetchPriceModal();
             })
             .catch(error => console.error('Error details:', error));
     });
@@ -402,6 +566,7 @@
             }
         });
     }
+
 </script>
 
 </body>
