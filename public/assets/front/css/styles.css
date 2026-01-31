@@ -8893,12 +8893,12 @@ header.header-bg {
 }
 
 .tf-product-info-price .price-on-sale {
-color: var(--primary);
-    font-size: 25px;
-    line-height: 26px;
-    font-weight: bold;
-    padding: 0;
-    margin: 0;
+  color: var(--primary);
+  font-size: 25px;
+  line-height: 26px;
+  font-weight: bold;
+  padding: 0;
+  margin: 0;
 }
 
 .tf-product-info-price .compare-at-price {
@@ -19123,9 +19123,9 @@ blockquote .text {
   .tf-product-info-wrap .tf-product-info-title h5 {
     font-size: 18px;
     line-height: 31.2px;
-            border-bottom: 1px solid #f0f0f0;
-        background-color: #fff;
-        border-top: 1px solid #f0f0f0;
+    border-bottom: 1px solid #f0f0f0;
+    background-color: #fff;
+    border-top: 1px solid #f0f0f0;
   }
 
   .tf-product-modal .modal-dialog .modal-content {
@@ -21535,6 +21535,27 @@ form .btn-add-to-cart {
   height: 50px;
 }
 
+.quantity_and_addtocart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+form .quantity_and_addtocart .btn-add-to-cart {
+  margin-top: 25px;
+  padding: 13px 24px;
+}
+
+.quantity_and_addtocart .tf-product-info-buy-button {
+  width: 80%;
+  margin-right: 10px;
+}
+
+.progress-wrap {
+  left: 10px;
+  right: auto;
+}
+
 @media(max-width: 991px) {
   .offer_page .data .product_info img {
     max-width: 100%;
@@ -21558,6 +21579,10 @@ form .btn-add-to-cart {
     background-color: #fff;
     padding: 10px;
     z-index: 99;
+  }
+
+  form .quantity_and_addtocart .btn-add-to-cart {
+    padding: 13px 24px;
   }
 }
 

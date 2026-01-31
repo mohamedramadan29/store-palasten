@@ -15,9 +15,11 @@
             $variationAttributes[$key]['values'] = array_unique($attribute['values']);
         }
     }
+    // Generate a unique ID for this specific card instance
+    $uniqueId = 'product_' . $product['id'] . '_' . uniqid();
 @endphp
 
-<div class="card-product {{ $productVariations->count() > 0 ? 'has-variants' : '' }}" id="product-card-{{ $product['id'] }}">
+<div class="card-product {{ $productVariations->count() > 0 ? 'has-variants' : '' }}" id="product-card-{{ $uniqueId }}" data-product-id="{{ $product['id'] }}">
     <div class="card-product-wrapper">
         <a href="{{ url('product/' . $product['slug']) }}" class="product-img aspect-ratio-box">
             <div class="card-variant-overlay"></div>
@@ -38,11 +40,11 @@
             @endif
         </a>
         <div class="list-product-btn">
-            <form id="wishlistForm_{{ $product['id'] }}" method="post" action="{{ url('wishlist/store') }}">
+            <form id="wishlistForm_{{ $uniqueId }}" method="post" action="{{ url('wishlist/store') }}">
                 @csrf
                 <input type="hidden" name="product_id" value="{{ $product['id'] }}">
                 <button type="button" 
-                    onclick="toggleWishlist(this, {{ $product['id'] }})"
+                    onclick="toggleWishlist(this, '{{ $uniqueId }}')"
                     class="box-icon bg_white wishlist btn-icon-action {{ in_array($product['id'], $wishlistProducts) ? 'in-wishlist' : '' }}">
                     <span class="icon icon-heart"></span>
                     <span class="tooltip"> اضف الي المفضلة </span>
@@ -70,7 +72,7 @@
             @endif
         </div>
 
-        <form id="addToCartForm_{{ $product['id'] }}" method="post" action="{{ url('cart/add') }}">
+        <form id="addToCartForm_{{ $uniqueId }}" method="post" action="{{ url('cart/add') }}">
             @csrf
             <input type="hidden" name="product_id" value="{{ $product['id'] }}">
             <input type="hidden" name="number" value="1">
@@ -85,14 +87,14 @@
                             <div class="flex-wrap gap-1 d-flex justify-content-center">
                                 @foreach ($attribute['values'] as $index => $value)
                                     <input type="radio" 
-                                           id="attr_{{ $product['id'] }}_{{ $attributeId }}_{{ $index }}" 
+                                           id="attr_{{ $uniqueId }}_{{ $attributeId }}_{{ $index }}" 
                                            name="attribute_values[{{ $attributeId }}]" 
                                            value="{{ $value }}" 
                                            @if($index == 0) checked @endif
-                                           onchange="fetchCardPrice({{ $product['id'] }})"
+                                           onchange="fetchCardPrice('{{ $uniqueId }}')"
                                            class="btn-check card-variant-input">
                                     <label class="px-2 py-0 btn btn-outline-dark btn-sm fs-12" 
-                                           for="attr_{{ $product['id'] }}_{{ $attributeId }}_{{ $index }}">
+                                           for="attr_{{ $uniqueId }}_{{ $attributeId }}_{{ $index }}">
                                         {{ $value }}
                                     </label>
                                 @endforeach
@@ -102,7 +104,7 @@
                 </div>
             @endif
 
-            <button type="button" onclick="addToCart({{ $product['id'] }})" class="add-to-cart w-100">
+            <button type="button" onclick="addToCart('{{ $uniqueId }}')" class="add-to-cart w-100">
                 اضف الي السلة
             </button>
         </form>

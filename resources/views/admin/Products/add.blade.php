@@ -109,7 +109,7 @@
                                     <div class="col-lg-6">
                                         <div class="mb-3">
                                             <label for="category_id" class="form-label"> حدد القسم الرئيسي </label>
-                                            <select required class="form-control" id="category_id" data-choices
+                                            <select class="form-control" id="category_id" data-choices
                                                 data-choices-groups data-placeholder="Select Categories" name="category_id">
                                                 <option value=""> -- حدد القسم --</option>
                                                 @foreach ($MainCategories as $maincat)
@@ -613,7 +613,23 @@
 
             var form = document.querySelector('form');
             if (form) {
-                form.onsubmit = function() {
+                form.onsubmit = function(e) {
+                    // Validation for Main Category
+                    var categorySelect = document.getElementById('category_id');
+                    if (categorySelect && !categorySelect.value) {
+                         e.preventDefault();
+                         Toastify({
+                            text: "من فضلك حدد القسم الرئيسي للمنتج",
+                            duration: 3000,
+                            gravity: "top",
+                            position: "center",
+                            backgroundColor: "#FF5722",
+                        }).showToast();
+                        // Scroll to the error
+                        categorySelect.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        return false;
+                    }
+
                     document.querySelector('input[name=description]').value = quill.root.innerHTML;
                 };
             }

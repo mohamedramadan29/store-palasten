@@ -225,9 +225,13 @@
 
 <script>
     // وظيفة جلب السعر لبطاقة المنتج (Product Card)
-    function fetchCardPrice(productId) {
-        let card = document.getElementById(`product-card-${productId}`);
-        let form = document.getElementById(`addToCartForm_${productId}`);
+    // وظيفة جلب السعر لبطاقة المنتج (Product Card)
+    function fetchCardPrice(uniqueId) {
+        let card = document.getElementById(`product-card-${uniqueId}`);
+        if (!card) return;
+        
+        let productId = card.getAttribute('data-product-id');
+        let form = document.getElementById(`addToCartForm_${uniqueId}`);
         let formData = new FormData(form);
 
         fetch(`/product/${productId}/get-price`, {
@@ -304,14 +308,15 @@
     // تهيئة جميع البطاقات عند تحميل الصفحة
     document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.card-product.has-variants').forEach(card => {
-            const productId = card.id.replace('product-card-', '');
-            if (productId) {
-                fetchCardPrice(productId);
+            // Extract unique ID from the element ID (product-card-UNIQUE_ID)
+            const uniqueId = card.id.replace('product-card-', '');
+            if (uniqueId) {
+                fetchCardPrice(uniqueId);
             }
         });
     });
-    function addToCart(productId) {
-        let form = $(`#addToCartForm_${productId}`);
+    function addToCart(uniqueId) {
+        let form = $(`#addToCartForm_${uniqueId}`);
         $.ajax({
             url: '/cart/add',
             method: 'POST',
@@ -346,8 +351,8 @@
     }
 
     // وظيفة المفضلة
-    function toggleWishlist(btn, productId) {
-        let form = $(`#wishlistForm_${productId}`);
+    function toggleWishlist(btn, uniqueId) {
+        let form = $(`#wishlistForm_${uniqueId}`);
         $.ajax({
             method: 'POST',
             url: '{{ url('wishlist/store') }}',
@@ -365,6 +370,10 @@
                     $('.nav-wishlist .count-box').text(response.wishlistCount);
                 }
 
+                // Check specific state since we might have duplicates
+                // But toggle is local to the button clicked essentially
+                // However, syncing backend state is good.
+                // For UI, we toggle the class on the button clicked.
                 $(btn).toggleClass('in-wishlist');
             }
         });

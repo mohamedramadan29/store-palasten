@@ -47,8 +47,8 @@
           @if (count($mainCategories) > 0)
     <section class="flat-spacing-10 flat-categorie">
         <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="text-3 fw-7 text-uppercase title wow fadeInUp d-inline-block cursor-pointer" 
+            <div class="mb-5 text-center">
+                <h2 class="cursor-pointer text-3 fw-7 text-uppercase title wow fadeInUp d-inline-block" 
                     onclick="window.location.href='{{ url('collection') }}'">
                     أقسام المتجر
                 </h2>
@@ -69,15 +69,15 @@
 
                     @foreach ($mainCategories as $category)
                         <div class="swiper-slide">
-                            <div class="collection-item style-left hover-img position-relative overflow-hidden rounded-4">
+                            <div class="overflow-hidden collection-item style-left hover-img position-relative rounded-4">
                                 <a href="{{ url('collection/' . $category['slug']) }}" class="d-block">
                                     <img class="lazyload w-100" style="height:220px; object-fit:cover;"
                                          data-src="{{ asset('assets/uploads/category_images/' . $category['image']) }}"
                                          src="{{ asset('assets/uploads/category_images/' . $category['image']) }}"
                                          alt="{{ $category['name'] }}">
 
-                                    <div class="position-absolute bottom-0 start-0 end-0 text-center pb-4">
-                                        <span class="d-inline-block bg-white bg-opacity-85 px-4 py-2 rounded-3 shadow-sm fw-600 text-dark fs-15">
+                                    <div class="bottom-0 pb-4 text-center position-absolute start-0 end-0">
+                                        <span class="px-4 py-2 bg-white shadow-sm d-inline-block bg-opacity-85 rounded-3 fw-600 text-dark fs-15">
                                             {{ $category['name'] }}
                                         </span>
                                     </div>
@@ -158,7 +158,7 @@
 
 
                     </div>
-                    <div class="tf-pagination-wrap view-more-button text-center">
+                    <div class="text-center tf-pagination-wrap view-more-button">
                         <button class="tf-btn-loading tf-loading-default style-2 btn-loadmore "><span class="text">
                                 مشاهدة
                                 المزيد </span></button>
@@ -286,7 +286,7 @@
             <section class="flat-spacing-12">
                 <div class="">
                     <div class="wrap-carousel wrap-brand wrap-brand-v2 autoplay-linear">
-                        <div class="swiper tf-sw-brand border-0" data-play="true" data-loop="true" data-preview="6"
+                        <div class="border-0 swiper tf-sw-brand" data-play="true" data-loop="true" data-preview="6"
                             data-tablet="4" data-mobile="2" data-space-lg="30" data-space-md="15">
                             <div class="swiper-wrapper">
                                 @foreach ($brands as $brand)
@@ -316,7 +316,7 @@
                             <div class="swiper-wrapper wrap-iconbox">
                                 @foreach ($advantages as $advantage)
                                     <div class="swiper-slide">
-                                        <div class="tf-icon-box style-border-line text-center">
+                                        <div class="text-center tf-icon-box style-border-line">
                                             <div class="icon">
                                                 <i class="fas {{ $advantage['icon'] }}"></i>
                                             </div>

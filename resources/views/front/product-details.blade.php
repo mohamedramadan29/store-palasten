@@ -273,6 +273,20 @@
                                 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
                                 <script>
+                                    // Variation Map
+                                    @php
+                                        $map = [];
+                                        foreach($productVariations as $var) {
+                                            $attrs = [];
+                                            foreach($var->variationValues as $val) {
+                                                $attrs[$val->attribute_id] = $val->attribute_value_name;
+                                            }
+                                            $map[$var->id] = $attrs;
+                                        }
+                                    @endphp
+                                    window.variationMap = @json($map);
+                                    window.isProgrammaticSlide = false;
+
                                     $(document).ready(function() {
                                             $("#addtocartbutton_{{ $product['id'] }}").on('click', function(e) {
                                                 e.preventDefault();
@@ -364,6 +378,43 @@
                                                     thumbs: {
                                                         swiper: thumbSwiper,
                                                     },
+                                                    on: {
+                                                        slideChange: function () {
+                                                            if (window.isProgrammaticSlide) {
+                                                                window.isProgrammaticSlide = false;
+                                                                return;
+                                                            }
+                                                            
+                                                            let activeIndex = this.activeIndex;
+                                                            let slide = this.slides[activeIndex];
+                                                            let variationId = slide.getAttribute('data-variation-id');
+                                                            
+                                                            if (variationId && window.variationMap[variationId]) {
+                                                                let attributes = window.variationMap[variationId];
+                                                                
+                                                                // Sync inputs
+                                                                let changed = false;
+                                                                for (let attrId in attributes) {
+                                                                    let val = attributes[attrId];
+                                                                    let input = document.querySelector(`input[name="attribute_values[${attrId}]"][value="${val}"]`);
+                                                                    if (input && !input.checked) {
+                                                                        input.checked = true;
+                                                                        input.closest('.variant-picker-item').querySelector('.selected-value').innerText = val;
+                                                                        changed = true;
+                                                                    }
+                                                                }
+                                                                
+                                                                if (changed) {
+                                                                    // Update overlay only, don't re-fetch price (or do, based on preference, but user said 'directly change name')
+                                                                    // The user wants the options to change AND the name.
+                                                                    updateOverlayText();
+                                                                    // Ideally we trigger the price fetch too, but we need to mark it to avoid loop if fetchPrice2 slides the slider.
+                                                                    // Let's call fetchPrice2 but tell it NOT to slide.
+                                                                    fetchPrice2(true); 
+                                                                }
+                                                            }
+                                                        }
+                                                    }
                                                 });
                                             }
 
@@ -381,6 +432,14 @@
                                                     overlay.style.display = 'none';
                                                 }
                                             }
+                                            
+                                            // Handle overlay display on logic
+                                            // Re-apply display block if values exist, let CSS handle hover hidden
+                                            // We remove the JS hover hiding logic above and rely on CSS or this JS
+                                            // Wait, JS hover logic above adds class 'hide-overlay'.
+                                            // So updateOverlayText should just ensure it's 'block' (visible) base state.
+                                            let overlay = document.getElementById('variant-overlay');
+                                            if (overlay) overlay.style.display = 'block';
 
                                             // جلب السعر عند التحميل إذا كان هناك متغيرات
                                             if (document.querySelector('.variant-picker-item')) {
@@ -391,7 +450,7 @@
                                 </script>
 
                                 <script>
-                                    function fetchPrice2() {
+                                    function fetchPrice2(skipSlide = false) {
                                             let form = document.getElementById('addToCart_{{ $product['id'] }}');
                                             let formData = new FormData(form);
                                             let productId = formData.get('product_id');
@@ -445,7 +504,8 @@
                                                     }
 
                                                     // التوجه للصورة المناسبة في السليدر
-                                                    if (data.variation_id) {
+                                                    if (!skipSlide && data.variation_id) {
+                                                        window.isProgrammaticSlide = true; 
                                                         const mainSwiperEl = document.querySelector('.tf-product-media-main-default');
                                                         if (mainSwiperEl && mainSwiperEl.swiper) {
                                                             const swiper = mainSwiperEl.swiper;
