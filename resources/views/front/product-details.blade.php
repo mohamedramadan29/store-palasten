@@ -171,7 +171,7 @@
                                                 <input type="radio" id="attribute_{{ $attributeId }}_{{ $index }}"
                                                     name="attribute_values[{{ $attributeId }}]" value="{{ $value }}"
                                                     @if($index==0) checked @endif
-                                                    onchange="fetchPrice2(); updateOverlayText(); this.closest('.variant-picker-item').querySelector('.selected-value').innerText = this.value;"
+                                                    onchange="fetchPrice2(); updateOverlayFromAttributes(); this.closest('.variant-picker-item').querySelector('.selected-value').innerText = this.value;"
                                                     class="d-none">
                                                 <label class="style-text"
                                                     for="attribute_{{ $attributeId }}_{{ $index }}">
@@ -348,6 +348,8 @@
                                                 });
                                             }
 
+                                             
+
                                             // تهيئة Swiper للمصغرات كـ carousel
                                             if (document.querySelector('.tf-product-media-thumbs-default')) {
                                                 var thumbSwiper = new Swiper('.tf-product-media-thumbs-default', {
@@ -366,6 +368,17 @@
                                                         1024: {
                                                             slidesPerView: 6,
                                                         }
+                                                    },
+                                                    on: {
+                                                        click: function(swiper, event) {
+                                                            // عند الضغط على الصورة المصغرة
+                                                            setTimeout(function() {
+                                                                let mainSwiperEl = document.querySelector('.tf-product-media-main-default');
+                                                                if (mainSwiperEl && mainSwiperEl.swiper) {
+                                                                    handleSlideChange(mainSwiperEl.swiper);
+                                                                }
+                                                            }, 100);
+                                                        }
                                                     }
                                                 });
 
@@ -379,72 +392,26 @@
                                                         swiper: thumbSwiper,
                                                     },
                                                     on: {
-                                                        slideChange: function () {
-                                                            if (window.isProgrammaticSlide) {
-                                                                window.isProgrammaticSlide = false;
-                                                                return;
-                                                            }
-                                                            
-                                                            let activeIndex = this.activeIndex;
-                                                            let slide = this.slides[activeIndex];
-                                                            let variationId = slide.getAttribute('data-variation-id');
-                                                            
-                                                            if (variationId && window.variationMap[variationId]) {
-                                                                let attributes = window.variationMap[variationId];
-                                                                
-                                                                // Sync inputs
-                                                                let changed = false;
-                                                                for (let attrId in attributes) {
-                                                                    let val = attributes[attrId];
-                                                                    let input = document.querySelector(`input[name="attribute_values[${attrId}]"][value="${val}"]`);
-                                                                    if (input && !input.checked) {
-                                                                        input.checked = true;
-                                                                        input.closest('.variant-picker-item').querySelector('.selected-value').innerText = val;
-                                                                        changed = true;
-                                                                    }
-                                                                }
-                                                                
-                                                                if (changed) {
-                                                                    // Update overlay only, don't re-fetch price (or do, based on preference, but user said 'directly change name')
-                                                                    // The user wants the options to change AND the name.
-                                                                    updateOverlayText();
-                                                                    // Ideally we trigger the price fetch too, but we need to mark it to avoid loop if fetchPrice2 slides the slider.
-                                                                    // Let's call fetchPrice2 but tell it NOT to slide.
-                                                                    fetchPrice2(true); 
-                                                                }
-                                                            }
+                                                        init: function () {
+                                                            // ضبط حالة الـ overlay عند التحميل
+                                                            setTimeout(() => handleSlideChange(this), 300);
+                                                        },
+                                                        slideChangeTransitionEnd: function () {
+                                                            handleSlideChange(this);
+                                                        },
+                                                        realIndexChange: function () {
+                                                            // يتم استدعاؤه عند تغيير السلايد الفعلي
+                                                            handleSlideChange(this);
                                                         }
                                                     }
                                                 });
                                             }
 
-                                            // تحديث النص على الصورة
-                                            window.updateOverlayText = function() {
-                                                let selectedValues = [];
-                                                document.querySelectorAll('#addToCart_{{ $product['id'] }} .variant-picker-item input[type="radio"]:checked').forEach(input => {
-                                                    selectedValues.push(input.value);
-                                                });
-                                                let overlay = document.getElementById('variant-overlay');
-                                                if (selectedValues.length > 0) {
-                                                    overlay.innerText = selectedValues.join(' / ');
-                                                    overlay.style.display = 'block';
-                                                } else {
-                                                    overlay.style.display = 'none';
-                                                }
-                                            }
                                             
-                                            // Handle overlay display on logic
-                                            // Re-apply display block if values exist, let CSS handle hover hidden
-                                            // We remove the JS hover hiding logic above and rely on CSS or this JS
-                                            // Wait, JS hover logic above adds class 'hide-overlay'.
-                                            // So updateOverlayText should just ensure it's 'block' (visible) base state.
-                                            let overlay = document.getElementById('variant-overlay');
-                                            if (overlay) overlay.style.display = 'block';
 
                                             // جلب السعر عند التحميل إذا كان هناك متغيرات
                                             if (document.querySelector('.variant-picker-item')) {
                                                 fetchPrice2();
-                                                updateOverlayText();
                                             }
                                         });
                                 </script>
@@ -512,6 +479,7 @@
                                                             const slides = swiper.slides;
                                                             let targetIndex = -1;
 
+                                                            // البحث عن السلايد الذي يحتوي على نفس variation_id
                                                             for (let i = 0; i < slides.length; i++) {
                                                                 if (slides[i].getAttribute('data-variation-id') == data.variation_id) {
                                                                     targetIndex = i;
@@ -520,14 +488,18 @@
                                                             }
 
                                                             if (targetIndex !== -1) {
+                                                                // الانتقال للصورة المطابقة
                                                                 swiper.slideTo(targetIndex);
-                                                            } else if (data.image) {
-                                                                // إذا لم نجد سلايد خاص، نغير الصورة في السلايد الأول
-                                                                const mainImg = document.getElementById('main-product-image');
-                                                                if (mainImg) {
-                                                                    mainImg.src = data.image;
-                                                                    mainImg.setAttribute('data-src', data.image);
-                                                                    swiper.slideTo(0);
+                                                                
+                                                                // تحديث الـ overlay مباشرة
+                                                                if (window.variationMap[data.variation_id]) {
+                                                                    let attributes = window.variationMap[data.variation_id];
+                                                                    let variantNames = Object.values(attributes).join(' / ');
+                                                                    let overlay = document.getElementById('variant-overlay');
+                                                                    if (overlay) {
+                                                                        overlay.innerText = variantNames;
+                                                                        overlay.style.display = 'block';
+                                                                    }
                                                                 }
                                                             }
                                                         }
@@ -822,47 +794,93 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-    function fetchPrice() {
-            let form = document.getElementById('addToCart');
-            let formData = new FormData(form);
-            let productId = formData.get('product_id');
+    window.isProgrammaticSlide = false;
 
-            fetch(`/product/${productId}/get-price`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    // تحديث السعر في الواجهة
-                    document.getElementById('price-value').innerText = data.price ? data.price +
-                        ' {{ $storeCurrency }}' : 'غير متوفر';
+  function syncOverlayWithSlide(swiper) {
+    let overlay = document.getElementById('variant-overlay');
+    if (!overlay || !swiper) return;
 
-                    if (data.discount && data.discount > 0) {
-                        document.getElementById('discounted-price').innerText = data.discount +
-                            ' {{ $storeCurrency }}';
-                        document.getElementById('discount-section').style.display = 'block';
-                        document.getElementById('price-value').style.textDecoration = "line-through";
-                    } else {
-                        document.getElementById('discount-section').style.display = 'none';
-                        document.getElementById('price-value').style.textDecoration = "none";
-                    }
-                    // تحديث الحقول المخفية
-                    document.getElementById('hidden-variation').value = data.variation_id;
-                    document.getElementById('hidden-price').value = data.price;
-                    document.getElementById('hidden-discount').value = data.discount || '';
+    let slide = swiper.slides[swiper.activeIndex];
+    let variationId = slide?.getAttribute('data-variation-id');
 
-                    // تحديث الصورة في المودال (إذا وجد)
-                    if (data.image) {
-                        const modalImg = document.getElementById('main-product-image-modal');
-                        if (modalImg) {
-                            modalImg.src = data.image;
-                        }
-                    }
-                })
-                .catch(error => console.error('Error:', error));
+    // صورة عامة
+    if (!variationId || !window.variationMap[variationId]) {
+        overlay.style.display = 'none';
+        overlay.innerText = '';
+        return;
+    }
+
+    let attrs = window.variationMap[variationId];
+
+    overlay.innerText = Object.values(attrs).join(' / ');
+    overlay.style.display = 'block';
+}
+
+
+function updateOverlayFromAttributes() {
+    let overlay = document.getElementById('variant-overlay');
+    if (!overlay) return;
+
+    let selected = [];
+    document.querySelectorAll(
+        '#addToCart_{{ $product['id'] }} input[type="radio"]:checked'
+    ).forEach(el => selected.push(el.value));
+
+    if (!selected.length) {
+        overlay.style.display = 'none';
+        overlay.innerText = '';
+        return;
+    }
+
+    overlay.innerText = selected.join(' / ');
+    overlay.style.display = 'block';
+}
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+       let thumbSwiper = new Swiper('.tf-product-media-thumbs-default', {
+    slidesPerView: 'auto',
+    spaceBetween: 10,
+    watchSlidesProgress: true,
+    slideToClickedSlide: true
+});
+thumbSwiper.on('click', function () {
+    requestAnimationFrame(() => {
+        if (mainSwiper) {
+            mainSwiper.slideTo(thumbSwiper.clickedIndex);
         }
+    });
+});
+
+
+
+     let mainSwiper = new Swiper('.tf-product-media-main-default', {
+    spaceBetween: 10,
+    navigation: {
+        nextEl: '.thumbs-next',
+        prevEl: '.thumbs-prev',
+    },
+    thumbs: { swiper: thumbSwiper },
+    on: {
+        slideChangeTransitionEnd() {
+            syncOverlayWithSlide(this);
+        }
+    }
+});
+
+
+        // thumbSwiper.on('click', function () {
+        //     setTimeout(() => {
+        //         syncOverlayWithSlide(mainSwiper);
+        //     }, 50);
+        // });
+
+        // أول تحميل
+        setTimeout(() => {
+            syncOverlayWithSlide(mainSwiper);
+        }, 300);
+    });
 </script>
+
 @endsection

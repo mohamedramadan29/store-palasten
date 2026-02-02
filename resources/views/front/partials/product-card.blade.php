@@ -1,18 +1,40 @@
 @php
-    $productVariations = \App\Models\admin\ProductVartions::where('product_id', $product['id'])->get();
+    $productVariations = \App\Models\admin\ProductVartions::where('product_id', $product['id'])->orderBy('stock', 'desc')->get();
     $variationAttributes = [];
+    $attributeStockMap = [];
+
     if ($productVariations->count() > 0) {
         foreach ($productVariations as $variation) {
             $variationValues = \App\Models\admin\VartionsValues::where('product_variation_id', $variation->id)->get();
             foreach ($variationValues as $value) {
                 if (isset($value->attribute)) {
-                    $variationAttributes[$value->attribute_id]['name'] = $value->attribute->name;
-                    $variationAttributes[$value->attribute_id]['values'][] = $value->attribute_value_name;
+                    $attributeId = $value->attribute_id;
+                    $attributeValue = $value->attribute_value_name;
+                    $variationAttributes[$attributeId]['name'] = $value->attribute->name;
+                    $variationAttributes[$attributeId]['values'][] = $attributeValue;
+
+                    // Track stock for sorting
+                    $key = $attributeId . '_' . $attributeValue;
+                    if (!isset($attributeStockMap[$key])) {
+                        $attributeStockMap[$key] = 0;
+                    }
+                    $attributeStockMap[$key] += $variation->stock ?? 0;
                 }
             }
         }
-        foreach ($variationAttributes as $key => $attribute) {
-            $variationAttributes[$key]['values'] = array_unique($attribute['values']);
+        foreach ($variationAttributes as $attributeId => $attribute) {
+            $uniqueValues = array_unique($attribute['values']);
+            
+            // Sort values based on their total stock (descending)
+            usort($uniqueValues, function($a, $b) use ($attributeId, $attributeStockMap) {
+                $keyA = $attributeId . '_' . $a;
+                $keyB = $attributeId . '_' . $b;
+                $stockA = $attributeStockMap[$keyA] ?? 0;
+                $stockB = $attributeStockMap[$keyB] ?? 0;
+                return $stockB - $stockA;
+            });
+
+            $variationAttributes[$attributeId]['values'] = $uniqueValues;
         }
     }
     // Generate a unique ID for this specific card instance
