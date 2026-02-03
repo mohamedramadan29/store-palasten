@@ -27,7 +27,7 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-       // dd($data);
+        // dd($data);
         $coupon_amount =  Session::has('coupon_amount') ? Session::get('coupon_amount') : 0;
         $coupon = Session::has('coupon_code') ? Session::get('coupon_code') : null;
         $cartItems = Cart::getcartitems();
@@ -96,14 +96,14 @@ class OrderController extends Controller
         ////////////////////// Send Confirmation Email ///////////////////////////////
         ///
         $public_setting = PublicSetting::first();
-        $admin_email = $public_setting['website_email'];
+        $admin_email = $public_setting['admin_order_email'] ?? $public_setting['website_email'];
         $email = $admin_email;
 
         $MessageDate = [
             'name' => $data['name'],
             "address" => $data['address'],
             'phone' => $data['phone'],
-            'grand_total'=>$data['grand_total'],
+            'grand_total' => $data['grand_total'],
         ];
         // Mail::send('front.mails.newordertoadmin', $MessageDate, function ($message) use ($email) {
         //     $message->to($email)->subject(' لديك طلب جديد علي متجرك ');
@@ -111,10 +111,10 @@ class OrderController extends Controller
 
         DB::commit();
         $admin = admins::all();
-        Notification::send($admin,new NewOrder($order->id));
+        Notification::send($admin, new NewOrder($order->id));
         Session::put('order_id', $order->id);
         return redirect('thanks');
-       // return $this->success_message(' تم اضافة الطلب الخاص بك بنجاح  ');
+        // return $this->success_message(' تم اضافة الطلب الخاص بك بنجاح  ');
     }
 
     public function thanks()
@@ -122,7 +122,7 @@ class OrderController extends Controller
         $session_id = Session::get('session_id');
         if (Session::has('order_id')) {
             // Empty The Cart
-            Cart::where('session_id',$session_id)->delete();
+            Cart::where('session_id', $session_id)->delete();
             return view('front.thanks');
         } else {
             return redirect('/');

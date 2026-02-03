@@ -111,10 +111,18 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="mb-3">
-                                            <label for="website_address" class="form-label">  البريد الالكتروني   </label>
+                                            <label for="website_email" class="form-label">  البريد الالكتروني للموقع   </label>
                                             <input type="email" id="website_email" class="form-control"
                                                    name="website_email" placeholder="  "
                                                    value="{{$public_setting['website_email']}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label for="admin_order_email" class="form-label"> ايميل اشعارات الطلبات </label>
+                                            <input type="email" id="admin_order_email" class="form-control"
+                                                   name="admin_order_email" placeholder="  "
+                                                   value="{{$public_setting['admin_order_email']}}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
@@ -155,7 +163,7 @@
                                     value="{{$public_setting['main_color']}}">
                         </div>
                     </div>
-                    <div class="p-3 bg-light mb-3 rounded">
+                    <div class="p-3 mb-3 rounded bg-light">
                         <div class="row justify-content-end g-2">
                             <div class="col-lg-2">
                                 <button type="submit" class="btn btn-outline-secondary w-100"> حفظ <i

@@ -61,6 +61,7 @@ class PublicSettingController extends Controller
                 'website_address'=>$data['website_address'],
                 'website_email'=>$data['website_email'],
                 'website_phone'=>$data['website_phone'],
+                'admin_order_email'=>$data['admin_order_email'],
             ]);
 
             return $this->success_message('تم تعديل الاعدادات العامة للموقع بنجاح');

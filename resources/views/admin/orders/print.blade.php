@@ -126,7 +126,7 @@
                 <div class="card">
                     <div class="card-body">
 
-                        <div class="row mb-3 align-items-center">
+                        <div class="mb-3 row align-items-center">
                             <div class="col-6 text-start">
                                 <img src="{{asset('assets/uploads/PublicSetting/'.$publicsetting['website_logo'])}}" class="invoice-logo">
                             </div>
@@ -147,6 +147,12 @@
                                     <td>رقم الهاتف</td>
                                     <td>{{$order['phone']}}</td>
                                 </tr>
+                                @if($order['phone2'])
+                                <tr>
+                                    <td>رقم هاتف إضافي</td>
+                                    <td>{{$order['phone2']}}</td>
+                                </tr>
+                                @endif
                                 <tr>
                                     <td>المدينة</td>
                                     <td>{{$order['city']['city']}}</td>
@@ -155,6 +161,12 @@
                                     <td>العنوان الكامل</td>
                                     <td>{{$order['address']}}</td>
                                 </tr>
+                                @if($order['note'])
+                                <tr>
+                                    <td>ملاحظات العميل</td>
+                                    <td>{{$order['note']}}</td>
+                                </tr>
+                                @endif
                             </tbody>
                         </table>
 
@@ -162,6 +174,7 @@
                         <table class="table mb-4">
                             <thead>
                                 <tr>
+                                    <th width="10%">الصورة</th>
                                     <th>اسم المنتج</th>
                                     <th width="10%">الكمية</th>
                                     <th width="20%">سعر الوحدة</th>
@@ -176,7 +189,22 @@
                                         $subtotal += $lineTotal;
                                     @endphp
                                     <tr>
-                                        <td>{{$detail['product_name']}}</td>
+                                        <td class="text-center">
+                                            <img src="{{asset('assets/uploads/product_images/'.($detail->variation->image ?? $detail->product->image))}}" alt="" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                                        </td>
+                                        <td>
+                                            <div>{{$detail['product_name']}}</div>
+                                            @if($detail->product_variation_id != null)
+                                                @php
+                                                    $variationValues = \App\Models\admin\VartionsValues::with('attribute')->where('product_variation_id', $detail->product_variation_id)->get();
+                                                @endphp
+                                                <div style="font-size: 11px; color: #777;">
+                                                    @foreach($variationValues as $value)
+                                                        {{ $value->attribute->name }}: {{ $value->attribute_value_name }}@if(!$loop->last) - @endif
+                                                    @endforeach
+                                                </div>
+                                            @endif
+                                        </td>
                                         <td class="text-center">{{$detail['product_qty']}}</td>
                                         <td class="text-center">{{$detail['product_price']}} {{$publicsetting['website_currency']}}</td>
                                         <td class="text-center">{{number_format($lineTotal,2)}} {{$publicsetting['website_currency']}}</td>
@@ -209,7 +237,7 @@
                         <p class="mb-4"><strong>توصيل الطلب يكون في حد أقصى 7 أيام</strong></p>
 
                         <div class="mt-4 text-center d-print-none">  
-                            <a href="javascript:window.print()" class="btn btn-primary btn-lg px-5">  
+                            <a href="javascript:window.print()" class="px-5 btn btn-primary btn-lg">  
                                 <i class="bx bx-printer me-2"></i> طباعة الفاتورة  
                             </a>  
                         </div>  
