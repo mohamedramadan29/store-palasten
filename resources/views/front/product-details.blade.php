@@ -318,8 +318,15 @@
                                                         // إظهار الـ modal بعد الإضافة
                                                         $('#shoppingCart').modal('show');
                                                     },
-                                                    error: function(xhr, status, error) {
-                                                        $('#wishlistMessage').html('<p>حدث خطأ أثناء إضافة المنتج للسلة </p>');
+                                                    error: function(xhr) {
+                                                        const msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : "حدث خطأ أثناء إضافة المنتج للسلة";
+                                                        Toastify({
+                                                            text: msg,
+                                                            duration: 3000,
+                                                            gravity: "top",
+                                                            position: "right",
+                                                            backgroundColor: "#FF5722",
+                                                        }).showToast();
                                                     }
                                                 });
                                             });

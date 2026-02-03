@@ -91,20 +91,30 @@
                                 <ul class="wrap-checkout-product">
                                     @php $subtotal = 0 ; @endphp
                                     @foreach($cartitems as $item)
-                                        @php  $subtotal = $subtotal + ($item['price'] * $item['qty']) @endphp
+                                        @php  $subtotal = $subtotal + ($item->price * $item->qty) @endphp
                                         <li class="checkout-product-item">
                                             <figure class="img-product">
                                                 <img
-                                                    src="{{asset('assets/uploads/product_images/'.$item['productdata']['image'])}}"
-                                                    alt=" {{$item['productdata']['name']}}">
-                                                <span class="quantity">{{$item['qty']}}</span>
+                                                    src="{{asset('assets/uploads/product_images/'.($item->variation->image ?? $item->productdata->image))}}"
+                                                    alt=" {{$item->productdata->name}}">
+                                                <span class="quantity">{{$item->qty}}</span>
                                             </figure>
                                             <div class="content">
                                                 <div class="info">
-                                                    <p class="name">Vanilla White</p>
+                                                    <p class="name">{{$item->productdata->name}}</p>
+                                                    @if($item->product_variation_id != null)
+                                                        @php
+                                                            $variationValues = \App\Models\admin\VartionsValues::with('attribute')->where('product_variation_id', $item->product_variation_id)->get();
+                                                        @endphp
+                                                        <div class="meta-variant" style="font-size: 12px; color: #777;">
+                                                            @foreach($variationValues as $value)
+                                                                {{ $value->attribute->name }}: {{ $value->attribute_value_name }}@if(!$loop->last) - @endif
+                                                            @endforeach
+                                                        </div>
+                                                    @endif
                                                 </div>
                                                 <span
-                                                    class="price">  {{$item['qty'] * $item['price']}} {{ $storeCurrency }} </span>
+                                                    class="price">  {{$item->qty * $item->price}} {{ $storeCurrency }} </span>
                                             </div>
                                         </li>
                                     @endforeach

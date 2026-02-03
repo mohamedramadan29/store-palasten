@@ -17,6 +17,11 @@ class Cart extends Model
         return $this->belongsTo(Product::class,'product_id');
     }
 
+    public function variation()
+    {
+        return $this->belongsTo(\App\Models\admin\ProductVartions::class, 'product_variation_id');
+    }
+
     public static function getcartitems()
     {
         if (Auth::check()) {

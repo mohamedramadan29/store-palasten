@@ -287,8 +287,14 @@ body {
                 <div class="info-grid">
                     <div>الاسم: {{$order->name}}</div>
                     <div>الهاتف: {{$order->phone}}</div>
+                    @if($order->phone2)
+                        <div>الهاتف الإضافي: {{$order->phone2}}</div>
+                    @endif
                     <div>المدينة: {{$order->city->city}}</div>
                     <div>العنوان: {{$order->address}}</div>
+                    @if($order->note)
+                        <div style="grid-column: 1 / -1;">ملاحظات: {{$order->note}}</div>
+                    @endif
                 </div>
             </div>
 
@@ -305,7 +311,24 @@ body {
                     @foreach($items as $item)
                         @php $subtotal += $item->product_price * $item->product_qty; @endphp
                         <tr>
-                            <td>{{$item->product_name}}</td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 10px; justify-content: center;">
+                                    <img src="{{asset('assets/uploads/product_images/'.($item->variation->image ?? $item->product->image))}}" alt="" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;">
+                                    <div style="text-align: right;">
+                                        <div>{{$item->product_name}}</div>
+                                        @if($item->product_variation_id != null)
+                                            @php
+                                                $variationValues = \App\Models\admin\VartionsValues::with('attribute')->where('product_variation_id', $item->product_variation_id)->get();
+                                            @endphp
+                                            <div style="font-size: 11px; color: #777;">
+                                                @foreach($variationValues as $value)
+                                                    {{ $value->attribute->name }}: {{ $value->attribute_value_name }}@if(!$loop->last) - @endif
+                                                @endforeach
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </td>
                             <td>{{number_format($item->product_price,2)}} {{$storeCurrency}}</td>
                             <td>{{$item->product_qty}}</td>
                             <td>{{number_format($item->product_price*$item->product_qty,2)}} {{$storeCurrency}}</td>

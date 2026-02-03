@@ -56,9 +56,22 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="mb-3">
-                                            <label for="name" class="form-label"> رقم الهاتف  </label>
-                                            <input disabled required type="text" id="name" class="form-control" name="name"
+                                            <label for="phone" class="form-label"> رقم الهاتف </label>
+                                            <input disabled required type="text" id="phone" class="form-control" name="phone"
                                                    value="{{$order['phone']}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label for="phone2" class="form-label"> رقم هاتف إضافي </label>
+                                            <input disabled type="text" id="phone2" class="form-control" name="phone2"
+                                                   value="{{$order['phone2']}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="mb-3">
+                                            <label for="note" class="form-label"> ملاحظات العميل </label>
+                                            <textarea disabled class="form-control" rows="3">{{$order['note']}}</textarea>
                                         </div>
                                     </div>
 
@@ -83,7 +96,24 @@
                                     <tbody>
                                     @foreach($order['details'] as $detail)
                                         <tr>
-                                            <td> {{$detail['product_name']}} </td>
+                                            <td>
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <img src="{{asset('assets/uploads/product_images/'.($detail->variation->image ?? $detail->product->image))}}" alt="" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                                                    <div>
+                                                        <div>{{$detail['product_name']}}</div>
+                                                        @if($detail->product_variation_id != null)
+                                                            @php
+                                                                $variationValues = \App\Models\admin\VartionsValues::with('attribute')->where('product_variation_id', $detail->product_variation_id)->get();
+                                                            @endphp
+                                                            <div style="font-size: 11px; color: #777;">
+                                                                @foreach($variationValues as $value)
+                                                                    {{ $value->attribute->name }}: {{ $value->attribute_value_name }}@if(!$loop->last) - @endif
+                                                                @endforeach
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </td>
                                             <td> {{$detail['product_qty']}} </td>
                                             <td> {{$detail['product_price']}} </td>
                                             <td> {{ number_format($detail['product_qty'] * $detail['product_price'] , 2)  }} </td>

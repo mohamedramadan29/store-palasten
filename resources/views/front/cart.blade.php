@@ -46,23 +46,23 @@
                                     @php  $subtotal = $subtotal + ($item['price'] * $item['qty']) @endphp
                                     <tr class="tf-cart-item file-delete">
                                         <td class="tf-cart-item_product">
-                                            <a href="{{url('product/'.$item['productdata']['slug'])}}" class="img-box">
+                                            <a href="{{url('product/'.$item->productdata->slug)}}" class="img-box">
                                                 <img
-                                                    src="{{asset('assets/uploads/product_images/'.$item['productdata']['image'])}}"
+                                                    src="{{asset('assets/uploads/product_images/'.($item->variation->image ?? $item->productdata->image))}}"
                                                     alt="img-product">
                                             </a>
                                             <div class="cart-info">
                                                 <a href="{{url('product/'.$item['productdata']['slug'])}}"
                                                    class="cart-title link"> {{$item['productdata']['name']}} </a>
-                                                @if($item['product_variation_id'] !=null)
+                                                @if($item->product_variation_id !=null)
                                                     @php
-                                                        $vartionValues = \App\Models\admin\VartionsValues::where('product_variation_id',$item['product_variation_id'])->select('attribute_value_name')->get();
+                                                        $variationValues = \App\Models\admin\VartionsValues::with('attribute')->where('product_variation_id', $item->product_variation_id)->get();
                                                     @endphp
-                                                    <div
-                                                        class="cart-meta-variant">
-                                                        @foreach($vartionValues as $value)
-                                                            {{$value['attribute_value_name']}} -
-                                                        @endforeach  </div>
+                                                    <div class="cart-meta-variant">
+                                                        @foreach($variationValues as $value)
+                                                            {{ $value->attribute->name }}: {{ $value->attribute_value_name }}@if(!$loop->last) - @endif
+                                                        @endforeach
+                                                    </div>
                                                 @endif
 
                                                 <form method="post" action="{{url('cart/delete/'.$item['id'])}}">

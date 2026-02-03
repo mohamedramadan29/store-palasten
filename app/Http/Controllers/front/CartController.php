@@ -40,11 +40,25 @@ class CartController extends Controller
         if (Auth::check()) {
             // User Is Login
             $user_id = Auth::user()->id;
-            $countProducts = Cart::where(['product_id' => $cartData['product_id'], 'user_id' => $user_id])->count();
+            $countProducts = Cart::where(['product_id' => $cartData['product_id'], 'user_id' => $user_id, 'product_variation_id' => $cartData['hidden-variation']])->count();
         } else {
             // User Not Login
             $user_id = 0;
             $countProducts = Cart::where(['product_id' => $cartData['product_id'], 'session_id' => $session_id, 'product_variation_id' => $cartData['hidden-variation']])->count();
+        }
+
+        // Stock Validation
+        $qty = $cartData['number'] ?? 1;
+        if (isset($cartData['hidden-variation']) && $cartData['hidden-variation']) {
+            $variation = \App\Models\admin\ProductVartions::find($cartData['hidden-variation']);
+            if (!$variation || $variation->stock < $qty) {
+                return response()->json(['status' => false, 'message' => 'الكمية المطلوبة غير متوفرة حالياً في المخزون'], 422);
+            }
+        } else {
+            $product = \App\Models\admin\Product::find($cartData['product_id']);
+            if (!$product || $product->quantity < $qty) {
+                return response()->json(['status' => false, 'message' => 'الكمية المطلوبة غير متوفرة حالياً في المخزون'], 422);
+            }
         }
         if ($countProducts > 0) {
             return response()->json(['message' => 'تم اضافة المنتج الي السلة من قبل ']);
@@ -116,6 +130,19 @@ class CartController extends Controller
     {
         $cartItem = Cart::find($request->item_id); // إيجاد العنصر في السلة
         if ($cartItem) {
+            // Stock Validation for update
+            if ($cartItem->product_variation_id) {
+                $variation = \App\Models\admin\ProductVartions::find($cartItem->product_variation_id);
+                if (!$variation || $variation->stock < $request->quantity) {
+                    return response()->json(['error' => 'الكمية المطلوبة غير متوفرة'], 422);
+                }
+            } else {
+                $product = \App\Models\admin\Product::find($cartItem->product_id);
+                if (!$product || $product->quantity < $request->quantity) {
+                    return response()->json(['error' => 'الكمية المطلوبة غير متوفرة'], 422);
+                }
+            }
+
             $cartItem->qty = $request->quantity; // تحديث الكمية
             $cartItem->save(); // حفظ التحديثات
 
@@ -185,8 +212,8 @@ class CartController extends Controller
                     $total_amount = 0;
                     // Coupon Code Is Correct
                     foreach ($cartItems as $item) {
-                        $price = floatval($item['price']); // تأكد من أن السعر رقم
-                        $qty = intval($item['qty']); // تأكد من أن الكمية رقم
+                        $price = floatval($item->price); // تأكد من أن السعر رقم
+                        $qty = intval($item->qty); // تأكد من أن الكمية رقم
                         $sub_total = $price * $qty;
                         $total_amount += $sub_total;
                     }

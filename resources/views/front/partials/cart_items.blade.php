@@ -21,31 +21,40 @@
                 <div class="tf-mini-cart-items">
                     @php $subtotal = 0 ; @endphp
                     @foreach($cartItems as $item)
-                        @php  $subtotal = $subtotal + ($item['price'] * $item['qty']) @endphp
+                        @php  $subtotal = $subtotal + ($item->price * $item->qty) @endphp
                         <div class="tf-mini-cart-item">
                             <div class="tf-mini-cart-image">
-                                <a href="{{url('product/'.$item['productdata']['slug'])}}">
-                                    <img src="{{asset('assets/uploads/product_images/'.$item['productdata']['image'])}}"
+                                <a href="{{url('product/'.$item->productdata->slug)}}">
+                                    <img src="{{asset('assets/uploads/product_images/'.($item->variation->image ?? $item->productdata->image))}}"
                                          alt="">
                                 </a>
                             </div>
                             <div class="tf-mini-cart-info">
                                 <a class="title link"
-                                   href="{{url('product/'.$item['productdata']['slug'])}}">{{$item['productdata']['name']}}</a>
-                                <div class="meta-variant">Light gray</div>
-                                <div class="price fw-6"> {{$item['qty']}}
-                                    * {{$item['price']}} {{ $storeCurrency }}</div>
+                                   href="{{url('product/'.$item->productdata->slug)}}">{{$item->productdata->name}}</a>
+                                @if($item->product_variation_id != null)
+                                    @php
+                                        $variationValues = \App\Models\admin\VartionsValues::with('attribute')->where('product_variation_id', $item->product_variation_id)->get();
+                                    @endphp
+                                    <div class="meta-variant">
+                                        @foreach($variationValues as $value)
+                                            {{ $value->attribute->name }}: {{ $value->attribute_value_name }}@if(!$loop->last) - @endif
+                                        @endforeach
+                                    </div>
+                                @endif
+                                <div class="price fw-6"> {{$item->qty}}
+                                    * {{$item->price}} {{ $storeCurrency }}</div>
                                 <div class="tf-mini-cart-btns">
                                     <div class="wg-quantity small">
-                                        <span class="btn-quantity minus-btn" data-id="{{$item['id']}}">-</span>
+                                        <span class="btn-quantity minus-btn" data-id="{{$item->id}}">-</span>
 
-                                        <input type="number" name="number" data-id="{{ $item['id'] }}"
-                                               value="{{ $item['qty'] }}" min="1">
-                                        <span class="btn-quantity plus-btn" data-id="{{$item['id']}}">+</span>
+                                        <input type="number" name="number" data-id="{{ $item->id }}"
+                                               value="{{ $item->qty }}" min="1">
+                                        <span class="btn-quantity plus-btn" data-id="{{$item->id}}">+</span>
                                     </div>
-                                    <form method="post" action="{{url('cart/delete/'.$item['id'])}}">
+                                    <form method="post" action="{{url('cart/delete/'.$item->id)}}">
                                         @csrf
-                                        <input type="hidden" name="item_id" value="{{$item['id']}}">
+                                        <input type="hidden" name="item_id" value="{{$item->id}}">
                                         <button type="submit" class="tf-mini-cart-remove"><i
                                                 class="bi bi-trash-fill"></i></button>
                                     </form>
