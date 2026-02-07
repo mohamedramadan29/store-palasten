@@ -248,13 +248,18 @@
                                                     @endforeach
 
                                                     <div class="form-group">
-                                                        <label>سعر المتغير</label>
-                                                        <input type="number" name="variant_price[]" value="{{ $variation->price }}" class="form-control" required>
+                                                        <label>سعر الشراء</label>
+                                                        <input type="number" name="variant_purchase_price[]" value="{{ $variation->purchase_price ?? 0 }}" class="form-control" step="0.01">
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label>سعر البيع</label>
+                                                        <input type="number" name="variant_price[]" value="{{ $variation->price }}" class="form-control" required step="0.01">
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label>تخفيض المتغير</label>
-                                                        <input type="number" name="variant_discount[]" value="{{ $variation->discount }}" class="form-control">
+                                                        <input type="number" name="variant_discount[]" value="{{ $variation->discount }}" class="form-control" step="0.01">
                                                     </div>
 
                                                     <div class="form-group">
@@ -454,15 +459,23 @@
             const variations = document.querySelectorAll('input[name="variations[]"]');
 
             let selectedValues = [];
+            let selectedAttributeIds = []; // لحفظ IDs السمات المحددة
+            
             attributes.forEach((attribute, index) => {
                 if (attribute.value) {
                     const variationValues = variations[index].value.split('-').map(v => v.trim());
                     selectedValues.push(variationValues);
+                    selectedAttributeIds.push(attribute.value); // حفظ ID السمة
                 }
             });
 
             const productVariants = cartesianProduct(selectedValues);
             let html = '';
+            
+            // إضافة حقول مخفية للسمات المحددة
+            selectedAttributeIds.forEach(attrId => {
+                html += `<input type="hidden" name="attributes[]" value="${attrId}">`;
+            });
 
             productVariants.forEach(variant => {
                 const variantText = variant.join(' - ');

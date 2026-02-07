@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('product_vartions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->references('id')->on('products')->cascadeOnDelete();
+            $table->decimal('purchase_price', 8, 2)->default(0);
             $table->decimal('price', 8, 2);
             $table->decimal('discount', 8, 2)->nullable();
             $table->string('image');

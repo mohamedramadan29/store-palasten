@@ -162,6 +162,16 @@ class ProductController extends Controller
                         DB::rollback();
                         return Redirect::back()->withInput()->withErrors('من فضلك قم بتأكيد المتغيرات أولاً');
                     }
+                    
+                    // التحقق من وجود السمات
+                    if (!isset($data['attributes']) || empty($data['attributes'])) {
+                        DB::rollback();
+                        return Redirect::back()->withInput()->withErrors('من فضلك قم بتحديد السمات أولاً');
+                    }
+                    
+                    // Debug: طباعة البيانات للتحقق
+                    \Log::info('Attributes IDs:', $data['attributes']);
+                    \Log::info('Variant Names:', $request->variant_name);
 
                     // حفظ المتغيرات
                     foreach ($request->variant_name as $index => $variantName) {
@@ -173,6 +183,7 @@ class ProductController extends Controller
                         // حفظ كل متغير في جدول product_variations
                         $productVariation = new ProductVartions();
                         $productVariation->product_id = $product->id;
+                        $productVariation->purchase_price = $request->variant_purchase_price[$index] ?? 0;
                         $productVariation->price = $request->variant_price[$index];
                         $productVariation->discount = $request->variant_discount[$index] ?? 0;
                         $productVariation->image = $vartiantImage;
@@ -181,14 +192,41 @@ class ProductController extends Controller
 
                         // حفظ القيم المرتبطة بهذا المتغير
                         $attributes = explode(' - ', $variantName);
-                        $attributesIds = $data['attributes'];  // مصفوفة attribute_ids
-                        foreach ($attributes as $attributeIndex => $attributeName) {
-                            if (isset($attributesIds[$attributeIndex])) {
+                        // تصفية القيم الفارغة وإعادة ترتيب المفاتيح
+                        $attributesIds = isset($data['attributes']) ? array_values(array_filter($data['attributes'])) : [];
+                        
+                        \Log::info("Variant Index {$index}:", [
+                            'variant_name' => $variantName,
+                            'attributes_after_explode' => $attributes,
+                            'attributesIds' => $attributesIds,
+                            'attribute_count' => count($attributes),
+                            'attributeIds_count' => count($attributesIds)
+                        ]);
+                        
+                        // التأكد من أن لدينا نفس عدد السمات والقيم
+                        $attributeCount = min(count($attributes), count($attributesIds));
+                        
+                        for ($i = 0; $i < $attributeCount; $i++) {
+                            $attributeName = trim($attributes[$i]);
+                            $attributeId = isset($attributesIds[$i]) ? $attributesIds[$i] : null;
+                            
+                            \Log::info("Saving VartionValue Loop {$i}:", [
+                                'product_variation_id' => $productVariation->id,
+                                'attribute_id' => $attributeId,
+                                'attribute_value_name' => $attributeName,
+                                'will_save' => !empty($attributeName) && !empty($attributeId)
+                            ]);
+                            
+                            // التأكد من أن السمة والقيمة ليست فارغة
+                            if (!empty($attributeName) && !empty($attributeId)) {
                                 VartionsValues::create([
                                     'product_variation_id' => $productVariation->id,
-                                    'attribute_id' => $attributesIds[$attributeIndex],
-                                    'attribute_value_name' => trim($attributeName)
+                                    'attribute_id' => $attributeId,
+                                    'attribute_value_name' => $attributeName
                                 ]);
+                                \Log::info("VartionValue Saved Successfully!");
+                            } else {
+                                \Log::warning("Skipped saving due to empty values");
                             }
                         }
                     }
@@ -315,16 +353,21 @@ class ProductController extends Controller
                             ]);
 
                             // حفظ القيم المرتبطة بهذا المتغير
-
                             $attributes = explode(' - ', $variantName);
-
-                            $attributesIds = $data['attributes'];  // مصفوفة attribute_ids
-                            //    dd($attributesIds);
-                            foreach ($attributes as $attributeIndex => $attributeName) {
-                                if (isset($attributesIds[$attributeIndex])) {
+                            $attributesIds = isset($data['attributes']) ? $data['attributes'] : [];  // مصفوفة attribute_ids
+                            
+                            // التأكد من أن لدينا نفس عدد السمات والقيم
+                            $attributeCount = min(count($attributes), count($attributesIds));
+                            
+                            for ($i = 0; $i < $attributeCount; $i++) {
+                                $attributeName = trim($attributes[$i]);
+                                $attributeId = $attributesIds[$i];
+                                
+                                // التأكد من أن السمة والقيمة ليست فارغة
+                                if (!empty($attributeName) && !empty($attributeId)) {
                                     VartionsValues::create([
                                         'product_variation_id' => $productVariation->id,
-                                        'attribute_id' => $attributesIds[$attributeIndex], // ربط attribute_id بالقيمة الصحيحة
+                                        'attribute_id' => $attributeId,
                                         'attribute_value_name' => $attributeName
                                     ]);
                                 }
@@ -342,6 +385,7 @@ class ProductController extends Controller
                             }
 
                             // تحديث بيانات المتغير
+                            $productVariation->purchase_price = $request->variant_purchase_price[$index] ?? 0;
                             $productVariation->price = $request->variant_price[$index];
                             $productVariation->discount = $request->variant_discount[$index];
 

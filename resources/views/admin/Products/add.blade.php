@@ -506,32 +506,53 @@
                     const variations = document.querySelectorAll('#attribute-container .row:not(#attribute-row-template) input[name="variations[]"]');
 
                     let selectedValues = [];
+                    let selectedAttributeIds = []; // لحفظ IDs السمات المحددة
                     let isValid = true;
 
                     attributes.forEach((attribute, index) => {
                         const selectedAttribute = attribute.value;
+                        console.log(`السمة ${index}:`, selectedAttribute);
                         if (selectedAttribute) {
                             const variationValuesString = variations[index].value.trim();
+                            console.log(`القيم ${index}:`, variationValuesString);
                             if (!variationValuesString) {
                                 isValid = false;
                                 return;
                             }
                             const variationValues = variationValuesString.split('-').map(v => v.trim()).filter(v => v !== '');
+                            console.log(`القيم بعد التقسيم ${index}:`, variationValues);
                             if (variationValues.length === 0) {
                                 isValid = false;
                                 return;
                             }
                             selectedValues.push(variationValues);
+                            selectedAttributeIds.push(selectedAttribute); // حفظ ID السمة
                         }
                     });
+
+                    console.log('جميع القيم المحددة:', selectedValues);
+                    console.log('جميع IDs السمات:', selectedAttributeIds);
 
                     if (!isValid || selectedValues.length === 0) {
                         alert('من فضلك حدد السمة وادخل المتغيرات مفصولة بـ (-) لكل سطر.');
                         return;
                     }
 
+                    // تعطيل حقول السمات الأصلية لمنع إرسالها مع النموذج
+                    attributes.forEach(attr => {
+                        attr.disabled = true;
+                    });
+
                     const productVariants = cartesianProduct(selectedValues);
                     let productVariantsHTML = '';
+                    
+                    // إضافة حقول السمات المحددة (للتأكد - سنراها مؤقتاً)
+                    productVariantsHTML += '<div class="alert alert-info mb-3">السمات المحددة: ';
+                    selectedAttributeIds.forEach((attrId, idx) => {
+                        productVariantsHTML += `<input type="hidden" name="attributes[]" value="${attrId}">`;
+                        productVariantsHTML += `<span class="badge bg-primary me-2">السمة ${idx + 1}: ID = ${attrId}</span>`;
+                    });
+                    productVariantsHTML += '</div>';
 
                     productVariants.forEach(variant => {
                         const variantText = variant.join(' - ');
@@ -542,12 +563,16 @@
                     <input name='variant_name[]' class="form-control" type="text" value="${variantText}" readonly>
                 </div>
                 <div class="form-group">
-                    <label>سعر المنتج</label>
-                    <input placeholder="السعر" required class="form-control" type="number" name='variant_price[]' min="0">
+                    <label>سعر الشراء</label>
+                    <input placeholder="سعر الشراء" class="form-control" type="number" name='variant_purchase_price[]' min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>سعر البيع</label>
+                    <input placeholder="سعر البيع" required class="form-control" type="number" name='variant_price[]' min="0" step="0.01">
                 </div>
                 <div class="form-group">
                     <label>السعر بعد التخفيض</label>
-                    <input placeholder="السعر" class="form-control" type="number" name='variant_discount[]' min="0">
+                    <input placeholder="السعر" class="form-control" type="number" name='variant_discount[]' min="0" step="0.01">
                 </div>
                 <div class="form-group">
                     <label>الكمية المتاحة</label>
