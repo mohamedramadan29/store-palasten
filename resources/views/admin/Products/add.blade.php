@@ -85,7 +85,7 @@
                 @csrf
                 <div class="row">
 
-                    <div class="col-xl-12 col-lg-8 ">
+                    <div class="col-xl-12 col-lg-8">
                         <div class="card">
                             <div class="card-header">
                                 <h4 class="card-title"> معلومات المنتج </h4>
@@ -363,7 +363,7 @@
                                         <div class="mb-3 input-group">
                                             <span class="input-group-text fs-20"><i class='bx bx-dollar'></i></span>
                                             <input type="number" id="purches_price" name="purches_price"
-                                                class="form-control" placeholder="000" value="{{ old('purches_price') }}">
+                                                class="form-control" placeholder="" value="{{ old('purches_price') }}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
@@ -371,7 +371,7 @@
                                         <div class="mb-3 input-group">
                                             <span class="input-group-text fs-20"><i class='bx bx-dollar'></i></span>
                                             <input type="number" id="price" name="price" class="form-control"
-                                                placeholder="000" value="{{ old('price') }}">
+                                                placeholder="" value="{{ old('price') }}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
@@ -379,7 +379,7 @@
                                         <div class="mb-3 input-group">
                                             <span class="input-group-text fs-20"><i class='bx bxs-discount'></i></span>
                                             <input type="number" id="discount" name="discount" class="form-control"
-                                                placeholder="000" value="{{ old('discount') }}">
+                                                placeholder="" value="{{ old('discount') }}">
                                         </div>
                                     </div>
                                 </div>
@@ -547,7 +547,7 @@
                     let productVariantsHTML = '';
                     
                     // إضافة حقول السمات المحددة (للتأكد - سنراها مؤقتاً)
-                    productVariantsHTML += '<div class="alert alert-info mb-3">السمات المحددة: ';
+                    productVariantsHTML += '<div class="mb-3 alert alert-info">السمات المحددة: ';
                     selectedAttributeIds.forEach((attrId, idx) => {
                         productVariantsHTML += `<input type="hidden" name="attributes[]" value="${attrId}">`;
                         productVariantsHTML += `<span class="badge bg-primary me-2">السمة ${idx + 1}: ID = ${attrId}</span>`;

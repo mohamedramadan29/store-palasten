@@ -127,7 +127,7 @@ class ProductController extends Controller
                 $product->status = $data['status'];
                 $product->short_description = $data['short_description'];
                 $product->description = $data['description'];
-                
+
                 // إذا كان المنتج متغير، الكمية الكلية هي مجموع كميات المتغيرات
                 if ($data['type'] == 'متغير') {
                     $product->quantity = array_sum($request->variant_stock ?? [0]);
@@ -138,8 +138,8 @@ class ProductController extends Controller
                 }
 
                 $product->type = $data['type'];
-                $product->purches_price = $data['purches_price'] ?? 0;
-                $product->discount = $data['discount'] ?? 0;
+                $product->purches_price = $data['purches_price'];
+                $product->discount = $data['discount'];
                 $product->meta_title = $data['meta_title'];
                 $product->meta_keywords = $data['meta_keywords'];
                 $product->meta_description = $data['meta_description'];
@@ -162,13 +162,13 @@ class ProductController extends Controller
                         DB::rollback();
                         return Redirect::back()->withInput()->withErrors('من فضلك قم بتأكيد المتغيرات أولاً');
                     }
-                    
+
                     // التحقق من وجود السمات
                     if (!isset($data['attributes']) || empty($data['attributes'])) {
                         DB::rollback();
                         return Redirect::back()->withInput()->withErrors('من فضلك قم بتحديد السمات أولاً');
                     }
-                    
+
                     // Debug: طباعة البيانات للتحقق
                     \Log::info('Attributes IDs:', $data['attributes']);
                     \Log::info('Variant Names:', $request->variant_name);
@@ -183,9 +183,9 @@ class ProductController extends Controller
                         // حفظ كل متغير في جدول product_variations
                         $productVariation = new ProductVartions();
                         $productVariation->product_id = $product->id;
-                        $productVariation->purchase_price = $request->variant_purchase_price[$index] ?? 0;
+                        $productVariation->purchase_price = $request->variant_purchase_price[$index];
                         $productVariation->price = $request->variant_price[$index];
-                        $productVariation->discount = $request->variant_discount[$index] ?? 0;
+                        $productVariation->discount = $request->variant_discount[$index];
                         $productVariation->image = $vartiantImage;
                         $productVariation->stock = $request->variant_stock[$index];
                         $productVariation->save();
@@ -194,7 +194,7 @@ class ProductController extends Controller
                         $attributes = explode(' - ', $variantName);
                         // تصفية القيم الفارغة وإعادة ترتيب المفاتيح
                         $attributesIds = isset($data['attributes']) ? array_values(array_filter($data['attributes'])) : [];
-                        
+
                         \Log::info("Variant Index {$index}:", [
                             'variant_name' => $variantName,
                             'attributes_after_explode' => $attributes,
@@ -202,21 +202,21 @@ class ProductController extends Controller
                             'attribute_count' => count($attributes),
                             'attributeIds_count' => count($attributesIds)
                         ]);
-                        
+
                         // التأكد من أن لدينا نفس عدد السمات والقيم
                         $attributeCount = min(count($attributes), count($attributesIds));
-                        
+
                         for ($i = 0; $i < $attributeCount; $i++) {
                             $attributeName = trim($attributes[$i]);
                             $attributeId = isset($attributesIds[$i]) ? $attributesIds[$i] : null;
-                            
+
                             \Log::info("Saving VartionValue Loop {$i}:", [
                                 'product_variation_id' => $productVariation->id,
                                 'attribute_id' => $attributeId,
                                 'attribute_value_name' => $attributeName,
                                 'will_save' => !empty($attributeName) && !empty($attributeId)
                             ]);
-                            
+
                             // التأكد من أن السمة والقيمة ليست فارغة
                             if (!empty($attributeName) && !empty($attributeId)) {
                                 VartionsValues::create([
@@ -355,14 +355,14 @@ class ProductController extends Controller
                             // حفظ القيم المرتبطة بهذا المتغير
                             $attributes = explode(' - ', $variantName);
                             $attributesIds = isset($data['attributes']) ? $data['attributes'] : [];  // مصفوفة attribute_ids
-                            
+
                             // التأكد من أن لدينا نفس عدد السمات والقيم
                             $attributeCount = min(count($attributes), count($attributesIds));
-                            
+
                             for ($i = 0; $i < $attributeCount; $i++) {
                                 $attributeName = trim($attributes[$i]);
                                 $attributeId = $attributesIds[$i];
-                                
+
                                 // التأكد من أن السمة والقيمة ليست فارغة
                                 if (!empty($attributeName) && !empty($attributeId)) {
                                     VartionsValues::create([
@@ -385,7 +385,7 @@ class ProductController extends Controller
                             }
 
                             // تحديث بيانات المتغير
-                            $productVariation->purchase_price = $request->variant_purchase_price[$index] ?? 0;
+                            $productVariation->purchase_price = $request->variant_purchase_price[$index];
                             $productVariation->price = $request->variant_price[$index];
                             $productVariation->discount = $request->variant_discount[$index];
 
