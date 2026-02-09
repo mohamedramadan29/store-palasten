@@ -326,15 +326,15 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label>سعر المنتج</label>
-                                                        <input placeholder="السعر" class="form-control" type="number" name='variant_price[]' value="{{ old('variant_price.'.$index) }}">
+                                                        <input placeholder="السعر" step="0.01" class="form-control" type="number" name='variant_price[]' value="{{ old('variant_price.'.$index) }}">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>السعر بعد التخفيض</label>
-                                                        <input placeholder="السعر" class="form-control" type="number" name='variant_discount[]' value="{{ old('variant_discount.'.$index) }}">
+                                                        <input placeholder="السعر" step="0.01" class="form-control" type="number" name='variant_discount[]' value="{{ old('variant_discount.'.$index) }}">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>الكمية المتاحة</label>
-                                                        <input placeholder="الكمية" class="form-control" type="number" name='variant_stock[]' value="{{ old('variant_stock.'.$index) }}">
+                                                        <input placeholder="الكمية" step="1" class="form-control" type="number" name='variant_stock[]' value="{{ old('variant_stock.'.$index) }}">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>صورة المتغير</label>
@@ -362,7 +362,7 @@
                                         <label for="purches_price" class="form-label"> سعر الشراء </label>
                                         <div class="mb-3 input-group">
                                             <span class="input-group-text fs-20"><i class='bx bx-dollar'></i></span>
-                                            <input type="number" id="purches_price" name="purches_price"
+                                            <input type="number" id="purches_price" name="purches_price" step="0.01"
                                                 class="form-control" placeholder="" value="{{ old('purches_price') }}">
                                         </div>
                                     </div>
@@ -370,7 +370,7 @@
                                         <label for="price" class="form-label"> سعر البيع </label>
                                         <div class="mb-3 input-group">
                                             <span class="input-group-text fs-20"><i class='bx bx-dollar'></i></span>
-                                            <input type="number" id="price" name="price" class="form-control"
+                                            <input type="number" id="price" name="price" step="0.01" class="form-control"
                                                 placeholder="" value="{{ old('price') }}">
                                         </div>
                                     </div>
@@ -378,7 +378,7 @@
                                         <label for="discount" class="form-label"> السعر بعدالخصم </label>
                                         <div class="mb-3 input-group">
                                             <span class="input-group-text fs-20"><i class='bx bxs-discount'></i></span>
-                                            <input type="number" id="discount" name="discount" class="form-control"
+                                            <input type="number" id="discount" name="discount" step="0.01" class="form-control"
                                                 placeholder="" value="{{ old('discount') }}">
                                         </div>
                                     </div>

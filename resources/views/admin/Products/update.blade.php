@@ -47,6 +47,7 @@
         }
 
         @media (max-width: 768px) {
+
             .variant-inputs,
             .variation.variant-inputs {
                 flex-direction: column;
@@ -67,6 +68,7 @@
         }
 
         @media (min-width: 576px) and (max-width: 991.98px) {
+
             .variant-inputs .form-group,
             .variation.variant-inputs .form-group {
                 min-width: 45%;
@@ -100,22 +102,27 @@
                                     <div class="col-lg-6 col-12">
                                         <div class="mb-3">
                                             <label for="name" class="form-label"> اسم المنتج </label>
-                                            <input required type="text" id="name" name="name" class="form-control" value="{{ $product['name'] }}">
+                                            <input required type="text" id="name" name="name"
+                                                class="form-control" value="{{ $product['name'] }}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-12">
                                         <div class="mb-3">
-                                            <label for="slug" class="form-label"> اضف اسم خاص للرابط ( اختياري ) </label>
-                                            <input required type="text" id="slug" name="slug" class="form-control" value="{{ $product['slug'] }}">
+                                            <label for="slug" class="form-label"> اضف اسم خاص للرابط ( اختياري )
+                                            </label>
+                                            <input required type="text" id="slug" name="slug"
+                                                class="form-control" value="{{ $product['slug'] }}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="mb-3">
                                             <label for="category_id" class="form-label"> حدد القسم الرئيسي </label>
-                                            <select required class="form-control" id="category_id" data-choices data-choices-groups name="category_id">
+                                            <select required class="form-control" id="category_id" data-choices
+                                                data-choices-groups name="category_id">
                                                 <option value=""> -- حدد القسم --</option>
                                                 @foreach ($MainCategories as $maincat)
-                                                    <option value="{{ $maincat['id'] }}" {{ $product['category_id'] == $maincat['id'] ? 'selected' : '' }}>
+                                                    <option value="{{ $maincat['id'] }}"
+                                                        {{ $product['category_id'] == $maincat['id'] ? 'selected' : '' }}>
                                                         {{ $maincat['name'] }}
                                                     </option>
                                                 @endforeach
@@ -139,10 +146,12 @@
                                     <div class="col-lg-6">
                                         <div class="mb-3">
                                             <label for="brand_id" class="form-label"> العلامة التجارية </label>
-                                            <select class="form-control" id="brand_id" data-choices data-choices-groups name="brand_id">
+                                            <select class="form-control" id="brand_id" data-choices data-choices-groups
+                                                name="brand_id">
                                                 <option value=""> -- حدد العلامة التجارية --</option>
                                                 @foreach ($brands as $brand)
-                                                    <option value="{{ $brand['id'] }}" {{ $product['brand_id'] == $brand['id'] ? 'selected' : '' }}>
+                                                    <option value="{{ $brand['id'] }}"
+                                                        {{ $product['brand_id'] == $brand['id'] ? 'selected' : '' }}>
                                                         {{ $brand['name'] }}
                                                     </option>
                                                 @endforeach
@@ -154,8 +163,10 @@
                                             <label for="status" class="form-label"> حالة المنتج </label>
                                             <select class="form-control" id="status" name="status">
                                                 <option value=""> -- حدد حالة المنتج --</option>
-                                                <option value="1" {{ $product['status'] == 1 ? 'selected' : '' }}>مفعل</option>
-                                                <option value="0" {{ $product['status'] == 0 ? 'selected' : '' }}>ارشيف</option>
+                                                <option value="1" {{ $product['status'] == 1 ? 'selected' : '' }}>مفعل
+                                                </option>
+                                                <option value="0" {{ $product['status'] == 0 ? 'selected' : '' }}>
+                                                    ارشيف</option>
                                             </select>
                                         </div>
                                     </div>
@@ -180,7 +191,8 @@
                                     <div class="col-lg-4">
                                         <div class="mb-3">
                                             <label for="quantity" class="form-label"> الكمية المتاحة </label>
-                                            <input min="1" type="number" id="quantity" name="quantity" value="{{ $product['quantity'] }}" class="form-control">
+                                            <input min="1" type="number" id="quantity" name="quantity"
+                                                value="{{ $product['quantity'] }}" class="form-control">
                                         </div>
                                     </div>
                                 </div>
@@ -196,21 +208,26 @@
                                     <div class="col-lg-6">
                                         <div class="mb-3">
                                             <label for="image" class="form-label"> صورة المنتج </label>
-                                            <input type="file" id="image" name="image" class="form-control" accept="image/*">
+                                            <input type="file" id="image" name="image" class="form-control"
+                                                accept="image/*">
                                             <br>
-                                            <img width="80px" class="img-thumbnail" src="{{ asset('assets/uploads/product_images/' . $product['image']) }}" alt="">
+                                            <img width="80px" class="img-thumbnail"
+                                                src="{{ asset('assets/uploads/product_images/' . $product['image']) }}"
+                                                alt="">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="mb-3">
                                             <label for="gallery" class="form-label"> اضافة صور للمعرض </label>
-                                            <input type="file" multiple id="gallery" name="gallery[]" class="form-control" accept="image/*">
+                                            <input type="file" multiple id="gallery" name="gallery[]"
+                                                class="form-control" accept="image/*">
                                         </div>
                                     </div>
                                     <div class="col-lg-12">
                                         <div class="mb-3">
                                             <label for="video" class="form-label"> اضافة فيديو للمنتج </label>
-                                            <input type="file" id="video" name="video" class="form-control" accept="video/*">
+                                            <input type="file" id="video" name="video" class="form-control"
+                                                accept="video/*">
                                         </div>
                                     </div>
                                 </div>
@@ -227,56 +244,74 @@
                                         <div class="mb-3">
                                             <label for="type">نوع المنتج:</label>
                                             <select class="form-control" name="type" id="product-type" required>
-                                                <option value="بسيط" {{ $product['type'] == 'بسيط' ? 'selected' : '' }}>بسيط</option>
-                                                <option value="متغير" {{ $product['type'] == 'متغير' ? 'selected' : '' }}>متغير</option>
+                                                <option value="بسيط" {{ $product['type'] == 'بسيط' ? 'selected' : '' }}>
+                                                    بسيط</option>
+                                                <option value="متغير"
+                                                    {{ $product['type'] == 'متغير' ? 'selected' : '' }}>متغير</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div id="variable-product-fields" style="display: {{ $product->type == 'متغير' ? 'block' : 'none' }};">
+                                <div id="variable-product-fields"
+                                    style="display: {{ $product->type == 'متغير' ? 'block' : 'none' }};">
                                     @if ($product->type == 'متغير')
                                         <div>
                                             @foreach ($variations as $variation)
                                                 <input type="hidden" name="variant_id[]" value="{{ $variation->id }}">
-                                                <div class="mb-3 variation variant-inputs d-flex align-items-center justify-content-between">
+                                                <div
+                                                    class="mb-3 variation variant-inputs d-flex align-items-center justify-content-between">
                                                     @foreach ($variation->variationValues as $value)
                                                         <div class="form-group">
                                                             <label>{{ $value->attribute->name }}</label>
-                                                            <input type="text" name="variant_attributes[{{ $loop->parent->index }}][{{ $value->attribute_id }}]" value="{{ $value->attribute_value_name }}" class="form-control" required>
+                                                            <input type="text"
+                                                                name="variant_attributes[{{ $loop->parent->index }}][{{ $value->attribute_id }}]"
+                                                                value="{{ $value->attribute_value_name }}"
+                                                                class="form-control" required>
                                                         </div>
                                                     @endforeach
 
                                                     <div class="form-group">
                                                         <label>سعر الشراء</label>
-                                                        <input type="number" name="variant_purchase_price[]" value="{{ $variation->purchase_price ?? 0 }}" class="form-control" step="0.01">
+                                                        <input type="number" name="variant_purchase_price[]"
+                                                            value="{{ $variation->purchase_price ?? 0 }}"
+                                                            class="form-control" step="0.01">
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label>سعر البيع</label>
-                                                        <input type="number" name="variant_price[]" value="{{ $variation->price }}" class="form-control" required step="0.01">
+                                                        <input type="number" name="variant_price[]"
+                                                            value="{{ $variation->price }}" class="form-control" required
+                                                            step="0.01">
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label>تخفيض المتغير</label>
-                                                        <input type="number" name="variant_discount[]" value="{{ $variation->discount }}" class="form-control" step="0.01">
+                                                        <input type="number" name="variant_discount[]"
+                                                            value="{{ $variation->discount }}" class="form-control"
+                                                            step="0.01">
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label>المخزون</label>
-                                                        <input type="number" name="variant_stock[]" value="{{ $variation->stock }}" class="form-control" required>
+                                                        <input type="number" name="variant_stock[]"
+                                                            value="{{ $variation->stock }}" class="form-control"
+                                                            required>
                                                     </div>
 
                                                     <div class="form-group">
                                                         <label>صورة المتغير</label>
-                                                        <input type="file" name="variant_image[]" class="form-control">
+                                                        <input type="file" name="variant_image[]"
+                                                            class="form-control">
                                                     </div>
 
                                                     @if ($variation->image)
                                                         <div class="form-group">
                                                             <label>الصورة الحالية</label>
                                                             <div>
-                                                                <img src="{{ asset('assets/uploads/product_images/' . $variation->image) }}" alt="" style="max-width: 80px; height: 80px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd;">
+                                                                <img src="{{ asset('assets/uploads/product_images/' . $variation->image) }}"
+                                                                    alt=""
+                                                                    style="max-width: 80px; height: 80px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd;">
                                                             </div>
                                                         </div>
                                                     @endif
@@ -289,14 +324,16 @@
                                         <br>
                                         <h4 class="card-title"> تحديث وتعديل متغيرات المنتج </h4>
                                         <br>
-                                        <div class="row d-flex align-items-center" id="attribute-row-template" style="display: none">
+                                        <div class="row d-flex align-items-center" id="attribute-row-template"
+                                            style="display: none">
                                             <div class="col-lg-4 col-12">
                                                 <div class="mb-3">
                                                     <label>اختر السمة:</label>
                                                     <select class="form-control" name="attributes[]">
                                                         <option value=""> -- حدد السمة --</option>
                                                         @foreach ($attributes as $attribute)
-                                                            <option value="{{ $attribute->id }}">{{ $attribute->name }}</option>
+                                                            <option value="{{ $attribute->id }}">{{ $attribute->name }}
+                                                            </option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -304,17 +341,22 @@
                                             <div class="col-lg-6 col-12">
                                                 <div class="mb-3">
                                                     <label>حدد المتغيرات:</label>
-                                                    <input type="text" class="form-control" name="variations[]" placeholder="ادخل المتغيرات وافصل بين كل متغير بـ(-)">
+                                                    <input type="text" class="form-control" name="variations[]"
+                                                        placeholder="ادخل المتغيرات وافصل بين كل متغير بـ(-)">
                                                 </div>
                                             </div>
                                             <div class="mb-3 col-2">
-                                                <button style="margin-top: 20px" class="btn btn-sm btn-danger delete-attribute"><i class="ti ti-x"></i></button>
+                                                <button style="margin-top: 20px"
+                                                    class="btn btn-sm btn-danger delete-attribute"><i
+                                                        class="ti ti-x"></i></button>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <button id="add_new_vartion" class="btn btn-primary btn-sm"><i class="ti ti-plus"></i> اضافة متغير جديد</button>
-                                    <button id="confirm-variations" class="btn btn-success btn-sm">تأكيد المتغيرات</button>
+                                    <button id="add_new_vartion" class="btn btn-primary btn-sm"><i
+                                            class="ti ti-plus"></i> اضافة متغير جديد</button>
+                                    <button id="confirm-variations" class="btn btn-success btn-sm">تأكيد
+                                        المتغيرات</button>
                                     <br>
                                     <div id="product-variants"></div>
                                 </div>
@@ -331,21 +373,24 @@
                                         <label class="form-label"> سعر الشراء </label>
                                         <div class="mb-3 input-group">
                                             <span class="input-group-text fs-20"><i class='bx bx-dollar'></i></span>
-                                            <input type="number" name="purches_price" class="form-control" value="{{ $product['purches_price'] }}">
+                                            <input type="number" step="0.01" name="purches_price"
+                                                class="form-control" value="{{ $product['purches_price'] }}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <label class="form-label"> سعر البيع </label>
                                         <div class="mb-3 input-group">
                                             <span class="input-group-text fs-20"><i class='bx bx-dollar'></i></span>
-                                            <input type="number" name="price" class="form-control" value="{{ $product['price'] }}">
+                                            <input type="number" step="0.01" name="price" class="form-control"
+                                                value="{{ $product['price'] }}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <label class="form-label"> السعر بعد الخصم </label>
                                         <div class="mb-3 input-group">
                                             <span class="input-group-text fs-20"><i class='bx bxs-discount'></i></span>
-                                            <input type="number" name="discount" class="form-control" value="{{ $product['discount'] }}">
+                                            <input type="number" step="0.01" name="discount" class="form-control"
+                                                value="{{ $product['discount'] }}">
                                         </div>
                                     </div>
                                 </div>
@@ -361,13 +406,15 @@
                                     <div class="col-lg-6">
                                         <div class="mb-3">
                                             <label class="form-label"> العنوان </label>
-                                            <input type="text" name="meta_title" class="form-control" value="{{ $product['meta_title'] }}">
+                                            <input type="text" name="meta_title" class="form-control"
+                                                value="{{ $product['meta_title'] }}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="mb-3">
                                             <label class="form-label"> الكلمات المفتاحية </label>
-                                            <input type="text" name="meta_keywords" class="form-control" value="{{ $product['meta_keywords'] }}">
+                                            <input type="text" name="meta_keywords" class="form-control"
+                                                value="{{ $product['meta_keywords'] }}">
                                         </div>
                                     </div>
                                     <div class="col-lg-12">
@@ -386,7 +433,8 @@
                                     <a href="{{ url('admin/products') }}" class="btn btn-primary w-100"> رجوع </a>
                                 </div>
                                 <div class="col-lg-2">
-                                    <button type="submit" class="btn btn-outline-secondary w-100"> حفظ <i class='bx bxs-save'></i></button>
+                                    <button type="submit" class="btn btn-outline-secondary w-100"> حفظ <i
+                                            class='bx bxs-save'></i></button>
                                 </div>
                             </div>
                         </div>
@@ -405,10 +453,14 @@
                     <tbody>
                         @foreach ($gallaries as $gallary)
                             <tr>
-                                <td><img width="60" height="60" class="img-thumbnail" src="{{ asset('assets/uploads/product_gallery/' . $gallary['image']) }}" alt=""></td>
+                                <td><img width="60" height="60" class="img-thumbnail"
+                                        src="{{ asset('assets/uploads/product_gallery/' . $gallary['image']) }}"
+                                        alt=""></td>
                                 <td>
-                                    <button type="button" class="btn btn-soft-danger btn-sm" data-bs-toggle="modal" data-bs-target="#delete_gallary_{{ $gallary['id'] }}">
-                                        <iconify-icon icon="solar:trash-bin-minimalistic-2-broken" class="align-middle fs-18"></iconify-icon>
+                                    <button type="button" class="btn btn-soft-danger btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#delete_gallary_{{ $gallary['id'] }}">
+                                        <iconify-icon icon="solar:trash-bin-minimalistic-2-broken"
+                                            class="align-middle fs-18"></iconify-icon>
                                     </button>
                                 </td>
                             </tr>
@@ -426,8 +478,10 @@
 
     <script>
         document.getElementById('product-type').addEventListener('change', function() {
-            document.getElementById('simple-product-fields').style.display = this.value === 'بسيط' ? 'block' : 'none';
-            document.getElementById('variable-product-fields').style.display = this.value === 'متغير' ? 'block' : 'none';
+            document.getElementById('simple-product-fields').style.display = this.value === 'بسيط' ? 'block' :
+                'none';
+            document.getElementById('variable-product-fields').style.display = this.value === 'متغير' ? 'block' :
+                'none';
         });
     </script>
 
@@ -460,7 +514,7 @@
 
             let selectedValues = [];
             let selectedAttributeIds = []; // لحفظ IDs السمات المحددة
-            
+
             attributes.forEach((attribute, index) => {
                 if (attribute.value) {
                     const variationValues = variations[index].value.split('-').map(v => v.trim());
@@ -471,7 +525,7 @@
 
             const productVariants = cartesianProduct(selectedValues);
             let html = '';
-            
+
             // إضافة حقول مخفية للسمات المحددة
             selectedAttributeIds.forEach(attrId => {
                 html += `<input type="hidden" name="attributes[]" value="${attrId}">`;
@@ -487,11 +541,11 @@
                         </div>
                         <div class="form-group">
                             <label>سعر المنتج</label>
-                            <input placeholder="السعر" class="form-control" type="number" name='variant_new_price[]'>
+                            <input placeholder="السعر" class="form-control" step="0.01" type="number" name='variant_new_price[]'>
                         </div>
                         <div class="form-group">
                             <label>السعر بعد التخفيض</label>
-                            <input placeholder="السعر" class="form-control" type="number" name='variant_new_discount[]'>
+                            <input placeholder="السعر" class="form-control" step="0.01" type="number" name='variant_new_discount[]'>
                         </div>
                         <div class="form-group">
                             <label>الكمية المتاحة</label>
@@ -513,7 +567,9 @@
         });
 
         function cartesianProduct(arrays) {
-            return arrays.reduce((a, b) => a.flatMap(x => b.map(y => x.concat([y]))), [[]]);
+            return arrays.reduce((a, b) => a.flatMap(x => b.map(y => x.concat([y]))), [
+                []
+            ]);
         }
 
         function attachDeleteEventListeners() {
