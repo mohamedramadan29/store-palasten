@@ -155,7 +155,7 @@
                                 @endif
                                 <tr>
                                     <td>المدينة</td>
-                                    <td>{{$order['city']['city']}}</td>
+                                    <td>{{$order['city']['city'] ?? 'غير محدد'}}</td>
                                 </tr>
                                 <tr>
                                     <td>العنوان الكامل</td>

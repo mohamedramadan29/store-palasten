@@ -51,7 +51,7 @@
                                         <div class="mb-3">
                                             <label for="name" class="form-label">  مدينة الشحن  </label>
                                             <input disabled required type="text" id="name" class="form-control" name="name"
-                                                   value="{{$order['city']['city']}}">
+                                                   value="{{$order['city']['city'] ?? ' غير محدد '}}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
@@ -84,7 +84,7 @@
                                 <h4 class="card-title"> تفاصيل الطلب   </h4>
                             </div>
                             <div class="card-body">
-                                <table class="table-bordered table">
+                                <table class="table table-bordered">
                                     <thead>
                                     <tr>
                                         <th>  المنتج   </th>
@@ -97,7 +97,7 @@
                                     @foreach($order['details'] as $detail)
                                         <tr>
                                             <td>
-                                                <div class="d-flex align-items-center gap-2">
+                                                <div class="gap-2 d-flex align-items-center">
                                                     <img src="{{asset('assets/uploads/product_images/'.($detail->variation->image ?? $detail->product->image))}}" alt="" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
                                                     <div>
                                                         <div>{{$detail['product_name']}}</div>
@@ -143,7 +143,7 @@
                                     </div>
                                 </div>
                             </div>
-                        <div class="p-3 bg-light mb-3 rounded">
+                        <div class="p-3 mb-3 rounded bg-light">
                             <div class="row justify-content-end g-2">
                                 <div class="col-lg-2">
                                     <a href="{{url('admin/orders')}}" class="btn btn-primary w-100"> رجوع </a>
