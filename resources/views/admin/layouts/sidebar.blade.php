@@ -54,6 +54,9 @@
                         <li class="sub-nav-item">
                             <a class="sub-nav-link" href="{{url('admin/product/add')}}"> اضف منتج جديد </a>
                         </li>
+                        <li class="sub-nav-item">
+                            <a class="sub-nav-link" href="{{url('admin/inventory')}}"> إدارة المخزون </a>
+                        </li>
                     </ul>
                 </div>
             </li>

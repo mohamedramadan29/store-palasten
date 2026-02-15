@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\admin\PublicSetting;
 use App\Models\front\Cart;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
@@ -58,6 +59,7 @@ class AppServiceProvider extends ServiceProvider
             View::share('cartItems', $cartItems);
             View::share('cartCount', $cartCount);
         });
+        Paginator::useBootstrap();
     }
 
 
