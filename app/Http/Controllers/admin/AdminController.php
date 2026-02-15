@@ -4,6 +4,8 @@ namespace App\Http\Controllers\admin;
 
 use App\Models\front\Order;
 use App\Models\Admin\admins;
+use App\Models\admin\Product;
+use App\Models\admin\ProductVartions;
 use Illuminate\Http\Request;
 use App\Http\Traits\Message_Trait;
 use App\Models\admin\PublicSetting;

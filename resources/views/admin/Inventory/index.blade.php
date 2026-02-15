@@ -49,9 +49,9 @@
             background-color: #14b8a6 !important;
         }
 
-        .bg-opacity-10 {
+        /* .bg-opacity-10 {
             opacity: 0.1;
-        }
+        } */
 
         @media (max-width: 768px) {
             .card-body {
