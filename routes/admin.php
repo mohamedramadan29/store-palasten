@@ -23,6 +23,7 @@ use \App\Http\Controllers\admin\OfferController;
 use \App\Http\Controllers\admin\OfferOrderController;
 use \App\Http\Controllers\admin\ReportController;
 use \App\Http\Controllers\admin\InventoryController;
+use \App\Http\Controllers\admin\SalesReportController;
 Route::group(['prefix' => 'admin'], function () {
 // Admin Login
 
@@ -213,6 +214,13 @@ Route::group(['prefix' => 'admin'], function () {
             Route::post('inventory/update-stock','updateStock')->name('admin.inventory.update-stock');
             Route::post('inventory/bulk-update-stock','bulkUpdateStock')->name('admin.inventory.bulk-update-stock');
             Route::get('inventory/report','stockReport')->name('admin.inventory.report');
+        });
+
+        //////////////////////// Start Sales Reports /////////////////
+        ///
+        Route::controller(SalesReportController::class)->group(function (){
+            Route::get('reports/sales','index')->name('admin.reports.sales');
+            Route::get('reports/sales/export','export')->name('admin.reports.sales.export');
         });
     });
 });

@@ -163,7 +163,7 @@
 {{--                    </ul>--}}
 {{--                </div>--}}
 {{--            </li>--}}
-            <li class="menu-title mt-2"> اعدادات الموقع</li>
+            <li class="mt-2 menu-title"> اعدادات الموقع</li>
 
             <li class="nav-item">
                 <a class="nav-link" href="{{url('admin/public-setting/update')}}">
@@ -184,7 +184,7 @@
             </li>
 
 
-            <li class="menu-title mt-2"> المستخدمين</li>
+            <li class="mt-2 menu-title"> المستخدمين</li>
 
             <li class="nav-item">
                 <a class="nav-link menu-arrow" href="#sidebaradminprofile" data-bs-toggle="collapse" role="button"
@@ -277,12 +277,23 @@
 
 
             <li class="nav-item">
-                <a class="nav-link" href="{{url('admin/reports')}}">
+                <a class="nav-link menu-arrow" href="#sidebarReports" data-bs-toggle="collapse" role="button"
+                   aria-expanded="false" aria-controls="sidebarReports">
                                    <span class="nav-icon">
-                                        <iconify-icon icon="solar:chat-round-bold-duotone"></iconify-icon>
+                                        <iconify-icon icon="solar:chart-line-bold-duotone"></iconify-icon>
                                    </span>
-                    <span class="nav-text">  تقارير  </span>
+                    <span class="nav-text">  التقارير  </span>
                 </a>
+                <div class="collapse" id="sidebarReports">
+                    <ul class="nav sub-navbar-nav">
+                        <li class="sub-nav-item">
+                            <a class="sub-nav-link" href="{{url('admin/reports/sales')}}"> تقرير أرباح المبيعات </a>
+                        </li>
+                        <li class="sub-nav-item">
+                            <a class="sub-nav-link" href="{{url('admin/reports')}}"> التقارير العامة </a>
+                        </li>
+                    </ul>
+                </div>
             </li>
 
 
