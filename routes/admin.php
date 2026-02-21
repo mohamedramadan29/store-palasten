@@ -24,6 +24,7 @@ use \App\Http\Controllers\admin\OfferOrderController;
 use \App\Http\Controllers\admin\ReportController;
 use \App\Http\Controllers\admin\InventoryController;
 use \App\Http\Controllers\admin\SalesReportController;
+use \App\Http\Controllers\admin\InventoryMovementController;
 Route::group(['prefix' => 'admin'], function () {
 // Admin Login
 
@@ -221,6 +222,13 @@ Route::group(['prefix' => 'admin'], function () {
         Route::controller(SalesReportController::class)->group(function (){
             Route::get('reports/sales','index')->name('admin.reports.sales');
             Route::get('reports/sales/export','export')->name('admin.reports.sales.export');
+        });
+
+        //////////////////////// Start Inventory Movement Reports /////////////////
+        ///
+        Route::controller(InventoryMovementController::class)->group(function (){
+            Route::get('reports/inventory-movement','index')->name('admin.reports.inventory-movement');
+            Route::get('reports/inventory-movement/export','export')->name('admin.reports.inventory-movement.export');
         });
     });
 });

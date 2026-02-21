@@ -190,7 +190,7 @@
                                     @endphp
                                     <tr>
                                         <td class="text-center">
-                                            <img src="{{asset('assets/uploads/product_images/'.($detail->variation->image ?? $detail->product->image))}}" alt="" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                                            <img src="{{asset('assets/uploads/product_images/'.($detail->variation->image ?? $detail->product->image ?? ''))}}" alt="" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
                                         </td>
                                         <td>
                                             <div>{{$detail['product_name']}}</div>

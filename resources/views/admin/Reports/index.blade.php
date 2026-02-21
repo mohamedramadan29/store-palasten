@@ -15,21 +15,21 @@
 
             <div class="row">
                 <div class="col-md-3">
-                    <div class="card overflow-hidden">
+                    <div class="overflow-hidden card">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-6">
-                                    <div class="avatar-md bg-soft-primary rounded">
+                                    <div class="rounded avatar-md bg-soft-primary">
                                         <i class="bx bx-cart avatar-title fs-32 text-primary"></i>
                                     </div>
                                 </div> <!-- end col -->
                                 <div class="col-6 text-end">
-                                    <p class="text-muted mb-0"> الطلبات </p>
-                                    <h3 class="text-dark mt-1 mb-0"> @php echo  count(\App\Models\front\Order::all()) @endphp  </h3>
+                                    <p class="mb-0 text-muted"> الطلبات </p>
+                                    <h3 class="mt-1 mb-0 text-dark"> @php echo  count(\App\Models\front\Order::all()) @endphp  </h3>
                                 </div> <!-- end col -->
                             </div> <!-- end row-->
                         </div> <!-- end card body -->
-                        <div class="card-footer py-2 bg-light bg-opacity-50">
+                        <div class="py-2 bg-opacity-50 card-footer bg-light">
                             <div class="d-flex align-items-center justify-content-between">
                                 <a href="{{url('admin/orders')}}" class="text-reset fw-semibold fs-12"> مشاهدة
                                     التفاصيل </a>
@@ -38,22 +38,22 @@
                     </div> <!-- end card -->
                 </div> <!-- end col -->
                 <div class="col-md-3">
-                    <div class="card overflow-hidden">
+                    <div class="overflow-hidden card">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-6">
-                                    <div class="avatar-md bg-soft-primary rounded">
+                                    <div class="rounded avatar-md bg-soft-primary">
                                         <iconify-icon icon="solar:t-shirt-bold-duotone"
                                                       class="avatar-title fs-32 text-primary"></iconify-icon>
                                     </div>
                                 </div> <!-- end col -->
                                 <div class="col-6 text-end">
-                                    <p class="text-muted mb-0"> المنتجات </p>
-                                    <h3 class="text-dark mt-1 mb-0">  @php echo  count(\App\Models\admin\Product::all()) @endphp  </h3>
+                                    <p class="mb-0 text-muted"> المنتجات </p>
+                                    <h3 class="mt-1 mb-0 text-dark">  @php echo  count(\App\Models\admin\Product::all()) @endphp  </h3>
                                 </div> <!-- end col -->
                             </div> <!-- end row-->
                         </div> <!-- end card body -->
-                        <div class="card-footer py-2 bg-light bg-opacity-50">
+                        <div class="py-2 bg-opacity-50 card-footer bg-light">
                             <div class="d-flex align-items-center justify-content-between">
                                 <a href="{{url('admin/products')}}" class="text-reset fw-semibold fs-12"> مشاهدة
                                     التفاصيل </a>
@@ -186,7 +186,7 @@
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table id="table-search"
-                                       class="table table-bordered gridjs-table align-middle mb-0 table-hover table-centered">
+                                       class="table mb-0 align-middle table-bordered gridjs-table table-hover table-centered">
                                     <thead class="bg-light-subtle">
                                     <tr>
                                         <th style="width: 20px;">
@@ -213,7 +213,7 @@
                                             </td>
                                             <td> {{$order['grand_total']}} </td>
                                             <td>
-                                                <div class="d-flex gap-2">
+                                                <div class="gap-2 d-flex">
                                                     <a href="{{url('/admin/order/update/'.$order['id'])}}"
                                                        class="btn btn-soft-primary btn-sm">
                                                         <iconify-icon icon="solar:pen-2-broken"

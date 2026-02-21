@@ -290,6 +290,9 @@
                             <a class="sub-nav-link" href="{{url('admin/reports/sales')}}"> تقرير أرباح المبيعات </a>
                         </li>
                         <li class="sub-nav-item">
+                            <a class="sub-nav-link" href="{{url('admin/reports/inventory-movement')}}"> تقرير حركة المخزون </a>
+                        </li>
+                        <li class="sub-nav-item">
                             <a class="sub-nav-link" href="{{url('admin/reports')}}"> التقارير العامة </a>
                         </li>
                     </ul>

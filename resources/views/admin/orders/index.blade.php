@@ -24,12 +24,12 @@
 
                 <div class="col-xl-12">
                     <div class="card">
-                        <div class="card-header d-flex justify-content-between align-items-center gap-1">
+                        <div class="gap-1 card-header d-flex justify-content-between align-items-center">
                             <h4 class="card-title flex-grow-1">الطلبات</h4>
                         </div>
 
                         <div class="table-responsive">
-                            <table id="table-search" class="table table-bordered align-middle mb-0 table-hover">
+                            <table id="table-search" class="table mb-0 align-middle table-bordered table-hover">
                                 <thead class="bg-light-subtle">
                                     <tr>
                                         <th>#</th>
@@ -50,7 +50,7 @@
                                             <td>{{ $order['id'] }}</td>
                                             <td>{{ $order['name'] }}</td>
                                             <td>{{ $order['phone'] }}</td>
-                                            <td>{{ $order['city']['city'] }}</td>
+                                            <td>{{ $order['city']['city'] ?? 'غير متاحة ' }}</td>
                                             <td>{{ $order['shipping_price'] }}</td>
                                             <td>{{ $order['grand_total'] }}</td>
                                             <td>
@@ -65,7 +65,7 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                <div class="d-flex gap-2">
+                                                <div class="gap-2 d-flex">
                                                     <a href="{{url('admin/order/update/'.$order['id'])}}" class="btn btn-soft-primary btn-sm">
                                                         <iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon>
                                                     </a>

@@ -14,7 +14,7 @@
             <form method="post" action="{{url('admin/order/update/'.$order['id'])}}" enctype="multipart/form-data">
                 @csrf
                 <div class="row">
-                    <div class="col-xl-12 col-lg-12 ">
+                    <div class="col-xl-12 col-lg-12">
                         @if (Session::has('Success_message'))
                             @php
                                 toastify()->success(\Illuminate\Support\Facades\Session::get('Success_message'));
@@ -98,7 +98,7 @@
                                         <tr>
                                             <td>
                                                 <div class="gap-2 d-flex align-items-center">
-                                                    <img src="{{asset('assets/uploads/product_images/'.($detail->variation->image ?? $detail->product->image))}}" alt="" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                                                    <img src="{{asset('assets/uploads/product_images/'.($detail->variation->image ?? $detail->product->image ?? ''))}}" alt="" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
                                                     <div>
                                                         <div>{{$detail['product_name']}}</div>
                                                         @if($detail->product_variation_id != null)
