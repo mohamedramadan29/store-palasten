@@ -57,6 +57,9 @@
                         <li class="sub-nav-item">
                             <a class="sub-nav-link" href="{{url('admin/inventory')}}"> إدارة المخزون </a>
                         </li>
+                        <li class="sub-nav-item">
+                            <a class="sub-nav-link" href="{{url('admin/inventory/logs')}}"> سجل حركة المخزون </a>
+                        </li>
                     </ul>
                 </div>
             </li>

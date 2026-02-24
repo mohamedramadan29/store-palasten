@@ -6,6 +6,7 @@ use App\Models\admin\PublicSetting;
 use App\Models\front\Cart;
 use App\Models\admin\Product;
 use App\Models\admin\ProductVartions;
+use App\Observers\ProductObserver;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
@@ -71,6 +72,10 @@ class AppServiceProvider extends ServiceProvider
             View::share('cartItems', $cartItems);
             View::share('cartCount', $cartCount);
         });
+        
+        // Register observers
+        Product::observe(ProductObserver::class);
+        
         Paginator::useBootstrap();
     }
     

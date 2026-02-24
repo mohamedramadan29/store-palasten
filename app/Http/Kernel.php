@@ -5,6 +5,7 @@ namespace App\Http;
 use App\Http\Middleware\admin;
 use App\Http\Middleware\CartMiddleware;
 use App\Http\Middleware\CheckCookie;
+use App\Http\Middleware\LogInventoryMovement;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -41,6 +42,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            LogInventoryMovement::class,
         ],
 
         'api' => [
