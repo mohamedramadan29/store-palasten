@@ -26,11 +26,24 @@ class ProductController extends Controller
     use Slug_Trait;
     use Upload_Images;
 
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with('Main_Category')->orderBy('id', 'desc')->get();
+        $query = Product::with('Main_Category')->orderBy('id', 'desc');
+        
+        // Filter by main category
+        if ($request->filled('main_category_id')) {
+            $query->where('category_id', $request->main_category_id);
+        }
+        
+        // Filter by sub category
+        if ($request->filled('sub_category_id')) {
+            $query->where('sub_category_id', $request->sub_category_id);
+        }
+        
+        $products = $query->get();
         $MainCategories = MainCategory::where('status', '1')->get();
         $SubCategories = SubCategory::where('status', '1')->get();
+        
         return view('admin.Products.index', compact('products', 'MainCategories', 'SubCategories'));
     }
 

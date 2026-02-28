@@ -323,6 +323,7 @@
                                 </a></li>
 
                             <li class="menu-item"><a href="{{ url('cart') }}" class="item-link"> السلة </a></li>
+                            <li class="menu-item"><a href="{{ url('track-order') }}" class="item-link"> تتبع طلبيتك </a></li>
                             <li class="menu-item"><a href="{{ url('faq') }}" class="item-link"> الاسئلة الشائعة
                                 </a></li>
                         </ul>

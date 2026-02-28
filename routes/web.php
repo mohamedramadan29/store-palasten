@@ -17,7 +17,8 @@ Route::controller(FrontController::class)->group(function () {
     Route::get('/', 'index');
     Route::get('/get-product-details/{id}', 'getProductDetails');
     Route::get('faq','faq');
-
+    Route::get('track-order', 'trackOrder')->name('track.order');
+    Route::post('track-order', 'trackOrderSubmit')->name('track.order.submit');
 });
 
 Route::controller(ShopController::class)->group(function () {

@@ -108,4 +108,21 @@ class FrontController extends Controller
         $faqs = faq::all();
         return view('front.faq', compact('faqs'));
     }
+
+    public function trackOrder()
+    {
+        return view('front.track_order');
+    }
+
+    public function trackOrderSubmit(Request $request)
+    {
+        $request->validate([
+            'phone' => 'required',
+        ], [
+            'phone.required' => 'يرجى إدخال رقم الجوال לתتتبع الطلب',
+        ]);
+
+        $orders = \App\Models\front\Order::with('details')->where('phone', $request->phone)->orWhere('phone2', $request->phone)->orderBy('id', 'desc')->get();
+        return view('front.track_order', compact('orders'));
+    }
 }

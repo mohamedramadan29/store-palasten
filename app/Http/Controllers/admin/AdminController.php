@@ -22,8 +22,8 @@ class AdminController extends Controller
     public function dashboard()
     {
         $publicsetting = PublicSetting::first();
-        $lastorders = Order::orderby('id','desc')->limit(5)->get();
-        return view('admin.dashboard',compact('lastorders','publicsetting'));
+        $lastorders = Order::orderby('id', 'desc')->limit(5)->get();
+        return view('admin.dashboard', compact('lastorders', 'publicsetting'));
     }
 
     ////////////////////// Login Admin //////////////
@@ -47,17 +47,18 @@ class AdminController extends Controller
 
             if (Auth::guard('admin')->attempt(['email' => $email, 'password' => $password])) {
                 if (Auth::guard('admin')->user()->type == 'vendor' && Auth::guard('admin')->user()->confirm == '0') {
+                    Auth::guard('admin')->logout();
                     $this->Error_message('يجب تفعيل البريد الالكتروني الخاص بك اولا ');
                 } elseif (Auth::guard('admin')->user()->type != 'vendor' && Auth::guard('admin')->user()->status == '0') {
+                    Auth::guard('admin')->logout();
                     $this->Error_message(' حساب الادمن الخاص بك غير فعال  ');
                 } else {
-                  //  dd('Goood');
+                    //  dd('Goood');
                     return redirect('admin/dashboard');
                 }
             } else {
-
-                //$this->Error_message(' لا يوجد حساب بهذه البيانات  ');
-                return Redirect::back()->withInput()->withErrors('لا يوجد حساب بهذه البيانات  ');
+                // Show proper error message for invalid credentials
+                $this->Error_message('البريد الإلكتروني أو كلمة المرور غير صحيحة');
             }
         }
 
@@ -142,11 +143,11 @@ class AdminController extends Controller
     public function admins($type = null)
     {
         if ($type != null) {
-            $admins = Admin::where('type', $type)->get();
+            $admins = admins::where('type', $type)->get();
             $title = ucfirst($type);
         }
         if ($type == 'all') {
-            $admins = Admin::all();
+            $admins = admins::all();
             $title = 'مشاهدة الكل ';
         }
         //        dd($admins);

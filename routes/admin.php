@@ -26,6 +26,7 @@ use \App\Http\Controllers\admin\InventoryController;
 use \App\Http\Controllers\admin\SalesReportController;
 use \App\Http\Controllers\admin\InventoryMovementController;
 use \App\Http\Controllers\admin\InventoryLogController;
+use \App\Http\Controllers\admin\NotificationController;
 Route::group(['prefix' => 'admin'], function () {
 // Admin Login
 
@@ -106,6 +107,7 @@ Route::group(['prefix' => 'admin'], function () {
             Route::match(['post', 'get'], 'product/update/{slug}', 'update')->name('product.update');
             Route::post('product/delete/{id}', 'delete');
             Route::get('/get-attribute-values/{attributeId}', 'getAttributeValues');
+            Route::get('get-subcategories', 'getSubCategories');
             Route::get('/get-subcategories', 'getSubCategories')->name('get.subcategories');
             Route::post('product/gallary/delete/{id}', 'delete_image_gallary');
         });
@@ -240,6 +242,13 @@ Route::group(['prefix' => 'admin'], function () {
             Route::get('inventory/logs/export','export')->name('admin.inventory.logs.export');
             Route::get('inventory/product-history/{id}','productHistory')->name('admin.inventory.product-history');
             Route::get('inventory/statistics','statistics')->name('admin.inventory.statistics');
+        });
+
+        //////////////////////// Start Notifications /////////////////
+        ///
+        Route::controller(NotificationController::class)->group(function (){
+            Route::post('notifications/mark-all-read','markAllAsRead')->name('admin.notifications.mark-all-read');
+            Route::get('notifications/count','getNotificationCount')->name('admin.notifications.count');
         });
     });
 });

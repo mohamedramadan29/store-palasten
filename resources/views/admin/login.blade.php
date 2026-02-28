@@ -22,6 +22,12 @@
                     </div>
                 @endif
 
+                @if(\Illuminate\Support\Facades\Session::has('Success_message'))
+                    <div class="alert alert-success rounded mb-3 small text-center py-2">
+                        {{\Illuminate\Support\Facades\Session::get('Success_message')}}
+                    </div>
+                @endif
+
                 <form method="post" action="{{route('admin_login')}}" class="authentication-form">
                     @csrf
 
