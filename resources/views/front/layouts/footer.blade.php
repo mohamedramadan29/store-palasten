@@ -1,8 +1,8 @@
 <!-- Footer -->
 
 @php
-    $public_setting = \App\Models\admin\PublicSetting::first();
-    $socialmedia = \App\Models\admin\SocialMedia::first();
+$public_setting = \App\Models\admin\PublicSetting::first();
+$socialmedia = \App\Models\admin\SocialMedia::first();
 @endphp
 <footer id="footer" class="footer md-pb-70">
     <div class="footer-wrap">
@@ -31,24 +31,34 @@
                         </div>
                         <ul>
                             <li>
-                                <p>البريد الالكتروني : <a href="mailto:{{ $public_setting['website_email'] }}">{{ $public_setting['website_email'] }}</a></p>
+                                <p>البريد الالكتروني : <a href="mailto:{{ $public_setting['website_email'] }}">{{
+                                        $public_setting['website_email'] }}</a></p>
                             </li>
                             <li>
-                                <p>رقم الهاتف : <a href="tel:{{ $public_setting['website_phone'] }}">{{ $public_setting['website_phone'] }}</a></p>
+                                <p>رقم الهاتف : <a href="tel:{{ $public_setting['website_phone'] }}">{{
+                                        $public_setting['website_phone'] }}</a></p>
                             </li>
                         </ul>
                         <ul class="gap-10 tf-social-icon d-flex">
                             @if ($socialmedia['facebook'] != '')
-                                <li><a href="{{ $socialmedia['facebook'] }}" class="box-icon w_34 round social-facebook social-line"><i class="icon fs-14 icon-fb"></i></a></li>
+                            <li><a href="{{ $socialmedia['facebook'] }}"
+                                    class="box-icon w_34 round social-facebook social-line"><i
+                                        class="icon fs-14 icon-fb"></i></a></li>
                             @endif
                             @if ($socialmedia['x-twitter'] != '')
-                                <li><a href="{{ $socialmedia['x-twitter'] }}" class="box-icon w_34 round social-twiter social-line"><i class="icon fs-12 icon-Icon-x"></i></a></li>
+                            <li><a href="{{ $socialmedia['x-twitter'] }}"
+                                    class="box-icon w_34 round social-twiter social-line"><i
+                                        class="icon fs-12 icon-Icon-x"></i></a></li>
                             @endif
                             @if ($socialmedia['instagram'] != '')
-                                <li><a href="{{ $socialmedia['instagram'] }}" class="box-icon w_34 round social-instagram social-line"><i class="icon fs-14 icon-instagram"></i></a></li>
+                            <li><a href="{{ $socialmedia['instagram'] }}"
+                                    class="box-icon w_34 round social-instagram social-line"><i
+                                        class="icon fs-14 icon-instagram"></i></a></li>
                             @endif
                             @if ($socialmedia['tiktok'] != '')
-                                <li><a href="{{ $socialmedia['tiktok'] }}" class="box-icon w_34 round social-tiktok social-line"><i class="icon fs-14 icon-tiktok"></i></a></li>
+                            <li><a href="{{ $socialmedia['tiktok'] }}"
+                                    class="box-icon w_34 round social-tiktok social-line"><i
+                                        class="icon fs-14 icon-tiktok"></i></a></li>
                             @endif
                         </ul>
                     </div>
@@ -72,8 +82,10 @@
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                        <div class="flex-wrap gap-20 footer-bottom-wrap d-flex justify-content-between align-items-center">
-                            <div class="footer-menu_item">جميع الحقوق محفوظة © 2024 {{ $public_setting['website_name'] }} .</div>
+                        <div
+                            class="flex-wrap gap-20 footer-bottom-wrap d-flex justify-content-between align-items-center">
+                            <div class="footer-menu_item">جميع الحقوق محفوظة © 2024 {{ $public_setting['website_name']
+                                }} .</div>
                         </div>
                     </div>
                 </div>
@@ -86,14 +98,16 @@
 
 <div class="progress-wrap">
     <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
-        <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98" style="transition: stroke-dashoffset 10ms linear 0s; stroke-dasharray: 307.919, 307.919; stroke-dashoffset: 286.138;"></path>
+        <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"
+            style="transition: stroke-dashoffset 10ms linear 0s; stroke-dasharray: 307.919, 307.919; stroke-dashoffset: 286.138;">
+        </path>
     </svg>
 </div>
 
 <div class="tf-toolbar-bottom type-1150">
     @php
-        $wishlistCount = \App\Models\front\wishlist::wishlistitems()->count();
-        $cartCount = \App\Models\front\Cart::getcartitems()->count();
+    $wishlistCount = \App\Models\front\wishlist::wishlistitems()->count();
+    $cartCount = \App\Models\front\Cart::getcartitems()->count();
     @endphp
 
     <div class="toolbar-item {{ request()->is('/') ? 'active' : '' }}">
@@ -117,7 +131,7 @@
             <div class="toolbar-icon nav-wishlist">
                 <i class="fas fa-heart"></i>
                 @if($wishlistCount > 0)
-                    <div class="toolbar-count count-box">{{ $wishlistCount }}</div>
+                <div class="toolbar-count count-box">{{ $wishlistCount }}</div>
                 @endif
             </div>
             <div class="toolbar-label">المفضلة</div>
@@ -128,7 +142,7 @@
             <div class="toolbar-icon nav-cart">
                 <i class="fas fa-shopping-bag"></i>
                 @if($cartCount > 0)
-                    <div class="toolbar-count count-box">{{ $cartCount }}</div>
+                <div class="toolbar-count count-box">{{ $cartCount }}</div>
                 @endif
             </div>
             <div class="toolbar-label">السلة</div>
@@ -144,38 +158,43 @@
                 <li class="nav-mb-item"><a href="{{ url('/') }}" class="mb-menu-link">الرئيسية</a></li>
                 <li class="nav-mb-item"><a href="{{ url('/shop') }}" class="mb-menu-link">المتجر</a></li>
                 <li class="nav-mb-item">
-                    <a href="#dropdown-menu-two" class="collapsed mb-menu-link current" data-bs-toggle="collapse" aria-expanded="true" aria-controls="dropdown-menu-two">
+                    <a href="#dropdown-menu-two" class="collapsed mb-menu-link current" data-bs-toggle="collapse"
+                        aria-expanded="true" aria-controls="dropdown-menu-two">
                         <span>التصنيفات</span>
                         <span class="btn-open-sub"></span>
                     </a>
                     @php
-                        $categories = \App\Models\admin\MainCategory::with('SubCategories')->where('status', 1)->get();
+                    $categories = \App\Models\admin\MainCategory::with('SubCategories')->where('status', 1)->get();
                     @endphp
                     <div id="dropdown-menu-two" class="collapse">
                         <ul class="sub-nav-menu" id="sub-menu-navigation">
                             @foreach ($categories as $category)
-                                @if ($category->SubCategories->isNotEmpty())
-                                    <li>
-                                        <a href="#sub-shop-one_{{ $category['slug'] }}" class="sub-nav-link collapsed" data-bs-toggle="collapse" aria-expanded="true" aria-controls="sub-shop-one">
-                                            <span>{{ $category['name'] }}</span>
-                                            <span class="btn-open-sub"></span>
-                                        </a>
-                                        <div id="sub-shop-one_{{ $category['slug'] }}" class="collapse">
-                                            <ul class="sub-nav-menu sub-menu-level-2">
-                                                @foreach ($category->SubCategories as $subcategory)
-                                                    <li><a href="{{ url('collection/' . $category['slug'] . '/' . $subcategory['slug']) }}" class="sub-nav-link">{{ $subcategory['name'] }}</a></li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                    </li>
-                                @else
-                                    <li><a href="{{ url('collection/' . $category['slug']) }}" class="sub-nav-link"><span>{{ $category['name'] }}</span></a></li>
-                                @endif
+                            @if ($category->SubCategories->isNotEmpty())
+                            <li>
+                                <a href="#sub-shop-one_{{ $category['slug'] }}" class="sub-nav-link collapsed"
+                                    data-bs-toggle="collapse" aria-expanded="true" aria-controls="sub-shop-one">
+                                    <span>{{ $category['name'] }}</span>
+                                    <span class="btn-open-sub"></span>
+                                </a>
+                                <div id="sub-shop-one_{{ $category['slug'] }}" class="collapse">
+                                    <ul class="sub-nav-menu sub-menu-level-2">
+                                        @foreach ($category->SubCategories as $subcategory)
+                                        <li><a href="{{ url('collection/' . $category['slug'] . '/' . $subcategory['slug']) }}"
+                                                class="sub-nav-link">{{ $subcategory['name'] }}</a></li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </li>
+                            @else
+                            <li><a href="{{ url('collection/' . $category['slug']) }}" class="sub-nav-link"><span>{{
+                                        $category['name'] }}</span></a></li>
+                            @endif
                             @endforeach
                         </ul>
                     </div>
                 </li>
                 <li class="nav-mb-item"><a href="{{ url('/cart') }}" class="mb-menu-link">سلة الشراء</a></li>
+                <li class="nav-mb-item"><a href="{{ url('track-order') }}" class="mb-menu-link"> تتبع طلبيتك </a></li>
                 <li class="nav-mb-item"><a href="{{ url('faq') }}" class="mb-menu-link">الاسئلة الشائعة</a></li>
             </ul>
             <div class="mb-other-content">
@@ -190,7 +209,8 @@
     </div>
 </div>
 
-<div class="modal fullLeft fade modal-shopping-cart" id="shoppingCart" tabindex="-1" aria-labelledby="shoppingCartLabel" aria-hidden="true">
+<div class="modal fullLeft fade modal-shopping-cart" id="shoppingCart" tabindex="-1" aria-labelledby="shoppingCartLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="header">
@@ -587,4 +607,5 @@
 </script>
 
 </body>
+
 </html>
