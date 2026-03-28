@@ -44,6 +44,12 @@
                                     </div>
                                     <div class="col-lg-12">
                                         <div class="mb-3">
+                                            <label for="image" class="form-label"> صورة العميل </label>
+                                            <input type="file" id="image" class="form-control" name="image">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="mb-3">
                                             <label class="form-label">التقييم <span class="star" style="color: red"> *
                                                 </span></label>
                                             <div class="star-rating">
@@ -93,7 +99,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="p-3 bg-light mb-3 rounded">
+                        <div class="p-3 mb-3 rounded bg-light">
                             <div class="row justify-content-end g-2">
                                 <div class="col-lg-2">
                                     <button type="submit" class="btn btn-outline-secondary w-100"> حفظ <i

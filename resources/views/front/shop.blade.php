@@ -44,10 +44,10 @@
                                     data-placeholder="Price: Low to High" id="sort" class="chosen-select"
                                     onchange="this.form.submit()">
                                     <option value="" selected> رتب حسب</option>
-                                    <option @if (isset($_GET['sort']) && $_GET['sort'] == 'price_from_low_heigh') selected @endif value="price_from_low_heigh">
+                                    <option @if (isset($_GET['sort']) && $_GET['sort'] == 'price_asc') selected @endif value="price_asc">
                                         السعر : من الاقل الي الاعلي
                                     </option>
-                                    <option @if (isset($_GET['sort']) && $_GET['sort'] == 'price_from_hieght_low') selected @endif value="price_from_hieght_low">
+                                    <option @if (isset($_GET['sort']) && $_GET['sort'] == 'price_desc') selected @endif value="price_desc">
                                         السعر : من الاعلي الي الاقل
                                     </option>
                                     <option @if (isset($_GET['sort']) && $_GET['sort'] == 'oldest') selected @endif value="oldest"> رتب حسب الاقدم

@@ -25,12 +25,14 @@ class ShippingCityController extends Controller
                 $data = $request->all();
                 $rules = [
                     'city'=>'required',
-                    'price'=>'required|numeric'
+                    'price'=>'required|numeric',
+                    'free_shipping_threshold' => 'nullable|numeric'
                 ];
                 $messages = [
                     'city.required'=>' من فضلك ادخل اسم المدينة  ',
                     'price.required'=>' من فضلك ادخل سعر الشحن  ',
                     'price.numeric'=>' سعر الشحن يجب ان يكون رقم صحيح  ',
+                    'free_shipping_threshold.numeric' => 'حد الشحن المجاني يجب ان يكون رقم'
                 ];
                 $validator = Validator::make($data,$rules,$messages);
                 if ($validator->fails())
@@ -40,7 +42,8 @@ class ShippingCityController extends Controller
                 $shippingcity = new ShippingCity();
                 $shippingcity->create([
                     'city'=>$data['city'],
-                    'price'=>$data['price']
+                    'price'=>$data['price'],
+                    'free_shipping_threshold'=>$data['free_shipping_threshold']
                 ]);
                 return $this->success_message(' تم اضافة مدينة شحن بنجاح  ');
             }catch (\Exception $e){
@@ -56,12 +59,14 @@ class ShippingCityController extends Controller
                 $data = $request->all();
                 $rules = [
                     'city'=>'required',
-                    'price'=>'required|numeric'
+                    'price'=>'required|numeric',
+                    'free_shipping_threshold' => 'nullable|numeric'
                 ];
                 $messages = [
                     'city.required'=>' من فضلك ادخل اسم المدينة  ',
                     'price.required'=>' من فضلك ادخل سعر الشحن  ',
                     'price.numeric'=>' سعر الشحن يجب ان يكون رقم صحيح  ',
+                    'free_shipping_threshold.numeric' => 'حد الشحن المجاني يجب ان يكون رقم'
                 ];
                 $validator = Validator::make($data,$rules,$messages);
                 if ($validator->fails())
@@ -70,7 +75,8 @@ class ShippingCityController extends Controller
                 }
                 $shippingcity->update([
                     'city'=>$data['city'],
-                    'price'=>$data['price']
+                    'price'=>$data['price'],
+                    'free_shipping_threshold'=>$data['free_shipping_threshold']
                 ]);
                 return $this->success_message(' تم اضافة مدينة شحن بنجاح  ');
             }catch (\Exception $e){

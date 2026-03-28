@@ -17,6 +17,10 @@
                         <label for=""> سعر الشحن  </label>
                         <input type="number" required name="price" class="form-control" value="{{$city['price']}}">
                     </div>
+                    <div class="mb-3">
+                        <label for=""> حد الشحن المجاني (اختياري) </label>
+                        <input type="number" name="free_shipping_threshold" class="form-control" value="{{$city['free_shipping_threshold']}}">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"> رجوع</button>

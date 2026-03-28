@@ -17,18 +17,21 @@ class ShopController extends Controller
         $productQuery = Product::where('status',1);
         if ($request->has('sort')){
             switch ($request->input('sort')){
-                case 'price_from_low_heigh';
-                $productQuery->orderBy('price', 'asc');
-                case 'price_from_hieght_low';
-                $productQuery->orderBy('price','desc');
-                case 'oldest';
-                $productQuery->orderBy('created_at', 'asc');
-                case 'latest';
-                $productQuery->orderBy('created_at','desc');
-                break;
+                case 'price_asc':
+                    $productQuery->orderByRaw('CASE WHEN discount > 0 THEN discount ELSE price END ASC');
+                    break;
+                case 'price_desc':
+                    $productQuery->orderByRaw('CASE WHEN discount > 0 THEN discount ELSE price END DESC');
+                    break;
+                case 'oldest':
+                    $productQuery->orderBy('created_at', 'asc');
+                    break;
+                case 'latest':
+                    $productQuery->orderBy('created_at', 'desc');
+                    break;
             }
         }
-        $products = $productQuery->orderBy('id','desc')->paginate(16);
+        $products = $productQuery->orderBy('id', 'desc')->paginate(16);
         $cookie_id = Cookie::get('cookie_id');
         if (empty($cookie_id)) {
             $cookie_id = Session::getId();

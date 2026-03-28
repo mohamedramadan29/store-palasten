@@ -178,7 +178,11 @@
             });
         });
 
-
+        $('.form-checkout').on('submit', function () {
+            var $btn = $(this).find('button[type="submit"]');
+            $btn.prop('disabled', true);
+            $btn.html('<i class="fas fa-spinner fa-spin"></i> جاري الارسال...');
+        });
     </script>
 
 @endsection

@@ -9,15 +9,17 @@
                     <div id="variant-overlay-modal" 
                          style="position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.7); padding: 3px 12px; border-radius: 5px; font-weight: 500; font-size: 14px; color: #000; z-index: 100; display: none; backdrop-filter: blur(2px); border: 1px solid rgba(255,255,255,0.3);">
                     </div>
-                    <div class="item">
-                        <img id="main-product-image-modal" src="{{asset('assets/uploads/product_images/'.$product['image'])}}" alt="">
+                    <div class="item" style="background-color: #fff; height: 350px; display: flex; align-items: center; justify-content: center; border: 1px solid #eee;">
+                        <img id="main-product-image-modal" src="{{asset('assets/uploads/product_images/'.$product['image'])}}" 
+                             style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="">
                     </div>
                 </div>
                 @if($product->gallary && $product->gallary->count() > 0)
                     @foreach($product->gallary as $gallary)
                         <div class="swiper-slide">
-                            <div class="item">
-                                <img src="{{asset('assets/uploads/product_gallery/'.$gallary->image)}}" alt="">
+                             <div class="item" style="background-color: #fff; height: 350px; display: flex; align-items: center; justify-content: center; border: 1px solid #eee;">
+                                <img src="{{asset('assets/uploads/product_gallery/'.$gallary->image)}}" 
+                                     style="max-width: 100%; max-height: 100%; object-fit: contain;" alt="">
                             </div>
                         </div>
                     @endforeach

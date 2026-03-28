@@ -140,6 +140,14 @@
                                             </option>
                                         </select>
                                     </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label for="global_free_shipping_threshold" class="form-label"> حد الشحن المجاني العام (مطلق) </label>
+                                            <input type="number" id="global_free_shipping_threshold" class="form-control"
+                                                   name="global_free_shipping_threshold" placeholder="مثال: 1000"
+                                                   value="{{$public_setting['global_free_shipping_threshold']}}">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -46,6 +46,7 @@ Route::controller(CartController::class)->group(function () {
     Route::get('/cart/items', 'getCartItems');
     Route::post('cart/delete/{id}', 'delete');
     Route::post('/cart/update', 'updateCart')->name('cart.update');
+    Route::post('/save-city-session', 'saveCityToSession');
     Route::post('apply_coupon', 'apply_coupon');
 
 });

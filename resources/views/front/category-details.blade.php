@@ -111,7 +111,7 @@
         <!-- page-title -->
         <div class="tf-page-title" style="margin-bottom:0; padding-bottom:0 !important">
             <div class="container-full">
-                <div class="heading text-center">منتجات القسم</div>
+                <div class="text-center heading">منتجات القسم</div>
                 <p class="text-center text-2 text_black-2 mt_5">
                     {{ $category['name'] }}
                     @isset($sub_category['name'])
@@ -148,7 +148,7 @@
 
                         <!-- Main Content -->
                         <div class="col-12">
-                            <div class="tf-shop-control py-4">
+                            <div class="py-4 tf-shop-control">
                                 <div class="container">
                                     <div class="row">
                                         <div class="col-12">
@@ -157,13 +157,13 @@
                                                     <div class="tf-dropdown-sort" style="border: none">
                                                         <form class="filter-choice select-form" name="sortProducts" id="sortProducts">
                                                             <select name="sort" title="sort-by"
-                                                                class="form-select rounded-pill px-5 py-2 shadow-sm fw-500 text-dark"
+                                                                class="px-5 py-2 shadow-sm form-select rounded-pill fw-500 text-dark"
                                                                 id="sort" onchange="this.form.submit()">
                                                                 <option value="" selected disabled hidden>رتب حسب</option>
-                                                                <option value="price_from_low_heigh" {{ request('sort') == 'price_from_low_heigh' ? 'selected' : '' }}>
+                                                                <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>
                                                                     السعر : من الأقل إلى الأعلى
                                                                 </option>
-                                                                <option value="price_from_hieght_low" {{ request('sort') == 'price_from_hieght_low' ? 'selected' : '' }}>
+                                                                <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>
                                                                     السعر : من الأعلى إلى الأقل
                                                                 </option>
                                                                 <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>

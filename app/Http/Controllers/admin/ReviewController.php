@@ -44,11 +44,22 @@ class ReviewController extends Controller
                 }
 
                 $review = new Review();
-                $review->create([
-                    'name' => $data['name'],
-                    'description' => $data['content'],
-                    'star'=>$data['rating']
-                ]);
+                $review->name = $data['name'];
+                $review->description = $data['content'];
+                $review->star = $data['rating'];
+
+                if ($request->hasFile('image')) {
+                    $image_tmp = $request->file('image');
+                    if ($image_tmp->isValid()) {
+                        $extension = $image_tmp->getClientOriginalExtension();
+                        $filename = rand(111, 99999) . '.' . $extension;
+                        $image_path = public_path('assets/uploads/reviews/' . $filename);
+                        $image_tmp->move(public_path('assets/uploads/reviews/'), $filename);
+                        $review->image = $filename;
+                    }
+                }
+
+                $review->save();
 
                 return $this->success_message(' تم اضافة التقيم بنجاح  ');
 
@@ -76,9 +87,27 @@ class ReviewController extends Controller
                 if ($validator->fails()) {
                     return Redirect::back()->withInput()->withErrors($validator);
                 }
+                if ($request->hasFile('image')) {
+                    $image_tmp = $request->file('image');
+                    if ($image_tmp->isValid()) {
+                        // Delete old image
+                        if (!empty($review->image)) {
+                            $old_image_path = public_path('assets/uploads/reviews/' . $review->image);
+                            if (file_exists($old_image_path)) {
+                                unlink($old_image_path);
+                            }
+                        }
+                        $extension = $image_tmp->getClientOriginalExtension();
+                        $filename = rand(111, 99999) . '.' . $extension;
+                        $image_tmp->move(public_path('assets/uploads/reviews/'), $filename);
+                        $review->image = $filename;
+                    }
+                }
+
                 $review->update([
                     'name' => $data['name'],
                     'description' => $data['content'],
+                    'image' => $review->image,
                 ]);
 
                 return $this->success_message(' تم تعديل  التقيم بنجاح  ');
@@ -95,6 +124,13 @@ class ReviewController extends Controller
     public function delete($id)
     {
         $review = Review::findOrFail($id);
+        // Delete image
+        if (!empty($review->image)) {
+            $image_path = public_path('assets/uploads/reviews/' . $review->image);
+            if (file_exists($image_path)) {
+                unlink($image_path);
+            }
+        }
         $review->delete();
         return $this->success_message(' تم حذف التقيم بنجاح  ');
     }

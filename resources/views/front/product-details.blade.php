@@ -57,7 +57,7 @@
                                                     <img id="main-product-image"
                                                         src="{{ asset('assets/uploads/product_images/' . $product['image']) }}"
                                                         alt="{{ $product['name'] }}"
-                                                        style="width: 100%; height: 400px; display: block; border: 1px solid #ccc;">
+                                                        style="width: 100%; height: 400px; display: block; border: 1px solid #eee; object-fit: contain; background-color: #fff;">
                                                 </a>
                                             </div>
                                             @if (isset($gallary) && count($gallary) > 0)
@@ -66,7 +66,7 @@
                                                 <a href="javascript:void(0);" class="item">
                                                     <img src="{{ asset('assets/uploads/product_gallery/' . $gallary_item['image']) }}"
                                                         alt="{{ $product['name'] }}"
-                                                        style="width: 100%; height: 400px; display: block; border: 1px solid #ccc;">
+                                                        style="width: 100%; height: 400px; display: block; border: 1px solid #eee; object-fit: contain; background-color: #fff;">
                                                 </a>
                                             </div>
                                             @endforeach
@@ -84,7 +84,7 @@
                                                 <a href="javascript:void(0);" class="item">
                                                     <img src="{{ asset('assets/uploads/product_images/' . $variation['image']) }}"
                                                         alt="{{ $product['name'] }}"
-                                                        style="width: 100%; height: 400px; display: block; border: 1px solid #ccc;">
+                                                        style="width: 100%; height: 400px; display: block; border: 1px solid #eee; object-fit: contain; background-color: #fff;">
                                                 </a>
                                             </div>
                                             @endif

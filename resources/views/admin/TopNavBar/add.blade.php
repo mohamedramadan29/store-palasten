@@ -29,6 +29,18 @@
                             <option value="0"> غير مفعل  </option>
                         </select>
                     </div>
+                    <div class="mb-3">
+                        <label for=""> لون النص </label>
+                        <input type="color" name="text_color" class="form-control form-control-color" value="#ffffff" style="width: 100%">
+                    </div>
+                    <div class="mb-3">
+                        <label for=""> لون خلفية الزر </label>
+                        <input type="color" name="button_background" class="form-control form-control-color" value="#000000" style="width: 100%">
+                    </div>
+                    <div class="mb-3">
+                        <label for=""> لون نص الزر </label>
+                        <input type="color" name="button_color" class="form-control form-control-color" value="#ffffff" style="width: 100%">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"> رجوع</button>

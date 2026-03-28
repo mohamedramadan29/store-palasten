@@ -38,11 +38,11 @@ class ShopCollection extends Controller
                 case 'oldest':
                     $products = $products->orderBy('id', 'asc');
                     break;
-                case 'price_from_low_high':
-                    $products = $products->orderBy('price', 'desc');
+                case 'price_asc':
+                    $products = $products->orderByRaw('CASE WHEN discount > 0 THEN discount ELSE price END ASC');
                     break;
-                case 'price_from_high_low':
-                    $products = $products->orderBy('price', 'asc');
+                case 'price_desc':
+                    $products = $products->orderByRaw('CASE WHEN discount > 0 THEN discount ELSE price END DESC');
                     break;
             }
         }
@@ -80,11 +80,11 @@ class ShopCollection extends Controller
                 case 'oldest':
                     $products = $products->orderBy('id', 'asc');
                     break;
-                case 'price_from_low_high':
-                    $products = $products->orderBy('price', 'desc');
+                case 'price_asc':
+                    $products = $products->orderByRaw('CASE WHEN discount > 0 THEN discount ELSE price END ASC');
                     break;
-                case 'price_from_high_low':
-                    $products = $products->orderBy('price', 'asc');
+                case 'price_desc':
+                    $products = $products->orderByRaw('CASE WHEN discount > 0 THEN discount ELSE price END DESC');
                     break;
             }
         }

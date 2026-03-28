@@ -82,7 +82,7 @@
     </div>
     <div class="text-center card-product-info">
         <a href="{{ url('product/' . $product['slug']) }}" class="title link text-truncate d-block">
-            {{ $product['name'] }}
+            {{ \Illuminate\Support\Str::limit($product['name'], 60) }}
         </a>
         
         <div class="mb-2 text-center price-container">
@@ -140,6 +140,7 @@
         padding-top: 100%; /* 1:1 Aspect Ratio */
         overflow: hidden;
         display: block;
+        background-color: #fff;
     }
     .aspect-ratio-box img {
         position: absolute;
@@ -147,7 +148,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
     }
     .card-variant-overlay {
         position: absolute;

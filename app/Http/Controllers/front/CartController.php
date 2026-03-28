@@ -21,7 +21,23 @@ class CartController extends Controller
         $cartItems = Cart::getcartitems();
         $cartcount = $cartItems->count();
         $shippingCity = ShippingCity::where('status', 1)->get();
-        return view('front.cart', compact('cartItems', 'cartcount', 'shippingCity'));
+        $selectedCityId = Session::get('shipping_city_id');
+        $selectedCity = $selectedCityId ? ShippingCity::find($selectedCityId) : null;
+        $publicSetting = \App\Models\admin\PublicSetting::first();
+        
+        return view('front.cart', compact('cartItems', 'cartcount', 'shippingCity', 'selectedCity', 'publicSetting'));
+    }
+
+    public function saveCityToSession(Request $request)
+    {
+        $cityId = $request->input('city_id');
+        Session::put('shipping_city_id', $cityId);
+        
+        $city = ShippingCity::find($cityId);
+        return response()->json([
+            'status' => true,
+            'city' => $city
+        ]);
     }
 
     public function add(Request $request)
@@ -196,7 +212,7 @@ class CartController extends Controller
                 if ($coupondata['categories'] != 'all') {
                     $catarray = explode(',', $coupondata['categories']);
                     foreach ($cartItems as $key => $item) {
-                        if (!in_array($item['productdata']['category_id'], $catarray)) {
+                        if (!in_array($item->productdata->category_id, $catarray)) {
                             $message = 'هذا الكود غير متاح مع هذه المنتجات ';
                         }
                     }

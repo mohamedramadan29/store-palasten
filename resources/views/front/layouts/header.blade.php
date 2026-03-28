@@ -45,6 +45,7 @@ $setting = \App\Models\admin\PublicSetting::first();
     <link rel="shortcut icon" href="{{asset('assets/uploads/PublicSetting/'.$setting['website_logo'])}}">
     <link rel="apple-touch-icon-precomposed" href="{{asset('assets/uploads/PublicSetting/'.$setting['website_logo'])}}">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     @toastifyCss
     @yield('css')
 </head>

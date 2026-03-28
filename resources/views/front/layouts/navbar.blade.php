@@ -15,6 +15,11 @@
     $public_add_to_cart_color = $colors['public_add_to_cart_color'];
     $footer_background = $colors['footer_background'];
     $footer_color = $colors['footer_color'];
+    $product_title_color = $colors['product_title_color'];
+    $search_category_background = $colors['search_category_background']; 
+    $search_background = $colors['search_background'];
+    $search_icon_background = $colors['search_icon_background'];
+    $search_icon_color = $colors['search_icon_color'];
 
 @endphp
 
@@ -33,6 +38,21 @@
         --public_add_to_cart_color: <?php echo $public_add_to_cart_color; ?>;
         --footer_background: <?php echo $footer_background; ?>;
         --footer_color: <?php echo $footer_color; ?>;
+        --product_title_color: <?php echo $product_title_color; ?>;
+        --search_category_background: <?php echo $search_category_background; ?>;
+        --search_background: <?php echo $search_background; ?>;
+        --search_icon_background: <?php echo $search_icon_background; ?>;
+        --search_icon_color: <?php echo $search_icon_color; ?>;
+    }
+
+    .track-icon {
+        display: none !important;
+    }
+
+    @media(max-width:991px) {
+        .track-icon {
+            display: block !important;
+        }
     }
 </style>
 
@@ -47,18 +67,20 @@
         <div class="tf-top-bar line" style="background-color:var(--top_navbar_background);">
             <div class="px_15 lg-px_40">
                 <div class="tf-top-bar_wrap gap-30 align-items-center">
-                    <div class="text-center overflow-hidden">
+                    <div class="overflow-hidden text-center">
                         <div class="swiper tf-sw-top_bar" data-preview="1" data-space="0" data-loop="true" data-speed="1000"
                             data-delay="2000">
                             <div class="swiper-wrapper">
 
                                 @foreach ($topnavs as $nav)
                                     <div class="swiper-slide">
-                                        <p class="top-bar-text fw-5"> {{ $nav['content'] }}
+                                        <p class="top-bar-text fw-5" style="color: {{ $nav['text_color'] ?? 'inherit' }}"> {{ $nav['content'] }}
                                             @if ($nav['button'] != '')
                                                 <a href="{{ $nav['link'] }}" title="all collection"
-                                                    class="tf-btn btn-line"> {{ $nav['button'] }} <i
-                                                        class="icon icon-arrow1-top-left"></i></a>
+                                                    class="tf-btn btn-line" 
+                                                    style="background-color: {{ $nav['button_background'] ?? 'transparent' }}; color: {{ $nav['button_color'] ?? 'inherit' }}; padding: 2px 10px; border-radius: 4px;text-decoration: none;"> 
+                                                    {{ $nav['button'] }} <i class="icon icon-arrow1-top-left"></i>
+                                                </a>
                                             @endif
                                         </p>
                                     </div>
@@ -80,8 +102,8 @@
     <div class="top_navbar">
         <div class="sections">
             <div class="logo_section">
-                <a href="{{url('/')}}">
-                <img src=" {{ asset('assets/uploads/PublicSetting/' . $settings->website_logo) }}" alt="logo">
+                <a href="{{ url('/') }}">
+                    <img src=" {{ asset('assets/uploads/PublicSetting/' . $settings->website_logo) }}" alt="logo">
                 </a>
 
 
@@ -107,8 +129,6 @@
                 </form>
                 <!-- Dropdown results container -->
                 <div id="search-results" class="dropdown-menu" style="display: none;"></div>
-
-                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
                 <script>
                     $(document).ready(function() {
@@ -203,7 +223,7 @@
                 </style>
             </div>
             <div class="cart_section">
-                <ul class="tf-top-bar_item tf-social-icon d-flex gap-10 flex-wrap">
+                <ul class="flex-wrap gap-10 tf-top-bar_item tf-social-icon d-flex">
                     @if ($socialmedia['facebook'] != '')
                         <li><a href="{{ $socialmedia['facebook'] }}"
                                 class="box-icon w_28 round social-facebook bg_line"><i
@@ -216,7 +236,7 @@
                     @endif
                     @if ($socialmedia && $socialmedia->linkedin)
                         <li><a href="{{ $socialmedia->linkedin }}" class="box-icon w_28 round social-linkedin bg_line">
-                                <i class="bi fs-12  bi-linkedin"></i></a>
+                                <i class="bi fs-12 bi-linkedin"></i></a>
                         </li>
                     @endif
                     @if ($socialmedia['x-twitter'] != '')
@@ -285,16 +305,19 @@
                     </a>
                 </div>
                 <div class="col-xl-9 tf-md-hidden">
-                    <nav class="box-navigation text-center">
+                    <nav class="text-center box-navigation">
                         <ul class="box-nav-ul d-flex align-items-center justify-content-center gap-30">
-                            <li class="menu-item"><a href="{{ url('/') }}" class="item-link"> الرئيسية </a></li>
+                            <li class="menu-item"><a href="{{ url('/') }}" class="item-link"> الرئيسية </a>
+                            </li>
                             <li class="menu-item"><a href="{{ url('shop') }}" class="item-link"> المتجر </a></li>
                             <li class="menu-item position-relative">
-                                <a href="{{ url('collection') }}" class="item-link"> الاقسام <i class="icon icon-arrow-down"></i></a>
+                                <a href="{{ url('collection') }}" class="item-link"> الاقسام <i
+                                        class="icon icon-arrow-down"></i></a>
                                 <div class="sub-menu submenu-default">
                                     <ul class="menu-list">
                                         @foreach ($categories as $category)
-                                            <li class="menu-item-2 {{ $category->SubCategories->isNotEmpty() ? 'has-subcategories' : '' }}">
+                                            <li
+                                                class="menu-item-2 {{ $category->SubCategories->isNotEmpty() ? 'has-subcategories' : '' }}">
                                                 <a href="{{ url('collection/' . $category['slug']) }}"
                                                     class="menu-link-text link text_black-2">
                                                     {{ $category['name'] }}
@@ -323,18 +346,19 @@
                                 </a></li>
 
                             <li class="menu-item"><a href="{{ url('cart') }}" class="item-link"> السلة </a></li>
-                            <li class="menu-item"><a href="{{ url('track-order') }}" class="item-link"> تتبع طلبيتك </a></li>
+                            <li class="menu-item"><a href="{{ url('track-order') }}" class="item-link"> تتبع طلبيتك
+                                </a></li>
                             <li class="menu-item"><a href="{{ url('faq') }}" class="item-link"> الاسئلة الشائعة
                                 </a></li>
                         </ul>
                     </nav>
-                
-                
-                
-                
+
+
+
+
                 </div>
                 <div class="col-xl-3 col-md-4 col-3">
-                    <ul class="nav-icon d-flex justify-content-end align-items-center gap-20">
+                    <ul class="gap-20 nav-icon d-flex justify-content-end align-items-center">
                         <li class="nav-account"><a href="#login" data-bs-toggle="modal" class="nav-icon-item"><i
                                     class="fas fa-user"></i></a></li>
                         @php
@@ -342,27 +366,25 @@
                             $cartCount = \App\Models\front\Cart::getcartitems()->count();
                         @endphp
                         <li class="nav-wishlist"><a href="{{ url('wishlist') }}" class="nav-icon-item"><i
-                                    class="fas fa-heart"></i><span
-                                    class="count-box">{{ $wishlistCount }}</span></a>
+                                    class="fas fa-heart"></i><span class="count-box">{{ $wishlistCount }}</span></a>
                         </li>
+                        <li class="nav-cart track-icon"><a id="trackOrderIcon" href="{{ url('track-order') }}"
+                                class="nav-icon-item"><i class="fas fa-forward"></i></a></li>
                         <li class="nav-cart"><a id="shoppingCartmodel" href="#shoppingCart" data-bs-toggle="modal"
                                 class="nav-icon-item"><i class="fas fa-shopping-bag"></i><span
                                     class="count-box">{{ $cartCount }}</span></a></li>
+
                     </ul>
                 </div>
             </div>
         </div>
-                
-                
+
+
     </header>
     <!-- /Header -->
 
-    <script>
-        $(document).ready(function() {
-            $("#shoppingCartmodel").on('click', function(e) {
-                e.preventDefault();
-                $('#shoppingCart').modal('show');
+    </header>
+    <!-- /Header -->
 
-            });
-        });
-    </script>
+@yield('js')
+

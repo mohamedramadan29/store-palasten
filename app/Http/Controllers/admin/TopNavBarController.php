@@ -41,6 +41,9 @@ class TopNavBarController extends Controller
                     'link' => $data['link'],
                     'button' => $data['button'],
                     'status' => $data['status'],
+                    'text_color' => $data['text_color'] ?? null,
+                    'button_background' => $data['button_background'] ?? null,
+                    'button_color' => $data['button_color'] ?? null,
                 ]);
                 return $this->success_message(' تم اضافة المحتوي بنجاح   ');
             } catch (\Exception $e) {
@@ -72,6 +75,9 @@ class TopNavBarController extends Controller
                     'link' => $data['link'],
                     'button' => $data['button'],
                     'status' => $data['status'],
+                    'text_color' => $data['text_color'] ?? null,
+                    'button_background' => $data['button_background'] ?? null,
+                    'button_color' => $data['button_color'] ?? null,
                 ]);
                 return $this->success_message(' تم  تعديل  المحتوي بنجاح   ');
             } catch (\Exception $e) {

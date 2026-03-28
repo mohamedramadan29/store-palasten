@@ -28,7 +28,7 @@
                 @endif
                 <div class="col-xl-12">
                     <div class="card">
-                        <div class="card-header d-flex justify-content-between align-items-center gap-1">
+                        <div class="gap-1 card-header d-flex justify-content-between align-items-center">
                             <h4 class="card-title flex-grow-1"> محتوي الشريط الاعلاني اعلي الموقع   </h4>
                             <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
                                     data-bs-target="#add_attribute">
@@ -42,7 +42,7 @@
                         <div>
                             <div class="table-responsive">
                                 <table id="table-search"
-                                       class="table table-bordered gridjs-table align-middle mb-0 table-hover table-centered">
+                                       class="table mb-0 align-middle table-bordered gridjs-table table-hover table-centered">
                                     <thead class="bg-light-subtle">
                                     <tr>
                                         <th style="width: 20px;">
@@ -50,6 +50,7 @@
                                         <th> المحتوي  </th>
                                         <th>الرابط  </th>
                                         <th>الزر  </th>
+                                        <th> الألوان  </th>
                                         <th> الحالة  </th>
                                         <th> العمليات</th>
                                     </tr>
@@ -68,13 +69,20 @@
                                             <td> {{$nav['link']}} </td>
                                             <td> {{$nav['button']}} </td>
                                             <td>
+                                                <div class="gap-1 d-flex">
+                                                    <span title="النص" style="display:inline-block;width:15px;height:15px;background-color:{{$nav['text_color']}};border:1px solid #ccc"></span>
+                                                    <span title="خلفية الزر" style="display:inline-block;width:15px;height:15px;background-color:{{$nav['button_background']}};border:1px solid #ccc"></span>
+                                                    <span title="نص الزر" style="display:inline-block;width:15px;height:15px;background-color:{{$nav['button_color']}};border:1px solid #ccc"></span>
+                                                </div>
+                                            </td>
+                                            <td>
                                                 @if($nav['status'] == 1)
                                                     <span class="badge bg-success"> فعال </span>
                                                 @else
                                                     <span class="badge bg-danger"> غير فعال  </span>
                                                 @endif  </td>
                                             <td>
-                                                <div class="d-flex gap-2">
+                                                <div class="gap-2 d-flex">
 
                                                     <button type="button" class="btn btn-soft-danger btn-sm"
                                                             data-bs-toggle="modal"

@@ -231,7 +231,6 @@ $socialmedia = \App\Models\admin\SocialMedia::first();
 </div>
 
 <script type="text/javascript" src="{{ asset('assets/front/js/bootstrap.min.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/front/js/jquery.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/front/js/swiper-bundle.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/front/js/carousel.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/front/js/bootstrap-select.min.js') }}"></script>
@@ -596,14 +595,27 @@ $socialmedia = \App\Models\admin\SocialMedia::first();
             url: '/cart/items',
             method: 'GET',
             success: function(response) {
-                $('#shoppingCart .wrap').html(response.html || response);
+                $('#shoppingCart .cart-items-container').html(response.html || response);
                 if (response.cartCount) {
                     $('.nav-cart .count-box').text(response.cartCount);
+                }
+                // Update mini-cart threshold if it exists
+                if (typeof updateMiniCartThreshold === "function") {
+                    updateMiniCartThreshold();
+                }
+                if (typeof updateProgressBar === "function") {
+                    updateProgressBar();
                 }
             }
         });
     }
 
+    $(document).ready(function() {
+        $(document).on('click', '#shoppingCartmodel', function(e) {
+            e.preventDefault();
+            $('#shoppingCart').modal('show');
+        });
+    });
 </script>
 
 </body>

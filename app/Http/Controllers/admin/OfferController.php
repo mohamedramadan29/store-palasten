@@ -44,6 +44,8 @@ class OfferController extends Controller
                     return Redirect::back()->withInput()->withErrors($validator);
                 }
                 if ($request->hasFile('image')) {
+
+                    ########### تعديل هنا بعد الرفع. 
                     $file_name = $this->saveImage($request->image, public_path('assets/uploads/product_offers'));
                 }
                 $offer = new Offer();

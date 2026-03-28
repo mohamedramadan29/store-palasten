@@ -32,7 +32,7 @@
                             <table id="table-search" class="table mb-0 align-middle table-bordered table-hover">
                                 <thead class="bg-light-subtle">
                                     <tr>
-                                        <th>#</th>
+                                        {{-- <th>#</th> --}}
                                         <th>رقم الطلب</th>
                                         <th>اسم العميل</th>
                                         <th>رقم الهاتف</th>
@@ -46,7 +46,7 @@
                                 <tbody>
                                     @foreach($orders as $order)
                                         <tr>
-                                            <td>{{ $loop->iteration }}</td>
+                                            {{-- <td>{{ $loop->iteration }}</td> --}}
                                             <td>{{ $order['id'] }}</td>
                                             <td>{{ $order['name'] }}</td>
                                             <td>{{ $order['phone'] }}</td>

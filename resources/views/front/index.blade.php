@@ -239,7 +239,13 @@
                                 <div class="text">
                                     {!! $review['description'] !!}
                                 </div>
-
+                                @if(!empty($review->image))
+                                <div class="author">
+                                    <div class="image">
+                                        <img src="{{ asset('assets/uploads/reviews/' . $review->image) }}" alt="{{ $review['name'] }}" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-top: 15px;">
+                                    </div>
+                                </div>
+                                @endif
                             </div>
                         </div>
                         @endforeach

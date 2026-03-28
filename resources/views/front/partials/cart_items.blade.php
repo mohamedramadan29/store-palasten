@@ -1,19 +1,42 @@
-<div class="wrap">
-    <div class="tf-mini-cart-threshold">
-{{--        <div class="tf-progress-bar">--}}
-{{--                            <span style="width: 50%;">--}}
-{{--                                <div class="progress-car">--}}
-{{--                                    <svg xmlns="http://www.w3.org/2000/svg" width="21" height="14" viewBox="0 0 21 14"--}}
-{{--                                         fill="currentColor">--}}
-{{--                                        <path fill-rule="evenodd" clip-rule="evenodd"--}}
-{{--                                              d="M0 0.875C0 0.391751 0.391751 0 0.875 0H13.5625C14.0457 0 14.4375 0.391751 14.4375 0.875V3.0625H17.3125C17.5867 3.0625 17.845 3.19101 18.0104 3.40969L20.8229 7.12844C20.9378 7.2804 21 7.46572 21 7.65625V11.375C21 11.8582 20.6082 12.25 20.125 12.25H17.7881C17.4278 13.2695 16.4554 14 15.3125 14C14.1696 14 13.1972 13.2695 12.8369 12.25H7.72563C7.36527 13.2695 6.39293 14 5.25 14C4.10706 14 3.13473 13.2695 2.77437 12.25H0.875C0.391751 12.25 0 11.8582 0 11.375V0.875ZM2.77437 10.5C3.13473 9.48047 4.10706 8.75 5.25 8.75C6.39293 8.75 7.36527 9.48046 7.72563 10.5H12.6875V1.75H1.75V10.5H2.77437ZM14.4375 8.89937V4.8125H16.8772L19.25 7.94987V10.5H17.7881C17.4278 9.48046 16.4554 8.75 15.3125 8.75C15.0057 8.75 14.7112 8.80264 14.4375 8.89937ZM5.25 10.5C4.76676 10.5 4.375 10.8918 4.375 11.375C4.375 11.8582 4.76676 12.25 5.25 12.25C5.73323 12.25 6.125 11.8582 6.125 11.375C6.125 10.8918 5.73323 10.5 5.25 10.5ZM15.3125 10.5C14.8293 10.5 14.4375 10.8918 14.4375 11.375C14.4375 11.8582 14.8293 12.25 15.3125 12.25C15.7957 12.25 16.1875 11.8582 16.1875 11.375C16.1875 10.8918 15.7957 10.5 15.3125 10.5Z"></path>--}}
-{{--                                    </svg>--}}
-{{--                                </div>--}}
-{{--                            </span>--}}
-{{--        </div>--}}
-{{--        <div class="tf-progress-msg">--}}
-{{--            اضف مشتريات بقيمة <span class="price fw-6">100 ريال </span> <span class=""> للحصول علي شحن مجاني  </span>--}}
-{{--        </div>--}}
+    <div class="tf-mini-cart-threshold px-3 pt-3">
+        @php
+            $publicSetting = \App\Models\admin\PublicSetting::first();
+            $cityId = session('shipping_city_id');
+            $selectedCity = $cityId ? \App\Models\admin\ShippingCity::find($cityId) : null;
+            $cityThreshold = $selectedCity->free_shipping_threshold ?? 0;
+            $globalThreshold = $publicSetting->global_free_shipping_threshold ?? 0;
+            $thresholds = array_filter([$cityThreshold, $globalThreshold], function($v) { return $v > 0; });
+            $threshold = count($thresholds) > 0 ? min($thresholds) : 0;
+            
+            $subtotal = 0;
+            foreach($cartItems as $item) {
+                $subtotal += ($item->price * $item->qty);
+            }
+            $remaining = $threshold - $subtotal;
+            $percent = $threshold > 0 ? min(100, ($subtotal / $threshold) * 100) : 0;
+        @endphp
+
+        <div id="mini-cart-threshold-wrapper" style="{{ $threshold > 0 ? '' : 'display: none;' }}">
+            <div class="free-shipping-text-wrapper mb-2">
+                <p class="free-shipping-text fw-5 mb-0" style="font-size: 13px; color: #333;">
+                    @if($threshold > 0)
+                        @if($remaining > 0)
+                            <i class="bi bi-box-seam me-2" style="color: #666;"></i>
+                            أضف مشتريات بقيمة <span class="remaining-amount" style="color: #28a745;">{{ number_format($remaining, 2) }}</span> {{ $storeCurrency }} للشحن المجاني
+                        @else
+                            <i class="bi bi-box-seam me-2" style="color: #666;"></i>
+                            <span style="color: #28a745;">لقد حصلت على شحن مجاني!</span>
+                        @endif
+                    @endif
+                </p>
+            </div>
+            <div class="progress-bar-container position-relative mb-3" style="height: 6px; background-color: #e9ecef; border-radius: 3px; overflow: visible;">
+                <div class="progress-bar-fill" style="height: 100%; background-color: #28a745; border-radius: 3px; transition: width 0.3s ease; width: {{ $percent }}%;"></div>
+                <div class="progress-star position-absolute" style="top: -8px; left: calc({{ $percent }}% - 12px); transition: left 0.3s ease;">
+                    <i class="fas fa-star" style="color: #ffc107; font-size: 16px; text-shadow: 0 0 5px rgba(0,0,0,0.2);"></i>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="tf-mini-cart-wrap">
         <div class="tf-mini-cart-main">

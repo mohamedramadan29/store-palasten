@@ -53,6 +53,7 @@
                                         </th>
                                         <th> المدينة  </th>
                                         <th> سعر الشحن   </th>
+                                        <th> حد الشحن المجاني </th>
                                         <th> العمليات</th>
                                     </tr>
                                     </thead>
@@ -68,6 +69,7 @@
                                             </td>
                                             <td> {{$city['city']}} </td>
                                             <td> {{$city['price']}} </td>
+                                            <td> {{$city['free_shipping_threshold'] ?? 'لا يوجد'}} </td>
                                             <td>
                                                 <div class="d-flex gap-2">
 

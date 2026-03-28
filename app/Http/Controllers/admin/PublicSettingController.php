@@ -62,6 +62,7 @@ class PublicSettingController extends Controller
                 'website_email'=>$data['website_email'],
                 'website_phone'=>$data['website_phone'],
                 'admin_order_email'=>$data['admin_order_email'],
+                'global_free_shipping_threshold'=>$data['global_free_shipping_threshold'],
             ]);
 
             return $this->success_message('تم تعديل الاعدادات العامة للموقع بنجاح');

@@ -27,8 +27,74 @@
 
         <!-- page-cart -->
         <section class="flat-spacing-11">
-            <div class="container">
+            <div class="container" id="cart-container">
                 @if($cartcount > 0 )
+                    @php
+                        $subtotal = 0;
+                        foreach($cartItems as $item) {
+                            $subtotal += ($item['price'] * $item['qty']);
+                        }
+                        
+                        $cityThreshold = $selectedCity ? $selectedCity->free_shipping_threshold : null;
+                        $globalThreshold = $publicSetting ? $publicSetting->global_free_shipping_threshold : null;
+                        
+                        // Pick the active threshold (whichever is lower and > 0)
+                        $thresholds = array_filter([$cityThreshold, $globalThreshold], function($v) { return $v > 0; });
+                        $threshold = !empty($thresholds) ? min($thresholds) : null;
+                        
+                        $remaining = $threshold ? $threshold - $subtotal : 0;
+                        $percent = $threshold ? min(100, ($subtotal / $threshold) * 100) : 0;
+                    @endphp
+
+                    <div id="free-shipping-threshold-wrapper" style="{{ $threshold ? '' : 'display:none;' }}">
+                        <div class="tf-free-shipping-bar pb-20">
+                            <div class="progress-bar-container" style="position: relative; width: 100%; height: 12px; background: #f0f0f0; border-radius: 20px; margin-bottom: 25px;">
+                                <div class="progress-bar-fill" style="width: {{ $percent }}%; height: 100%; background: #28a745; border-radius: 20px; transition: width 0.3s ease;"></div>
+                                <div class="progress-star" style="position: absolute; left: calc({{ $percent }}% - 15px); top: -10px; width: 32px; height: 32px; background: #fff; border: 2px solid #28a745; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 10; transition: left 0.3s ease;">
+                                    <i class="bi bi-star-fill" style="color: #28a745; font-size: 16px;"></i>
+                                </div>
+                            </div>
+                            <div class="free-shipping-text text-center fw-6" style="color: #333; font-size: 15px;">
+                                <i class="bi bi-box-seam me-2" style="color: #666;"></i>
+                                @if($remaining > 0)
+                                    أضف مشتريات بقيمة <span class="remaining-amount" style="color: #28a745;">{{ number_format($remaining, 2) }}</span> {{ $storeCurrency }} للحصول على شحن مجاني
+                                @else
+                                    <span style="color: #28a745;">لقد حصلت على شحن مجاني!</span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
+                    @php
+                        $anyCityHasThreshold = $shippingCity->contains(function($city) {
+                            return ($city->free_shipping_threshold ?? 0) > 0;
+                        });
+                        $anyThresholdExists = ($globalThreshold > 0) || $anyCityHasThreshold;
+                    @endphp
+
+                    @if($anyThresholdExists)
+                    <div class="mb-4">
+                        <label for="cart-shipping-city" class="fw-6 mb-2">
+                            @if($globalThreshold > 0)
+                                مدينة الشحن:
+                            @else
+                                اختر المدينة لمعرفة حد الشحن المجاني:
+                            @endif
+                        </label>
+                        <select id="cart-shipping-city" class="form-select w-100" data-global-threshold="{{ $globalThreshold }}">
+                            <option value="">-- اختر المدينة --</option>
+                            @foreach($shippingCity as $city)
+                                <option value="{{ $city->id }}" {{ (isset($selectedCity) && $selectedCity->id == $city->id) ? 'selected' : '' }} data-threshold="{{ $city->free_shipping_threshold }}">
+                                    {{ $city->city }} 
+                                    @if(($city->free_shipping_threshold ?? 0) > 0)
+                                        (الشحن المجاني فوق {{ number_format($city->free_shipping_threshold, 0) }} {{ $storeCurrency }})
+                                    @endif
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @endif
+
                     <div class="tf-page-cart-wrap">
                         <div class="tf-page-cart-item">
                             <table class="tf-table-page-cart">
@@ -240,11 +306,66 @@
 
                         // تحديث المجموع الفرعي (Subtotal)
                         $('.total-value').text(response.subtotal.toFixed(2) + ' {{ $storeCurrency }}');
+                        
+                        updateProgressBar(response.subtotal);
                     },
                     error: function (xhr) {
                         console.log('Error updating cart');
                     }
                 });
+            }
+
+            $('#cart-shipping-city').on('change', function() {
+                let cityId = $(this).val();
+                let cityThreshold = parseFloat($(this).find(':selected').data('threshold')) || 0;
+                let globalThreshold = parseFloat($(this).data('global-threshold')) || 0;
+                
+                let thresholds = [cityThreshold, globalThreshold].filter(v => v > 0);
+                let threshold = thresholds.length > 0 ? Math.min(...thresholds) : 0;
+
+                $.ajax({
+                    url: '/save-city-session',
+                    method: 'POST',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        "city_id": cityId
+                    },
+                    success: function(response) {
+                        if (threshold > 0) {
+                            $('#free-shipping-threshold-wrapper').show();
+                            let subtotal = parseFloat($('.total-value').first().text().replace(/[^\d.]/g, ''));
+                            updateProgressBar(subtotal);
+                        } else {
+                            $('#free-shipping-threshold-wrapper').hide();
+                        }
+                    }
+                });
+            });
+
+            function updateProgressBar(subtotal) {
+                let cityThreshold = parseFloat($('#cart-shipping-city option:selected').data('threshold')) || 0;
+                let globalThreshold = parseFloat($('#cart-shipping-city').data('global-threshold')) || 0;
+                
+                let thresholds = [cityThreshold, globalThreshold].filter(v => v > 0);
+                let threshold = thresholds.length > 0 ? Math.min(...thresholds) : 0;
+
+                if (!threshold || threshold <= 0) {
+                    $('#free-shipping-threshold-wrapper').hide();
+                    return;
+                }
+                
+                $('#free-shipping-threshold-wrapper').show();
+                let remaining = threshold - subtotal;
+                let percent = Math.min(100, (subtotal / threshold) * 100);
+                
+                $('.progress-bar-fill').css('width', percent + '%');
+                $('.progress-star').css('left', 'calc(' + percent + '% - 15px)');
+                
+                if (remaining > 0) {
+                    $('.free-shipping-text').html('<i class="bi bi-box-seam me-2" style="color: #666;"></i> أضف مشتريات بقيمة <span class="remaining-amount" style="color: #28a745;">' + remaining.toFixed(2) + '</span> {{ $storeCurrency }} للحصول على شحن مجاني');
+                } else {
+                    $('.free-shipping-text').html('<i class="bi bi-box-seam me-2" style="color: #666;"></i> <span style="color: #28a745;">لقد حصلت على شحن مجاني!</span>');
+                }
             }
         });
     </script>

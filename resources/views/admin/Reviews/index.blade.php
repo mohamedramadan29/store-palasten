@@ -50,6 +50,7 @@
                                             </div>
                                         </th>
                                         <th> الاسم  </th>
+                                        <th> الصورة </th>
                                         <th> التقيم  </th>
                                         <th> العمليات</th>
                                     </tr>
@@ -65,6 +66,13 @@
                                                 {{$i++}}
                                             </td>
                                             <td> {{$review['name']}} </td>
+                                            <td>
+                                                @if(!empty($review->image))
+                                                    <img src="{{ asset('assets/uploads/reviews/'.$review->image) }}" style="width: 50px; height: 50px; border-radius: 50%;">
+                                                @else
+                                                    <span> لا يوجد </span>
+                                                @endif
+                                            </td>
                                             <td> {!! $review['description']  !!} </td>
                                             <td>
                                                 <div class="d-flex gap-2">

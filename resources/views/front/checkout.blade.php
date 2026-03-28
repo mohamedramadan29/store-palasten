@@ -20,7 +20,7 @@
 
         <div class="tf-page-title">
             <div class="container-full">
-                <div class="heading text-center"> اتمام الطلب</div>
+                <div class="text-center heading"> اتمام الطلب</div>
             </div>
         </div>
 
@@ -61,10 +61,10 @@
                             <fieldset class="box fieldset">
                                 <label for="shippingcity"> المدينة / المنطقة <span class="text-danger">*</span></label>
                                 <div class="select-custom">
-                                    <select class="form-select w-100" id="shippingcity" name="shippingcity" required>
-                                        <option value="" disabled {{ old('shippingcity') ? '' : 'selected' }}> -- اختر المدينة --</option>
+                                    <select class="form-select w-100" id="shippingcity" name="shippingcity" required data-global-threshold="{{ $publicSetting->global_free_shipping_threshold }}">
+                                        <option value="" disabled {{ !isset($selectedCity) ? 'selected' : '' }}> -- اختر المدينة --</option>
                                         @foreach($shippingCity as $city)
-                                            <option value="{{$city['id']}}" {{old('shippingcity') == $city['id'] ? 'selected' : ''}}>
+                                            <option value="{{$city['id']}}" {{ (isset($selectedCity) && $selectedCity->id == $city->id) ? 'selected' : '' }} data-threshold="{{ $city->free_shipping_threshold }}">
                                                 {{$city['city']}}
                                             </option>
                                         @endforeach
@@ -120,26 +120,32 @@
                                     @endforeach
                                 </ul>
 
-                                <div class="d-flex justify-content-between line pb_20 pt-4">
+                                <div class="pt-4 d-flex justify-content-between line pb_20">
                                     <h6 class="fw-5"> مجموع المنتجات </h6>
                                     <h6 class="total-products fw-5"> {{number_format($subtotal,2)}}  {{ $storeCurrency }} </h6>
                                 </div>
 
-                                <div class="d-flex justify-content-between line pb_20 pt-4">
+                                <div class="pt-4 d-flex justify-content-between line pb_20">
                                     <h6 class="fw-5"> قيمة الشحن </h6>
-                                    <h6 class="shipping-price fw-5">$0.00</h6>
+                                    <h6 class="shipping-price fw-5">
+                                        @if($freeShipping)
+                                            0.00 {{ $storeCurrency }} (شحن مجاني)
+                                        @else
+                                            $0.00
+                                        @endif
+                                    </h6>
                                 </div>
 
                                 <form id="applycoupon" method="post" action="javascript:void(0);">
                                     @csrf
-                                    <div class="coupon-box pb-20 pt-5 d-flex justify-content-between">
+                                    <div class="pt-5 pb-20 coupon-box d-flex justify-content-between">
                                         <input id="code" name="code" type="text" placeholder=" كود خصم ">
                                         <button id="coupon_button" class="tf-btn btn-sm radius-3 btn-fill btn-icon animate-hover-btn">تطبيق</button>
                                     </div>
                                 </form>
 
                                 @if (Session::has('coupon_amount'))
-                                    <div class="d-flex justify-content-between line pb_20 pt-4">
+                                    <div class="pt-4 d-flex justify-content-between line pb_20">
                                         <h6 class="fw-5"> قيمة الخصم </h6>
                                         <h6 class="fw-5">
                                             - {{ Session::get('coupon_amount') }} {{ $storeCurrency }}
@@ -147,7 +153,7 @@
                                     </div>
                                 @endif
 
-                                <div class="d-flex justify-content-between line pb_30 pt-4 border-top border-2">
+                                <div class="pt-4 border-2 d-flex justify-content-between line pb_30 border-top">
                                     <h5 class="fw-6"> المجموع الكلي </h5>
                                     @if (Session::has('coupon_amount'))
                                         <h5 class="grand-total fw-6"> {{number_format($subtotal - Session::get('coupon_amount'), 2)}} {{ $storeCurrency }} </h5>
@@ -156,14 +162,14 @@
                                     @endif
                                 </div>
 
-                                <input type="hidden" id="shipping-price" name="shipping_price" value="">
+                                <input type="hidden" id="shipping-price" name="shipping_price" value="{{ $freeShipping ? 0 : '' }}">
                                 <input type="hidden" id="coupon_amount" name="coupon_amount"
                                        value="{{ Session::has('coupon_amount') ? Session::get('coupon_amount') : 0 }}">
-                                <input type="hidden" id="grand_total" name="grand_total" value="">
+                                <input type="hidden" id="grand_total" name="grand_total" value="{{ $freeShipping ? number_format($subtotal - (Session::get('coupon_amount') ?? 0), 2, '.', '') : '' }}">
 
                                 <div class="d-flex justify-content-center mt_30">
                                     <button type="submit"
-                                            class="tf-btn radius-3 btn-fill btn-icon animate-hover-btn justify-content-center w-100 py-3 text-uppercase fw-6 fs-16">
+                                            class="py-3 tf-btn radius-3 btn-fill btn-icon animate-hover-btn justify-content-center w-100 text-uppercase fw-6 fs-16">
                                         اتمام الطلب
                                     </button>
                                 </div>
@@ -188,26 +194,47 @@
                         type: 'GET',
                         data: {city_id: cityId},
                         success: function (response) {
-                            $('.shipping-price').text(response.price + ' {{ $storeCurrency }}');
+                                var subtotal = parseFloat($('.total-products').text().replace(/[^\d.]/g, ''));
+                                var shippingPrice = parseFloat(response.price);
+                                var cityThreshold = parseFloat($('#shippingcity option:selected').data('threshold')) || 0;
+                                var globalThreshold = parseFloat($('#shippingcity').data('global-threshold')) || 0;
+                                
+                                let thresholds = [cityThreshold, globalThreshold].filter(v => v > 0);
+                                let threshold = thresholds.length > 0 ? Math.min(...thresholds) : 0;
 
-                            var subtotal = parseFloat($('.total-products').text().replace(',', ''));
-                            var shippingPrice = parseFloat(response.price);
+                                if (threshold > 0 && subtotal >= threshold) {
+                                    shippingPrice = 0;
+                                    $('.shipping-price').text('0.00 {{ $storeCurrency }} (شحن مجاني)');
+                                } else {
+                                    $('.shipping-price').text(shippingPrice + ' {{ $storeCurrency }}');
+                                }
 
-                            var couponAmount = parseFloat($('#coupon_amount').val()) || 0;
-                            var shipping_price_input = document.getElementById('shipping-price');
-                            shipping_price_input.value = shippingPrice;
+                                var couponAmount = parseFloat($('#coupon_amount').val()) || 0;
+                                var shipping_price_input = document.getElementById('shipping-price');
+                                shipping_price_input.value = shippingPrice;
 
-                            var grandTotal = (subtotal + shippingPrice) - couponAmount;
-                            $('.grand-total').text(grandTotal.toFixed(2) + ' {{ $storeCurrency }}');
-                            var grand_total = document.getElementById('grand_total');
-                            grand_total.value = grandTotal;
-                        },
-                        error: function () {
-                            alert('خطأ أثناء جلب سعر الشحن');
-                        }
-                    });
+                                var grandTotal = (subtotal + shippingPrice) - couponAmount;
+                                $('.grand-total').text(grandTotal.toFixed(2) + ' {{ $storeCurrency }}');
+                                var grand_total = document.getElementById('grand_total');
+                                grand_total.value = grandTotal;
+                            },
+                            error: function () {
+                                alert('خطأ أثناء جلب سعر الشحن');
+                            }
+                        });
+                    }
+                });
+
+                // Trigger change if city is already selected
+                if ($('#shippingcity').val()) {
+                    $('#shippingcity').trigger('change');
                 }
             });
+
+        $('.form-checkout').on('submit', function () {
+            var $btn = $(this).find('button[type="submit"]');
+            $btn.prop('disabled', true);
+            $btn.html('<i class="fas fa-spinner fa-spin"></i> جاري الارسال...');
         });
     </script>
 

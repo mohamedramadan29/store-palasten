@@ -43,6 +43,17 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-12">
+                                        <div class="mb-3">
+                                            <label for="image" class="form-label"> صورة العميل </label>
+                                            <input type="file" id="image" class="form-control" name="image">
+                                            @if(!empty($review->image))
+                                                <div class="mt-2">
+                                                    <img src="{{ asset('assets/uploads/reviews/'.$review->image) }}" style="width: 80px; height: 80px; border-radius: 50%;">
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
                                         <input type="hidden" name="content" id="content">
                                         <!-- Quill Editors -->
                                         <div id="snow-editor" style="height: 300px;">

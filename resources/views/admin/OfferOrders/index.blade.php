@@ -24,15 +24,15 @@
 
                 <div class="col-xl-12">
                     <div class="card">
-                        <div class="card-header d-flex justify-content-between align-items-center gap-1">
+                        <div class="gap-1 card-header d-flex justify-content-between align-items-center">
                             <h4 class="card-title flex-grow-1">الطلبات من صفحات الهبوط</h4>
                         </div>
 
                         <div class="table-responsive">
-                            <table id="table-search" class="table table-bordered align-middle mb-0 table-hover table-centered">
+                            <table id="table-search" class="table mb-0 align-middle table-bordered table-hover table-centered">
                                 <thead class="bg-light-subtle">
                                     <tr>
-                                        <th>#</th>
+                                        <th>رقم الطلب</th>
                                         <th>المنتج</th>
                                         <th>اسم العميل</th>
                                         <th>رقم الهاتف</th>
@@ -46,6 +46,7 @@
                                 <tbody>
                                     @foreach ($orders as $order)
                                         <tr>
+                                            
                                             <td>{{ $order['id'] }}</td>
                                             <td>{{ $order['product_name'] }}</td>
                                             <td>{{ $order['name'] }}</td>
@@ -65,7 +66,7 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                <div class="d-flex gap-2">
+                                                <div class="gap-2 d-flex">
                                                     <a href="{{ url('admin/offer_order/update/' . $order['id']) }}" class="btn btn-soft-primary btn-sm">
                                                         <iconify-icon icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon>
                                                     </a>

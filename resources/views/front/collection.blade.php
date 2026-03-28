@@ -9,7 +9,7 @@
         <!-- page-title -->
         <div class="tf-page-title">
             <div class="container-full">
-                <div class="heading text-center"> جميع الاقسام  </div>
+                <div class="text-center heading"> جميع الاقسام  </div>
             </div>
         </div>
         <!-- /page-title -->
