@@ -21,7 +21,7 @@ class FrontController extends Controller
 {
     public function index()
     {
-        $reviews = Review::all();
+        $reviews = Review::latest()->limit(7)->get();
         $banners = Banner::where('status', 1)->get();
         $bestproducts = Product::with('gallary', 'Main_Category')->where('status', 1)->inRandomOrder()->limit(6)->get();
         $lastproducts = Product::with('gallary', 'Main_Category')->where('status', 1)->orderBy('id', 'DESC')->limit(12)->get();

@@ -224,8 +224,8 @@
                                     <td class="text-end">{{$order['shipping_price']}} {{$publicsetting['website_currency']}}</td>
                                 </tr>
                                 <tr>
-                                    <td>قيمة الخصم</td>
-                                    <td class="text-end">0 {{$publicsetting['website_currency']}}</td>
+                                    <td>قيمة الخصم @if($order['coupon_code']) ({{$order['coupon_code']}}) @endif</td>
+                                    <td class="text-end" style="color:red">-{{$order['coupon_amount'] ?? 0}} {{$publicsetting['website_currency']}}</td>
                                 </tr>
                                 <tr>
                                     <td><strong>المجموع الكلي</strong></td>

@@ -20377,7 +20377,7 @@ blockquote .text {
   }
 
   .tf-slideshow .wrap-slider {
-    height: 450px;
+    max-height: 450px;
   }
 
   .tf-slideshow .banner-wrapper {

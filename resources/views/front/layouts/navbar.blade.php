@@ -223,62 +223,7 @@
                 </style>
             </div>
             <div class="cart_section">
-                <ul class="flex-wrap gap-10 tf-top-bar_item tf-social-icon d-flex">
-                    @if ($socialmedia['facebook'] != '')
-                        <li><a href="{{ $socialmedia['facebook'] }}"
-                                class="box-icon w_28 round social-facebook bg_line"><i
-                                    class="icon fs-12 icon-fb"></i></a></li>
-                    @endif
-                    @if ($socialmedia['instagram'] != '')
-                        <li><a href="{{ $socialmedia['instagram'] }}"
-                                class="box-icon w_28 round social-instagram bg_line"><i
-                                    class="icon fs-12 icon-instagram"></i></a></li>
-                    @endif
-                    @if ($socialmedia && $socialmedia->linkedin)
-                        <li><a href="{{ $socialmedia->linkedin }}" class="box-icon w_28 round social-linkedin bg_line">
-                                <i class="bi fs-12 bi-linkedin"></i></a>
-                        </li>
-                    @endif
-                    @if ($socialmedia['x-twitter'] != '')
-                        <li><a href="{{ $socialmedia['x-twitter'] }}"
-                                class="box-icon w_28 round social-twiter bg_line"><i
-                                    class="icon fs-10 icon-Icon-x"></i></a></li>
-                    @endif
-
-                    @if ($socialmedia['youtube'] != '')
-                        <li><a href="{{ $socialmedia['youtube'] }}"
-                                class="box-icon w_28 round social-twiter bg_line"><i
-                                    class="icon fs-10 icon-youtube"></i></a></li>
-                    @endif
-
-                    @if ($socialmedia['whatsapp'] != '')
-                        <li><a href="{{ $socialmedia['whatsapp'] }}"
-                                class="box-icon w_28 round social-twiter bg_line"><i
-                                    class="icon fs-10 icon-whatsapp"></i></a></li>
-                    @endif
-
-                    @if ($socialmedia['tiktok'] != '')
-                        <li><a href="{{ $socialmedia['tiktok'] }}" class="box-icon w_28 round social-tiktok bg_line"><i
-                                    class="icon fs-12 icon-tiktok"></i></a></li>
-                    @endif
-
-                    @if ($socialmedia['pinterest'] != '')
-                        <li><a href="{{ $socialmedia['pinterest'] }}"
-                                class="box-icon w_28 round social-pinterest bg_line"><i
-                                    class="icon fs-12 icon-pinterest-1"></i></a></li>
-                    @endif
-                    @if ($socialmedia['snapchat'] != '')
-                        <li><a href="{{ $socialmedia['snapchat'] }}"
-                                class="box-icon w_28 round social-pinterest bg_line"><i
-                                    class="fs-12 bi bi-snapchat"></i></a></li>
-                    @endif
-                    @if ($socialmedia['telegram'] != '')
-                        <li><a href="{{ $socialmedia['telegram'] }}"
-                                class="box-icon w_28 round social-facebook bg_line"><i
-                                    class="fs-12 bi bi-telegram"></i></a></li>
-                    @endif
-
-                </ul>
+                <!-- Social Media has been moved to the home slider -->
             </div>
         </div>
     </div>

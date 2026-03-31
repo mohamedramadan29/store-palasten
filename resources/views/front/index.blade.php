@@ -9,6 +9,11 @@
     toastify()->success(\Illuminate\Support\Facades\Session::get('Success_message'));
     @endphp
     @endif
+    @if (Session::has('error'))
+    @php
+    toastify()->error(\Illuminate\Support\Facades\Session::get('error'));
+    @endphp
+    @endif
     @if ($errors->any())
     @foreach ($errors->all() as $error)
     @php
@@ -34,8 +39,50 @@
             </div>
         </div>
         <div class="wrap-pagination">
-            <div class="container">
-                <div class="sw-dots sw-pagination-slider justify-content-center"></div>
+            <div class="container position-relative">
+                <!-- Dots positioned on the right using Native Swiper classes -->
+                <div class="sw-dots sw-pagination-slider justify-content-start"></div>
+                
+                <!-- Social media positioned absolutely on the left -->
+                @php
+                    $socialmedia = \App\Models\admin\SocialMedia::first();
+                @endphp
+                @if($socialmedia)
+                <div class="slider-social-icons position-absolute" style="left: 15px; bottom: 0; z-index: 22; transform: translateY(-50%);">
+                    <ul class="flex-wrap gap-2 tf-social-icon d-flex m-0" style="list-style: none; padding: 0;">
+                        @if ($socialmedia['facebook'] != '')
+                            <li><a target="_blank" href="{{ $socialmedia['facebook'] }}" class="box-icon w_28 round social-facebook bg_white"><i class="icon fs-12 icon-fb"></i></a></li>
+                        @endif
+                        @if ($socialmedia['instagram'] != '')
+                            <li><a target="_blank" href="{{ $socialmedia['instagram'] }}" class="box-icon w_28 round social-instagram bg_white"><i class="icon fs-12 icon-instagram"></i></a></li>
+                        @endif
+                        @if ($socialmedia->linkedin)
+                            <li><a target="_blank" href="{{ $socialmedia->linkedin }}" class="box-icon w_28 round social-linkedin bg_white"><i class="bi fs-12 bi-linkedin"></i></a></li>
+                        @endif
+                        @if ($socialmedia['x-twitter'] != '')
+                            <li><a target="_blank" href="{{ $socialmedia['x-twitter'] }}" class="box-icon w_28 round social-twiter bg_white"><i class="icon fs-10 icon-Icon-x"></i></a></li>
+                        @endif
+                        @if ($socialmedia['youtube'] != '')
+                            <li><a target="_blank" href="{{ $socialmedia['youtube'] }}" class="box-icon w_28 round social-twiter bg_white"><i class="icon fs-10 icon-youtube"></i></a></li>
+                        @endif
+                        @if ($socialmedia['whatsapp'] != '')
+                            <li><a target="_blank" href="{{ $socialmedia['whatsapp'] }}" class="box-icon w_28 round social-twiter bg_white"><i class="icon fs-10 icon-whatsapp"></i></a></li>
+                        @endif
+                        @if ($socialmedia['tiktok'] != '')
+                            <li><a target="_blank" href="{{ $socialmedia['tiktok'] }}" class="box-icon w_28 round social-tiktok bg_white"><i class="icon fs-12 icon-tiktok"></i></a></li>
+                        @endif
+                        @if ($socialmedia['pinterest'] != '')
+                            <li><a target="_blank" href="{{ $socialmedia['pinterest'] }}" class="box-icon w_28 round social-pinterest bg_white"><i class="icon fs-12 icon-pinterest-1"></i></a></li>
+                        @endif
+                        @if ($socialmedia['snapchat'] != '')
+                            <li><a target="_blank" href="{{ $socialmedia['snapchat'] }}" class="box-icon w_28 round social-pinterest bg_white"><i class="fs-12 bi bi-snapchat"></i></a></li>
+                        @endif
+                        @if ($socialmedia['telegram'] != '')
+                            <li><a target="_blank" href="{{ $socialmedia['telegram'] }}" class="box-icon w_28 round social-facebook bg_white"><i class="fs-12 bi bi-telegram"></i></a></li>
+                        @endif
+                    </ul>
+                </div>
+                @endif
             </div>
         </div>
     </div>
@@ -101,26 +148,48 @@
                             class="bi bi-arrow-left"></i></a> --}}
                 </div>
             </div>
-            <div class="hover-sw-nav hover-sw-3">
-                <div class="swiper tf-sw-product-sell wrap-sw-over" data-preview="4" data-tablet="3" data-mobile="2"
-                    data-space-lg="30" data-space-md="15" data-pagination="2" data-pagination-md="3"
-                    data-pagination-lg="3">
-                    <div class="swiper-wrapper">
-
-                        @foreach ($bestproducts as $product)
-                        <div class="swiper-slide" lazy="true">
-                            @include('front.partials.product-card', ['product' => $product])
-                        </div>
-                        @endforeach
-
-                    </div>
-
+            <div class="grid-layout wow" id="bestProductsGrid" data-wow-delay="0s" data-grid="grid-4" style="gap: 15px;">
+                @foreach ($bestproducts as $product)
+                <div class="best-product-item" style="display: {{ $loop->iteration <= 6 ? 'block' : 'none' }};">
+                    @include('front.partials.product-card', ['product' => $product])
                 </div>
-                <div class="nav-sw nav-next-slider nav-next-product box-icon w_46 round"><span
-                        class="icon icon-arrow-left"></span></div>
-                <div class="nav-sw nav-prev-slider nav-prev-product box-icon w_46 round"><span
-                        class="icon icon-arrow-right"></span></div>
+                @endforeach
             </div>
+
+            <div class="d-flex justify-content-center gap-2 gap-md-3 mt-4 pt-2">
+                @if(count($bestproducts) > 6)
+                <button id="loadMoreBestProducts" class="tf-btn-loading tf-loading-default style-2 w-50" style="max-width: 200px; min-height: 48px; border-radius: 4px;">
+                    <span class="text fs-15"><i class="icon icon-plus fs-5 pe-1"></i> عرض المزيد </span>
+                </button>
+                @endif
+                <a href="{{ url('shop') }}" class="tf-btn-loading tf-loading-default style-2 w-50 text-center" style="max-width: 200px; min-height: 48px; border-radius: 4px; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                    <span class="text fs-15">عرض الكل</span>
+                </a>
+            </div>
+
+            <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                let currentBest = 6;
+                const totalBest = {{ count($bestproducts) }};
+                const bestItems = document.querySelectorAll('.best-product-item');
+                const bestBtn = document.getElementById('loadMoreBestProducts');
+
+                if (bestBtn) {
+                    bestBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        currentBest += 6;
+                        bestItems.forEach((item, index) => {
+                            if(index < currentBest) {
+                                item.style.display = 'block';
+                            }
+                        });
+                        if (currentBest >= totalBest) {
+                            bestBtn.style.display = 'none';
+                        }
+                    });
+                }
+            });
+            </script>
         </div>
     </section>
     @endif
@@ -141,19 +210,48 @@
                 </div> --}}
 
             </div>
-            <div class="grid-layout loadmore-item wow fadeInUp" data-wow-delay="0s" data-grid="grid-4">
-
+            <div class="grid-layout wow" id="lastProductsGrid" data-wow-delay="0s" data-grid="grid-4" style="gap: 15px;">
                 @foreach ($lastproducts as $product)
-                @include('front.partials.product-card', ['product' => $product])
+                <div class="last-product-item" style="display: {{ $loop->iteration <= 6 ? 'block' : 'none' }};">
+                    @include('front.partials.product-card', ['product' => $product])
+                </div>
                 @endforeach
-
-
             </div>
-            <div class="text-center tf-pagination-wrap view-more-button">
-                <button class="tf-btn-loading tf-loading-default style-2 btn-loadmore "><span class="text">
-                        مشاهدة
-                        المزيد </span></button>
+
+            <div class="d-flex justify-content-center gap-2 gap-md-3 mt-4 pt-2">
+                @if(count($lastproducts) > 6)
+                <button id="loadMoreLastProducts" class="tf-btn-loading tf-loading-default style-2 w-50" style="max-width: 200px; min-height: 48px; border-radius: 4px;">
+                    <span class="text fs-15"><i class="icon icon-plus fs-5 pe-1"></i> عرض المزيد </span>
+                </button>
+                @endif
+                <a href="{{ url('shop') }}" class="tf-btn-loading tf-loading-default style-2 w-50 text-center" style="max-width: 200px; min-height: 48px; border-radius: 4px; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                    <span class="text fs-15">عرض الكل</span>
+                </a>
             </div>
+
+            <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                let currentLast = 6;
+                const totalLast = {{ count($lastproducts) }};
+                const lastItems = document.querySelectorAll('.last-product-item');
+                const lastBtn = document.getElementById('loadMoreLastProducts');
+
+                if (lastBtn) {
+                    lastBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        currentLast += 6;
+                        lastItems.forEach((item, index) => {
+                            if(index < currentLast) {
+                                item.style.display = 'block';
+                            }
+                        });
+                        if (currentLast >= totalLast) {
+                            lastBtn.style.display = 'none';
+                        }
+                    });
+                }
+            });
+            </script>
         </div>
     </section>
 
@@ -174,32 +272,50 @@
                     {{-- <p class="sub-title wow fadeInUp" data-wow-delay="0s"> اكثر المنتجات مبيعا في
                         المتجر </p> --}}
                 </div>
-                <div>
-                    <a href="{{ url('collection/' . $category['slug']) }}" class="head_read_more"> عرض
-                        الكل
-                        <i class="bi bi-arrow-left"></i></a>
-                </div>
             </div>
-            <div class="hover-sw-nav hover-sw-3">
-                <div class="swiper tf-sw-product-sell wrap-sw-over" data-preview="4" data-tablet="3" data-mobile="2"
-                    data-space-lg="30" data-space-md="15" data-pagination="2" data-pagination-md="3"
-                    data-pagination-lg="3">
-                    <div class="swiper-wrapper">
-
-                        @foreach ($category['products'] as $product)
-                        <div class="swiper-slide" lazy="true">
-                            @include('front.partials.product-card', ['product' => $product])
-                        </div>
-                        @endforeach
-
-                    </div>
-
+            
+            <div class="grid-layout wow" id="catProductsGrid_{{ $category['id'] }}" data-wow-delay="0s" data-grid="grid-4" style="gap: 15px;">
+                @foreach ($category['products'] as $product)
+                <div class="cat-product-item-{{ $category['id'] }}" style="display: {{ $loop->iteration <= 6 ? 'block' : 'none' }};">
+                    @include('front.partials.product-card', ['product' => $product])
                 </div>
-                <div class="nav-sw nav-next-slider nav-next-product box-icon w_46 round"><span
-                        class="icon icon-arrow-left"></span></div>
-                <div class="nav-sw nav-prev-slider nav-prev-product box-icon w_46 round"><span
-                        class="icon icon-arrow-right"></span></div>
+                @endforeach
             </div>
+
+            <div class="d-flex justify-content-center gap-2 gap-md-3 mt-4 pt-2">
+                @if(count($category['products']) > 6)
+                <button id="loadMoreCatProducts_{{ $category['id'] }}" class="tf-btn-loading tf-loading-default style-2 w-50" style="max-width: 200px; min-height: 48px; border-radius: 4px;">
+                    <span class="text fs-15"><i class="icon icon-plus fs-5 pe-1"></i> عرض المزيد </span>
+                </button>
+                @endif
+                <a href="{{ url('collection/' . $category['slug']) }}" class="tf-btn-loading tf-loading-default style-2 w-50 text-center" style="max-width: 200px; min-height: 48px; border-radius: 4px; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                    <span class="text fs-15">عرض الكل</span>
+                </a>
+            </div>
+
+            <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                let currentCat_{{ $category['id'] }} = 6;
+                const totalCat_{{ $category['id'] }} = {{ count($category['products']) }};
+                const catItems_{{ $category['id'] }} = document.querySelectorAll('.cat-product-item-{{ $category['id'] }}');
+                const catBtn_{{ $category['id'] }} = document.getElementById('loadMoreCatProducts_{{ $category['id'] }}');
+
+                if (catBtn_{{ $category['id'] }}) {
+                    catBtn_{{ $category['id'] }}.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        currentCat_{{ $category['id'] }} += 6;
+                        catItems_{{ $category['id'] }}.forEach((item, index) => {
+                            if(index < currentCat_{{ $category['id'] }}) {
+                                item.style.display = 'block';
+                            }
+                        });
+                        if (currentCat_{{ $category['id'] }} >= totalCat_{{ $category['id'] }}) {
+                            catBtn_{{ $category['id'] }}.style.display = 'none';
+                        }
+                    });
+                }
+            });
+            </script>
         </div>
     </section>
     @endif
@@ -223,7 +339,6 @@
                 <div class="swiper tf-sw-testimonial" data-preview="3" data-tablet="2" data-mobile="1"
                     data-space-lg="30" data-space-md="15">
                     <div class="swiper-wrapper">
-
                         @foreach ($reviews as $review)
                         <div class="swiper-slide">
                             <div class="testimonial-item style-column wow fadeInUp" data-wow-delay="0s">
@@ -236,13 +351,15 @@
                                             @endfor
                                 </div>
                                 <div class="heading"> {{ $review['name'] }} </div>
-                                <div class="text">
+                                <div class="text" style="height: 120px;overflow-y: scroll;">
                                     {!! $review['description'] !!}
                                 </div>
                                 @if(!empty($review->image))
                                 <div class="author">
                                     <div class="image">
-                                        <img src="{{ asset('assets/uploads/reviews/' . $review->image) }}" alt="{{ $review['name'] }}" style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-top: 15px;">
+                                        <img src="{{ asset('assets/uploads/reviews/' . $review->image) }}"
+                                            alt="{{ $review['name'] }}"
+                                            style="width: 100%;height: auto; margin-top: 15px;border-radius:10px; max-height: 120px; object-fit: cover; object-position: center;">
                                     </div>
                                 </div>
                                 @endif
@@ -254,8 +371,7 @@
                     <style>
                         .icon-start.empty {
                             font-size: 20px;
-                            color: #ddd;
-                             !important;
+                            color: #ddd !important;
                             /* Default color for empty stars */
                         }
 
@@ -270,6 +386,11 @@
                 <div class="nav-sw nav-prev-slider nav-prev-testimonial lg"><span class="icon icon-arrow-right"></span>
                 </div>
                 <div class="sw-dots style-2 sw-pagination-testimonial justify-content-center"></div>
+            </div>
+            <div class="mt-4 text-center view-more-button">
+                <a href="{{ url('all-reviews') }}"
+                    class="tf-btn-loading btn tf-loading-default style-2 btn-loadmore"><span class="text">
+                        مشاهدة جميع الاراء </span></a>
             </div>
         </div>
     </section>
@@ -336,11 +457,8 @@
 
 @section('js')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    });
-</script>
 
-});
+
 </script>
 
 @if (isset($product))

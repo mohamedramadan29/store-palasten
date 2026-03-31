@@ -81,8 +81,8 @@
         </div>
     </div>
     <div class="text-center card-product-info">
-        <a href="{{ url('product/' . $product['slug']) }}" class="title link text-truncate d-block">
-            {{ \Illuminate\Support\Str::limit($product['name'], 60) }}
+        <a href="{{ url('product/' . $product['slug']) }}" class="mb-1 title link d-block" style="display: -webkit-box !important; -webkit-line-clamp: 2; -webkit-box-orient: vertical; white-space: normal; overflow: hidden; text-overflow: ellipsis; min-height: 48px; line-height: 24px;">
+            {{ \Illuminate\Support\Str::limit($product['name'], 90) }}
         </a>
         
         <div class="mb-2 text-center price-container">
@@ -134,6 +134,19 @@
 </div>
 
 <style>
+    .card-product {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    .card-product-info {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+    .card-product-info form {
+        margin-top: auto;
+    }
     .aspect-ratio-box {
         position: relative;
         width: 100%;

@@ -41,7 +41,7 @@ class CheckoutController extends Controller
         if ($cartitems ->count() > 0){
             return view('front.checkout',compact('shippingCity','cartitems', 'selectedCity', 'freeShipping', 'publicSetting'));
         }else{
-            return view('front.shop');
+            return redirect('shop');
         }
 
     }

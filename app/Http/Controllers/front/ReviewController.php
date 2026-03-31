@@ -50,4 +50,10 @@ class ReviewController extends Controller
         }
         return view('front.review');
     }
+
+    public function all_reviews()
+    {
+        $reviews = Review::latest()->get();
+        return view('front.all-reviews', compact('reviews'));
+    }
 }

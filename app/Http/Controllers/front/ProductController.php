@@ -17,6 +17,11 @@ class ProductController extends Controller
     {
 
         $product = Product::with('Main_Category', 'gallary')->where('slug', $slug)->first();
+
+        if (!$product) {
+            return redirect('/')->with('error', 'عفواً، هذا المنتج لم يعد متوفراً حالياً');
+        }
+
         $similar_products = Product::with('gallary')->where('id', '!=', $product['id'])->where(function ($query) use ($product) {
                 $query->where('category_id', $product['category_id'])
                     ->orWhere('sub_category_id', $product['sub_category_id']);

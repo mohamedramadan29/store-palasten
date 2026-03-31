@@ -122,6 +122,38 @@
 
                                     </tbody>
                                 </table>
+                                <div class="mt-4 row justify-content-end">
+                                    <div class="col-lg-4">
+                                        <table class="table table-bordered">
+                                            <tbody>
+                                                <tr>
+                                                    <td><strong>إجمالي المنتجات</strong></td>
+                                                    <td class="text-end">
+                                                        @php
+                                                            $subtotal = 0;
+                                                            foreach($order['details'] as $detail) {
+                                                                $subtotal += $detail['product_price'] * $detail['product_qty'];
+                                                            }
+                                                        @endphp
+                                                        {{number_format($subtotal, 2)}} 
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>قيمة الشحن</strong></td>
+                                                    <td class="text-end">{{number_format($order['shipping_price'], 2)}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>قيمة الخصم @if($order['coupon_code']) ({{$order['coupon_code']}}) @endif</strong></td>
+                                                    <td class="text-end" style="color: red;">-{{number_format($order['coupon_amount'] ?? 0, 2)}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>المجموع الكلي</strong></td>
+                                                    <td class="text-end"><strong>{{number_format($order['grand_total'], 2)}}</strong></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                             <div class="card">

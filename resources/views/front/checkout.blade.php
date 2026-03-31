@@ -26,6 +26,7 @@
 
         <section class="flat-spacing-11">
             <div class="container">
+                @if(count($cartitems) > 0)
                 <form method="post" action="{{url('order/store')}}"
                       class="form-checkout tf-page-cart-checkout widget-wrap-checkout">
                     @csrf
@@ -177,6 +178,8 @@
                         </div>
                     </div>
                 </form>
+                @else
+                @endif
             </div>
         </section>
     </div>

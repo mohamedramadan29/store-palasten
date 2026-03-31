@@ -205,7 +205,15 @@ class CartController extends Controller
                 // check if this coupon is expired or not
                 $current_date = date("Y-m-d");
                 if ($coupondata['expire_date'] < $current_date) {
-                    $message = ['لقد انتهي وقت هذا الكود '];
+                    $message = 'لقد انتهي وقت هذا الكود ';
+                }
+
+                // Check If this coupon is single use
+                if ($coupondata['coupon_type'] == 'مرة واحده') {
+                    $usedCount = \App\Models\front\Order::where('coupon_code', $data['code'])->count();
+                    if ($usedCount > 0) {
+                        $message = 'عفوا، لقد تم استخدام هذا الكود من قبل';
+                    }
                 }
 
                 // Check If this Coupon in selected Categories Or Not All Product

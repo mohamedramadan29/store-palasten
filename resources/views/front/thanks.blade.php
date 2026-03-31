@@ -43,7 +43,7 @@ body {
 }
 
 .invoice-body {
-    padding: 40px;
+    padding: 5px;
 }
 
 .invoice-info {
@@ -65,6 +65,14 @@ table {
     border-collapse: collapse;
     margin-bottom: 25px;
     font-size: 16px;
+    white-space: nowrap;
+}
+
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    margin-bottom: 25px;
 }
 
 .table th,
@@ -197,8 +205,8 @@ body {
 
 .table th, .table td {
     border: 1px solid #000 !important;
-    padding: 10px !important;
-    font-size: 11pt;
+    padding: 5px !important;
+    font-size: 11px;
     text-align: center;
 }
 
@@ -298,7 +306,8 @@ body {
                 </div>
             </div>
 
-            <table class="table">
+            <div class="table-responsive">
+                <table class="table" style="margin-bottom: 0;">
                 <thead>
                     <tr>
                         <th>المنتج</th>
@@ -312,7 +321,7 @@ body {
                         @php $subtotal += $item->product_price * $item->product_qty; @endphp
                         <tr>
                             <td>
-                                <div style="display: flex; align-items: center; gap: 10px; justify-content: center;">
+                                <div style="display: flex; align-items: center;flex-direction: column; gap: 10px; justify-content: center;">
                                     <img src="{{asset('assets/uploads/product_images/'.($item->variation->image ?? $item->product->image))}}" alt="" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;">
                                     <div style="text-align: right;">
                                         <div>{{$item->product_name}}</div>
@@ -336,10 +345,14 @@ body {
                     @endforeach
                 </tbody>
             </table>
+            </div>
 
             <div class="totals">
                 <div><span>مجموع المنتجات</span><span>{{number_format($subtotal,2)}} {{$storeCurrency}}</span></div>
                 <div><span>الشحن</span><span>{{number_format($order->shipping_price,2)}} {{$storeCurrency}}</span></div>
+                @if($order->coupon_amount > 0)
+                <div style="color: #e74c3c;"><span>خصم القسيمة @if($order->coupon_code) ({{$order->coupon_code}}) @endif</span><span>-{{number_format($order->coupon_amount,2)}} {{$storeCurrency}}</span></div>
+                @endif
                 <div class="grand-total"><span>المجموع الكلي</span><span>{{number_format($order->grand_total,2)}} {{$storeCurrency}}</span></div>
             </div>
 
@@ -352,6 +365,12 @@ body {
                     <td>الشحن</td>
                     <td>{{number_format($order->shipping_price,2)}} {{$storeCurrency}}</td>
                 </tr>
+                @if($order->coupon_amount > 0)
+                <tr>
+                    <td>خصم القسيمة</td>
+                    <td>-{{number_format($order->coupon_amount,2)}} {{$storeCurrency}}</td>
+                </tr>
+                @endif
                 <tr class="print-grand-total">
                     <td><strong>المجموع الكلي</strong></td>
                     <td><strong>{{number_format($order->grand_total,2)}} {{$storeCurrency}}</strong></td>

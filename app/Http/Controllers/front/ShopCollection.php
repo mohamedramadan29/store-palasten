@@ -23,6 +23,9 @@ class ShopCollection extends Controller
     public function collection_details($slug)
     {
         $category = MainCategory::where('slug', $slug)->first();
+        if (!$category) {
+            return redirect('/')->with('error', 'عفواً، هذا القسم لم يعد متوفراً حالياً');
+        }
         // جلب المنتجات التي تنتمي لهذه الفئة أو الفئة الفرعية
         $products = Product::where(function ($query) use ($category) {
             $query->where('category_id', $category['id'])
@@ -67,6 +70,9 @@ class ShopCollection extends Controller
     {
         $category = MainCategory::where('slug', $slug)->first();
         $sub_category = SubCategory::where('slug', $sub_slug)->first();
+        if (!$category || !$sub_category) {
+            return redirect('/')->with('error', 'عفواً، هذا القسم الفرعي لم يعد متوفراً حالياً');
+        }
         $products = Product::where(function ($query) use ($sub_category) {
             $query->where('sub_category_id', $sub_category['id']);
         })->where('status', 1);

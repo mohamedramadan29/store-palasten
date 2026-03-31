@@ -44,7 +44,7 @@
                                     </div>
                                     <div class="col-lg-12">
                                         <div class="mb-3">
-                                            <label for="image" class="form-label"> صورة العميل </label>
+                                            <label for="image" class="form-label"> اضافة صورة  </label>
                                             <input type="file" id="image" class="form-control" name="image">
                                         </div>
                                     </div>

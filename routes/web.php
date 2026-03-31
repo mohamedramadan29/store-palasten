@@ -80,5 +80,6 @@ Route::controller(OfferOrderController::class)->group(function () {
 
 Route::controller(\App\Http\Controllers\front\ReviewController::class)->group(function (){
    Route::match(['post','get'],'review','review');
+   Route::get('all-reviews','all_reviews');
 });
 @include 'admin.php';
