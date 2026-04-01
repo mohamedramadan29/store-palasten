@@ -152,6 +152,7 @@ class ProductController extends Controller
 
                 $product->type = $data['type'];
                 $product->purches_price = $data['purches_price'];
+                $product->marketer_price = $data['marketer_price'] ?? 0;
                 $product->discount = $data['discount'];
                 $product->meta_title = $data['meta_title'];
                 $product->meta_keywords = $data['meta_keywords'];
@@ -197,6 +198,7 @@ class ProductController extends Controller
                         $productVariation = new ProductVartions();
                         $productVariation->product_id = $product->id;
                         $productVariation->purchase_price = $request->variant_purchase_price[$index];
+                        $productVariation->marketer_price = $request->variant_marketer_price[$index] ?? 0;
                         $productVariation->price = $request->variant_price[$index];
                         $productVariation->discount = $request->variant_discount[$index];
                         $productVariation->image = $vartiantImage;
@@ -312,6 +314,7 @@ class ProductController extends Controller
                 $product->quantity = $data['quantity'];
                 $product->type = $data['type'];
                 $product->purches_price = $data['purches_price'];
+                $product->marketer_price = $data['marketer_price'] ?? 0;
                 $product->price = $data['price'];
                 $product->discount = $data['discount'];
                 $product->meta_title = $data['meta_title'];
@@ -359,6 +362,8 @@ class ProductController extends Controller
 
                             $productVariation = ProductVartions::create([
                                 'product_id' => $product->id,
+                                'purchase_price' => $request->variant_new_purchase_price[$index],
+                                'marketer_price' => $request->variant_new_marketer_price[$index] ?? 0,
                                 'price' => $request->variant_new_price[$index],
                                 'discount' => $request->variant_new_discount[$index],
                                 'image' => $vartiantImage,
@@ -399,6 +404,7 @@ class ProductController extends Controller
 
                             // تحديث بيانات المتغير
                             $productVariation->purchase_price = $request->variant_purchase_price[$index];
+                            $productVariation->marketer_price = $request->variant_marketer_price[$index] ?? 0;
                             $productVariation->price = $request->variant_price[$index];
                             $productVariation->discount = $request->variant_discount[$index];
 

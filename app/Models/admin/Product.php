@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
+    protected $fillable = ['name', 'price', 'purches_price', 'quantity', 'description', 'category_id', 'sub_category_id', 'brand_id', 'status', 'image', 'slug'];
     protected $guarded = [];
     // علاقة المتغيرات
     public function variations()

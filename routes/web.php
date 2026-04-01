@@ -82,4 +82,28 @@ Route::controller(\App\Http\Controllers\front\ReviewController::class)->group(fu
    Route::match(['post','get'],'review','review');
    Route::get('all-reviews','all_reviews');
 });
+
+//////////////////////// Marketer Routes ////////////////////////
+Route::group(['prefix' => 'marketer'], function () {
+    // Auth Routes
+    Route::controller(\App\Http\Controllers\front\MarketerAuthController::class)->group(function () {
+        Route::get('register', 'showRegister')->name('marketer.register');
+        Route::post('register', 'register')->name('marketer.register.submit');
+        Route::get('login', 'showLogin')->name('marketer.login');
+        Route::post('login', 'login')->name('marketer.login.submit');
+        Route::get('logout', 'logout')->name('marketer.logout');
+    });
+
+    // Dashboard Routes (Protected by marketer middleware)
+    Route::group(['middleware' => 'marketer'], function () {
+        Route::controller(\App\Http\Controllers\front\MarketerDashboardController::class)->group(function () {
+            Route::get('dashboard', 'dashboard')->name('marketer.dashboard');
+            Route::get('orders', 'orders')->name('marketer.orders');
+            Route::post('orders/cancel/{id}', 'cancelOrder')->name('marketer.order.cancel');
+            Route::get('profile', 'profile')->name('marketer.profile');
+            Route::post('profile', 'updateProfile')->name('marketer.profile.update');
+            Route::get('reports', 'reports')->name('marketer.reports');
+        });
+    });
+});
 @include 'admin.php';

@@ -90,6 +90,24 @@ class CartController extends Controller
         } else {
             $hidden_vartion = null;
         }
+        // Determine affiliate sell price from product's marketer_price
+        // If marketer_price is null or 0, use the regular product price as fallback
+        $affiliateSellPrice = null;
+        if (Auth::guard('marketer')->check()) {
+            $productModel = \App\Models\admin\Product::find($cartData['product_id']);
+            $productMktPrice = $productModel->marketer_price ?? 0;
+            $basePrice = $productMktPrice > 0 ? $productMktPrice : ($productModel->price ?? $price);
+            
+            if ($hidden_vartion) {
+                $variationModel = \App\Models\admin\ProductVartions::find($hidden_vartion);
+                $variationMktPrice = $variationModel->marketer_price ?? 0;
+                // Check for variation marketer_price first if > 0, else fallback to product price
+                $affiliateSellPrice = $variationMktPrice > 0 ? $variationMktPrice : $basePrice;
+            } else {
+                $affiliateSellPrice = $basePrice;
+            }
+        }
+
         $item = new Cart();
         $item->session_id = $session_id;
         $item->user_id = $user_id;
@@ -97,6 +115,7 @@ class CartController extends Controller
         $item->qty = $cartData['number'];
         $item->price = $price;
         $item->product_variation_id = $hidden_vartion;
+        $item->marketer_sell_price = $affiliateSellPrice;
         $item->save();
         $cartCount = Cart::getcartitems()->count();
         return response()->json([
@@ -177,6 +196,32 @@ class CartController extends Controller
         }
 
         return response()->json(['error' => 'Item not found'], 404);
+    }
+
+    public function updateMarketerPrice(Request $request)
+    {
+        $cartItem = Cart::find($request->item_id);
+        if (!$cartItem) {
+            return response()->json(['error' => 'Item not found'], 404);
+        }
+
+        $newPrice = floatval($request->marketer_sell_price);
+        // Ensure minimum price is the product's marketer_price
+        $minPrice = $cartItem->productdata->marketer_price ?? $cartItem->price;
+        if ($newPrice < $minPrice) {
+            $newPrice = $minPrice;
+        }
+
+        $cartItem->marketer_sell_price = $newPrice;
+        $cartItem->save();
+
+        $profit = ($newPrice - $cartItem->price) * $cartItem->qty;
+
+        return response()->json([
+            'status' => true,
+            'marketer_sell_price' => $newPrice,
+            'profit' => round($profit, 2),
+        ]);
     }
 
 

@@ -250,5 +250,15 @@ Route::group(['prefix' => 'admin'], function () {
             Route::post('notifications/mark-all-read','markAllAsRead')->name('admin.notifications.mark-all-read');
             Route::get('notifications/count','getNotificationCount')->name('admin.notifications.count');
         });
+
+        //////////////////////// Start Marketer Management /////////////////
+        ///
+        Route::controller(\App\Http\Controllers\admin\MarketerManagementController::class)->group(function (){
+            Route::get('marketers','index')->name('admin.marketers.index');
+            Route::get('marketer/{id}','show')->name('admin.marketer.show');
+            Route::post('marketer/status/{id}','updateStatus')->name('admin.marketer.status');
+            Route::post('marketer/delete/{id}','delete')->name('admin.marketer.delete');
+            Route::get('marketer-orders','marketerOrders')->name('admin.marketer.orders');
+        });
     });
 });

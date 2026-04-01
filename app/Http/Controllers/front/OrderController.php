@@ -68,7 +68,7 @@ class OrderController extends Controller
 
         DB::beginTransaction();
         $order = new Order();
-        $order->name = $data['name'] . '' . $data['name2'];
+        $order->name = $data['name'] . ' ' . $data['name2'];
         $order->address = $data['address'];
         $order->shippingcity = $data['shippingcity'];
         $order->phone = $data['phone'];
@@ -80,17 +80,45 @@ class OrderController extends Controller
         $order->order_status = 'لم يبدا';
         $order->payment_method = 'الدفع عند الاستلام';
         $order->grand_total = $data['grand_total'];
+
+        // Marketer fields
+        $isMarketer = \Illuminate\Support\Facades\Auth::guard('marketer')->check();
+        if ($isMarketer) {
+            $order->is_marketer_order = 1;
+            $order->marketer_id = \Illuminate\Support\Facades\Auth::guard('marketer')->id();
+        }
+
         $order->save();
-        foreach ($cartItems as $item) {
+
+        $total_profit = 0;
+        foreach ($cartItems as $idx => $item) {
             $order_details = new OrderDetails();
             $order_details->order_id = $order->id;
             $order_details->product_id = $item->product_id;
             $getproductdata = Product::where('id', $item->product_id)->first();
             $order_details->product_name = $getproductdata->name;
-            $order_details->product_price = $item->price;
+            
+            // Marketer Logic for line items
+            if ($isMarketer && isset($data['marketer_sell_price'][$idx])) {
+                $sell_price = $data['marketer_sell_price'][$idx];
+                $store_base_price = $item->price;
+                
+                $order_details->product_price = $sell_price;
+                $order_details->marketer_price = $store_base_price;
+                $order_details->profit = ($sell_price - $store_base_price) * $item->qty;
+                $total_profit += $order_details->profit;
+            } else {
+                $order_details->product_price = $item->price;
+            }
+
             $order_details->product_qty = $item->qty;
             $order_details->product_variation_id = $item->product_variation_id;
             $order_details->save();
+        }
+
+        if ($isMarketer) {
+            $order->total_profit = $total_profit;
+            $order->save();
         }
 
         ////////////////////// Send Confirmation Email ///////////////////////////////

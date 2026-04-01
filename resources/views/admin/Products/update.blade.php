@@ -4,6 +4,10 @@
     تعديل المنتج
 @endsection
 
+@php
+    $setting = \App\Models\admin\PublicSetting::first();
+@endphp
+
 @section('css')
     <style>
         #product-variants {
@@ -277,6 +281,14 @@
                                                             value="{{ $variation->purchase_price ?? 0 }}"
                                                             class="form-control" step="0.01">
                                                     </div>
+                                                    @if($setting->marketer_system_status)
+                                                    <div class="form-group">
+                                                        <label>سعر المنتج للمسوق</label>
+                                                        <input type="number" name="variant_marketer_price[]"
+                                                            value="{{ $variation->marketer_price ?? 0 }}"
+                                                            class="form-control" step="0.01">
+                                                    </div>
+                                                    @endif
 
                                                     <div class="form-group">
                                                         <label>سعر البيع</label>
@@ -369,7 +381,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-4">
                                         <label class="form-label"> سعر الشراء </label>
                                         <div class="mb-3 input-group">
                                             <span class="input-group-text fs-20"><i class='bx bx-dollar'></i></span>
@@ -377,7 +389,17 @@
                                                 class="form-control" value="{{ $product['purches_price'] }}">
                                         </div>
                                     </div>
-                                    <div class="col-lg-6">
+                                    @if($setting->marketer_system_status)
+                                    <div class="col-lg-4">
+                                        <label class="form-label"> سعر المنتج للمسوق </label>
+                                        <div class="mb-3 input-group">
+                                            <span class="input-group-text fs-20"><i class='bx bx-dollar'></i></span>
+                                            <input type="number" step="0.01" name="marketer_price"
+                                                class="form-control" value="{{ $product['marketer_price'] }}">
+                                        </div>
+                                    </div>
+                                    @endif
+                                    <div class="col-lg-4">
                                         <label class="form-label"> سعر البيع </label>
                                         <div class="mb-3 input-group">
                                             <span class="input-group-text fs-20"><i class='bx bx-dollar'></i></span>
@@ -539,6 +561,16 @@
                             <label>اسم المتغير</label>
                             <input name='variant_new_name[]' class="form-control" type="text" value="${variantText}">
                         </div>
+                        <div class="form-group">
+                            <label>سعر الشراء</label>
+                            <input placeholder="السعر" class="form-control" step="0.01" type="number" name='variant_new_purchase_price[]'>
+                        </div>
+                        @if($setting->marketer_system_status)
+                        <div class="form-group">
+                            <label>سعر المنتج للمسوق</label>
+                            <input placeholder="السعر" class="form-control" step="0.01" type="number" name='variant_new_marketer_price[]'>
+                        </div>
+                        @endif
                         <div class="form-group">
                             <label>سعر المنتج</label>
                             <input placeholder="السعر" class="form-control" step="0.01" type="number" name='variant_new_price[]'>

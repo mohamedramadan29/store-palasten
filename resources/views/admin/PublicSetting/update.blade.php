@@ -148,6 +148,14 @@
                                                    value="{{$public_setting['global_free_shipping_threshold']}}">
                                         </div>
                                     </div>
+                                    <div class="col-lg-12">
+                                        <label for="marketer_system_status" class="form-label"> تفعيل نظام المسوقين </label>
+                                        <select required name="marketer_system_status" class="form-control" id="marketer_system_status" data-choices
+                                                data-choices-groups data-placeholder="Select">
+                                            <option @if($public_setting['marketer_system_status'] == 0) selected @endif value="0"> غير مفعل </option>
+                                            <option @if($public_setting['marketer_system_status'] == 1) selected @endif value="1"> مفعل </option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>

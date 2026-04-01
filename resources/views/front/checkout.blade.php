@@ -121,6 +121,60 @@
                                     @endforeach
                                 </ul>
 
+                                @php
+                                    $isMarketer = Auth::guard('marketer')->check();
+                                @endphp
+                                @if($isMarketer)
+                                <div class="p-3 mt-3 rounded border marketer-pricing-section" style="background:#f8f9ff">
+                                    <h6 class="mb-3 fw-6" style="color:#5c4ac7">🏷️ تسعير المسوق - حدد سعر البيع لكل منتج</h6>
+                                    @foreach($cartitems as $idx => $item)
+                                    @php
+                                        // Standard store price (base for profit)
+                                        $storeP = $item->price; 
+                                        // Admin defined marketer price - fallback to regular price if null or 0
+                                        $variationMktPrice = $item->variation->marketer_price ?? 0;
+                                        $productMktPrice = $item->productdata->marketer_price ?? 0;
+                                        
+                                        if ($item->product_variation_id) {
+                                            // If variation has marketer_price > 0 use it, else check product marketer_price
+                                            $mktP = $variationMktPrice > 0 ? $variationMktPrice : ($productMktPrice > 0 ? $productMktPrice : $item->price);
+                                        } else {
+                                            // No variation, use product marketer_price if > 0, else use regular price
+                                            $mktP = $productMktPrice > 0 ? $productMktPrice : $item->price;
+                                        }
+                                    @endphp
+                                    <div class="p-2 mb-3" style="border-bottom:1px dashed #ddd">
+                                        <div class="mb-1 fw-5" style="font-size:13px">{{ $item->productdata->name }}</div>
+                                        <div class="flex-wrap gap-5 d-flex align-items-center">
+                                            <div style="font-size:12px;color:#666">
+                                                سعر المنتج: <strong>{{ $storeP }} {{ $storeCurrency }}</strong>
+                                            </div>
+                                            <div style="font-size:12px;color:#666">
+                                                سعر المسوق المقترح: <strong>{{ $mktP }} {{ $storeCurrency }}</strong>
+                                            </div>
+                                            <div class="gap-2 d-flex align-items-center">
+                                                <label style="font-size:12px;white-space:nowrap">سعر البيع النهائي:</label>
+                                                <input type="number" step="0.01" min="{{ $mktP }}"
+                                                    class="form-control form-control-sm marketer-sell-price"
+                                                    style="max-width:110px"
+                                                    name="marketer_sell_price[{{ $idx }}]"
+                                                    value="{{ $mktP }}"
+                                                    data-store-price="{{ $storeP }}"
+                                                    data-mkt-price="{{ $mktP }}"
+                                                    data-qty="{{ $item->qty }}">
+                                            </div>
+                                            <div style="font-size:12px;color:green">
+                                                ربحك: <strong class="item-profit-{{ $idx }}">{{ ($mktP - $storeP) * $item->qty }}</strong> {{ $storeCurrency }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                    <div class="mt-2" style="font-size:14px;color:#5c4ac7">
+                                        إجمالي ربحك المتوقع: <strong id="total-marketer-profit">0</strong> {{ $storeCurrency }}
+                                    </div>
+                                </div>
+                                @endif
+
                                 <div class="pt-4 d-flex justify-content-between line pb_20">
                                     <h6 class="fw-5"> مجموع المنتجات </h6>
                                     <h6 class="total-products fw-5"> {{number_format($subtotal,2)}}  {{ $storeCurrency }} </h6>
@@ -167,6 +221,9 @@
                                 <input type="hidden" id="coupon_amount" name="coupon_amount"
                                        value="{{ Session::has('coupon_amount') ? Session::get('coupon_amount') : 0 }}">
                                 <input type="hidden" id="grand_total" name="grand_total" value="{{ $freeShipping ? number_format($subtotal - (Session::get('coupon_amount') ?? 0), 2, '.', '') : '' }}">
+                                @if(Auth::guard('marketer')->check())
+                                <input type="hidden" name="is_marketer_order" value="1">
+                                @endif
 
                                 <div class="d-flex justify-content-center mt_30">
                                     <button type="submit"
@@ -231,6 +288,45 @@
                 // Trigger change if city is already selected
                 if ($('#shippingcity').val()) {
                     $('#shippingcity').trigger('change');
+                }
+
+                // Marketer Profit Calculation
+                function updateMarketerProfit() {
+                    let totalProfit = 0;
+                    let subtotal = 0;
+
+                    $('.marketer-sell-price').each(function(index) {
+                        let storePrice = parseFloat($(this).data('store-price'));
+                        let mktPrice = parseFloat($(this).data('mkt-price'));
+                        let sellPrice = parseFloat($(this).val()) || mktPrice;
+                        let qty = parseInt($(this).data('qty'));
+                        
+                        // Minimum sell price is mktPrice
+                        if (sellPrice < mktPrice) {
+                            sellPrice = mktPrice;
+                        }
+
+                        let itemProfit = (sellPrice - storePrice) * qty;
+                        totalProfit += itemProfit;
+                        subtotal += (sellPrice * qty);
+
+                        $('.item-profit-' + index).text(itemProfit.toFixed(2));
+                    });
+
+                    $('#total-marketer-profit').text(totalProfit.toFixed(2));
+                    
+                    // Update main subtotal and grand total
+                    $('.total-products').text(subtotal.toFixed(2) + ' {{ $storeCurrency }}');
+                    
+                    // Trigger shipping calculation to update grand total
+                    $('#shippingcity').trigger('change');
+                }
+
+                $('.marketer-sell-price').on('input change', updateMarketerProfit);
+                
+                // Initial update for marketer profit
+                if ($('.marketer-sell-price').length > 0) {
+                    updateMarketerProfit();
                 }
             });
 

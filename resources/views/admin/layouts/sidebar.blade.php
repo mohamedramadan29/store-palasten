@@ -127,6 +127,29 @@
                     </ul>
                 </div>
             </li>
+
+            @if($setting['marketer_system_status'])
+            <li class="nav-item">
+                <a class="nav-link menu-arrow" href="#sidebarMarketers" data-bs-toggle="collapse" role="button"
+                   aria-expanded="false" aria-controls="sidebarMarketers">
+                                   <span class="nav-icon">
+                                        <iconify-icon icon="solar:users-group-rounded-bold-duotone"></iconify-icon>
+                                   </span>
+                    <span class="nav-text"> نظام المسوقين </span>
+                </a>
+                <div class="collapse" id="sidebarMarketers">
+                    <ul class="nav sub-navbar-nav">
+                        <li class="sub-nav-item">
+                            <a class="sub-nav-link" href="{{url('admin/marketers')}}"> إدارة المسوقين </a>
+                        </li>
+                        <li class="sub-nav-item">
+                            <a class="sub-nav-link" href="{{url('admin/marketer-orders')}}"> طلبات المسوقين </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            @endif
+
             <li class="nav-item">
                 <a class="nav-link menu-arrow" href="#sidebarAttributes" data-bs-toggle="collapse" role="button"
                    aria-expanded="false" aria-controls="sidebarAttributes">

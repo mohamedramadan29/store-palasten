@@ -73,6 +73,9 @@ $socialmedia = \App\Models\admin\SocialMedia::first();
                             <li><a href="privacy-policy.html" class="footer-menu_item">شروط الاستخدام</a></li>
                             <li><a href="delivery-return.html" class="footer-menu_item">التوصيل والارجاع</a></li>
                             <li><a href="shipping-delivery.html" class="footer-menu_item">الاسئلة الشائعة</a></li>
+                            @if($public_setting->marketer_system_status)
+                                <li><a href="{{ url('marketer/register') }}" class="footer-menu_item">انضم كمسوق</a></li>
+                            @endif
                         </ul>
                     </div>
                 </div>
@@ -196,6 +199,27 @@ $socialmedia = \App\Models\admin\SocialMedia::first();
                 <li class="nav-mb-item"><a href="{{ url('/cart') }}" class="mb-menu-link">سلة الشراء</a></li>
                 <li class="nav-mb-item"><a href="{{ url('track-order') }}" class="mb-menu-link"> تتبع طلبيتك </a></li>
                 <li class="nav-mb-item"><a href="{{ url('faq') }}" class="mb-menu-link">الاسئلة الشائعة</a></li>
+
+                @if($public_setting->marketer_system_status)
+                    <li class="nav-mb-item">
+                        <a href="#dropdown-marketer" class="collapsed mb-menu-link" data-bs-toggle="collapse"
+                            aria-expanded="false" aria-controls="dropdown-marketer">
+                            <span>نظام المسوقين</span>
+                            <span class="btn-open-sub"></span>
+                        </a>
+                        <div id="dropdown-marketer" class="collapse">
+                            <ul class="sub-nav-menu">
+                                @if(Auth::guard('marketer')->check())
+                                    <li><a href="{{ url('marketer/dashboard') }}" class="sub-nav-link">لوحة التحكم</a></li>
+                                    <li><a href="{{ url('marketer/logout') }}" class="sub-nav-link">تسجيل الخروج</a></li>
+                                @else
+                                    <li><a href="{{ url('marketer/login') }}" class="sub-nav-link">تسجيل دخول</a></li>
+                                    <li><a href="{{ url('marketer/register') }}" class="sub-nav-link">تسجيل مسوق جديد</a></li>
+                                @endif
+                            </ul>
+                        </div>
+                    </li>
+                @endif
             </ul>
             <div class="mb-other-content">
                 <div class="mb-notice"><a class="text-need">تريد مساعدة</a></div>

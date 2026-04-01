@@ -4,6 +4,10 @@
     اضافة منتج جديد
 @endsection
 
+@php
+    $setting = \App\Models\admin\PublicSetting::first();
+@endphp
+
 @section('css')
     <style>
         #product-variants {
@@ -328,6 +332,12 @@
                                                         <label>سعر المنتج</label>
                                                         <input placeholder="السعر" step="0.01" class="form-control" type="number" name='variant_price[]' value="{{ old('variant_price.'.$index) }}">
                                                     </div>
+                                                    @if($setting->marketer_system_status)
+                                                    <div class="form-group">
+                                                        <label>سعر المنتج للمسوق</label>
+                                                        <input placeholder="السعر" step="0.01" class="form-control" type="number" name='variant_marketer_price[]' value="{{ old('variant_marketer_price.'.$index) }}">
+                                                    </div>
+                                                    @endif
                                                     <div class="form-group">
                                                         <label>السعر بعد التخفيض</label>
                                                         <input placeholder="السعر" step="0.01" class="form-control" type="number" name='variant_discount[]' value="{{ old('variant_discount.'.$index) }}">
@@ -366,6 +376,16 @@
                                                 class="form-control" placeholder="" value="{{ old('purches_price') }}">
                                         </div>
                                     </div>
+                                    @if($setting->marketer_system_status)
+                                    <div class="col-lg-6">
+                                        <label for="marketer_price" class="form-label"> سعر المنتج للمسوق </label>
+                                        <div class="mb-3 input-group">
+                                            <span class="input-group-text fs-20"><i class='bx bx-dollar'></i></span>
+                                            <input type="number" id="marketer_price" name="marketer_price" step="0.01"
+                                                class="form-control" placeholder="" value="{{ old('marketer_price') }}">
+                                        </div>
+                                    </div>
+                                    @endif
                                     <div class="col-lg-6">
                                         <label for="price" class="form-label"> سعر البيع </label>
                                         <div class="mb-3 input-group">
@@ -566,6 +586,12 @@
                     <label>سعر الشراء</label>
                     <input placeholder="سعر الشراء" class="form-control" type="number" name='variant_purchase_price[]' min="0" step="0.01">
                 </div>
+                @if($setting->marketer_system_status)
+                <div class="form-group">
+                    <label>سعر المنتج للمسوق</label>
+                    <input placeholder="سعر المنتج للمسوق" class="form-control" type="number" name='variant_marketer_price[]' min="0" step="0.01">
+                </div>
+                @endif
                 <div class="form-group">
                     <label>سعر البيع</label>
                     <input placeholder="سعر البيع" required class="form-control" type="number" name='variant_price[]' min="0" step="0.01">

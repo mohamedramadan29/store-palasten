@@ -20,4 +20,9 @@ class Order extends Model
     {
         return $this->hasMany(OrderDetails::class,'order_id');
     }
+
+    public function marketer()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'marketer_id');
+    }
 }

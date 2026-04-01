@@ -95,7 +95,7 @@
         <!-- /Top Bar -->
     @endif
     @php
-        $settings = \App\Models\admin\PublicSetting::select('website_logo')->first();
+        $settings = \App\Models\admin\PublicSetting::first();
         $socialmedia = \App\Models\admin\SocialMedia::first();
     @endphp
     <!-- Search Top Bar -->
@@ -295,6 +295,23 @@
                                 </a></li>
                             <li class="menu-item"><a href="{{ url('faq') }}" class="item-link"> الاسئلة الشائعة
                                 </a></li>
+
+                            @if($settings->marketer_system_status)
+                                <li class="menu-item position-relative">
+                                    <a href="javascript:void(0)" class="item-link"> نظام المسوقين <i class="icon icon-arrow-down"></i></a>
+                                    <div class="sub-menu submenu-default">
+                                        <ul class="menu-list">
+                                            @if(Auth::guard('marketer')->check())
+                                                <li><a href="{{ url('marketer/dashboard') }}" class="menu-link-text link text_black-2">لوحة التحكم</a></li>
+                                                <li><a href="{{ url('marketer/logout') }}" class="menu-link-text link text_black-2">تسجيل الخروج</a></li>
+                                            @else
+                                                <li><a href="{{ url('marketer/login') }}" class="menu-link-text link text_black-2">تسجيل دخول</a></li>
+                                                <li><a href="{{ url('marketer/register') }}" class="menu-link-text link text_black-2">تسجيل مسوق جديد</a></li>
+                                            @endif
+                                        </ul>
+                                    </div>
+                                </li>
+                            @endif
                         </ul>
                     </nav>
 
