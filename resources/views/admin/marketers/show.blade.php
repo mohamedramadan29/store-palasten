@@ -189,7 +189,7 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <a href="{{ url('admin/order/details/'.$order->id) }}" class="btn btn-sm btn-primary">
+                                            <a href="{{ url('admin/order/update/'.$order->id) }}" class="btn btn-sm btn-primary">
                                                 <i class="ri-eye-line"></i> عرض
                                             </a>
                                         </td>

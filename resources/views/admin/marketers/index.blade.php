@@ -16,7 +16,7 @@
                         <h4 class="card-title flex-grow-1">إدارة المسوقين</h4>
                     </div>
                     <div class="table-responsive">
-                        <table id="table-search" class="table mb-0 align-middle table-bordered table-hover">
+                        <table id="marketers-table" class="table mb-0 align-middle table-bordered table-hover">
                             <thead class="bg-light-subtle">
                                 <tr>
                                     <th>#</th>
@@ -101,14 +101,17 @@
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function() {
-        $('#table-search').DataTable({
-            language: {
-                search: "بحث:", lengthMenu: "عرض _MENU_ عناصر",
-                zeroRecords: "لم يتم العثور على سجلات",
-                info: "عرض _PAGE_ من _PAGES_", infoEmpty: "لا توجد سجلات",
-                paginate: { previous: "السابق", next: "التالي" }
-            }
-        });
+        // Check if DataTable is already initialized
+        if (!$.fn.DataTable.isDataTable('#marketers-table')) {
+            $('#marketers-table').DataTable({
+                language: {
+                    search: "بحث:", lengthMenu: "عرض _MENU_ عناصر",
+                    zeroRecords: "لم يتم العثور على سجلات",
+                    info: "عرض _PAGE_ من _PAGES_", infoEmpty: "لا توجد سجلات",
+                    paginate: { previous: "السابق", next: "التالي" }
+                }
+            });
+        }
     });
 </script>
 @endsection

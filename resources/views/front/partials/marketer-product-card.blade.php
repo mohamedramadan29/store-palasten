@@ -85,14 +85,47 @@
             {{ \Illuminate\Support\Str::limit($product['name'], 90) }}
         </a>
         
+        <!-- Marketer Price Display -->
         <div class="mb-2 text-center price-container">
-            @if (isset($product['discount']) && $product['discount'] != null)
-                <span class="price main_price card-price">{{ $product['discount'] }} {{ $storeCurrency }}</span>
-                <span class="price old_price card-old-price">{{ $product['price'] }} {{ $storeCurrency }}</span>
+            @php
+                $regularPrice = $product['price'];
+                $marketerPrice = $product['marketer_price'] ?? 0;
+            @endphp
+            
+            @if($marketerPrice > 0)
+                <div class="marketer-price-info">
+                    <span class="price marketer-price card-price text-success">{{ number_format($marketerPrice, 2) }} {{ $storeCurrency }}</span>
+                    <span class="price regular-price card-old-price text-muted">{{ number_format($regularPrice, 2) }} {{ $storeCurrency }}</span>
+                    <div class="small text-info mt-1">سعر المسوق (الجملة)</div>
+                </div>
             @else
-                <span class="price main_price card-price">{{ $product['price'] }} {{ $storeCurrency }}</span>
+                <div class="regular-price-info">
+                    <span class="price main_price card-price">{{ number_format($regularPrice, 2) }} {{ $storeCurrency }}</span>
+                    <div class="small text-muted mt-1">سعر البيع العادي</div>
+                </div>
             @endif
         </div>
+
+        <!-- Variations Info -->
+        @if($productVariations->count() > 0)
+            <div class="mb-2 variations-info">
+                <small class="text-primary">
+                    <i class="ri-palette-line"></i> 
+                    {{ $productVariations->count() }} خيارات متاحة
+                </small>
+                
+                @php
+                    $hasMarketerVariations = $productVariations->where('marketer_price', '>', 0)->count() > 0;
+                @endphp
+                
+                @if($hasMarketerVariations)
+                    <div class="text-success small mt-1">
+                        <i class="ri-checkbox-circle-line"></i> 
+                        أسعار مسوق متاحة
+                    </div>
+                @endif
+            </div>
+        @endif
 
         <form id="addToCartForm_{{ $uniqueId }}" method="post" action="{{ url('cart/add') }}">
             @csrf
@@ -194,5 +227,21 @@
         margin-top: 10px;
         padding: 8px;
         font-size: 14px;
+    }
+    .marketer-price-info {
+        border-bottom: 1px solid #eee;
+        padding-bottom: 8px;
+    }
+    .marketer-price {
+        font-size: 16px;
+        font-weight: bold;
+    }
+    .regular-price {
+        font-size: 13px;
+    }
+    .variations-info {
+        border-top: 1px solid #eee;
+        padding-top: 8px;
+        margin-top: 8px;
     }
 </style>

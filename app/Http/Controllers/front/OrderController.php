@@ -101,11 +101,11 @@ class OrderController extends Controller
             // Marketer Logic for line items
             if ($isMarketer && isset($data['marketer_sell_price'][$idx])) {
                 $sell_price = $data['marketer_sell_price'][$idx];
-                $store_base_price = $item->price;
+                $marketer_base_price = $item->marketer_sell_price ?? $item->price;
                 
                 $order_details->product_price = $sell_price;
-                $order_details->marketer_price = $store_base_price;
-                $order_details->profit = ($sell_price - $store_base_price) * $item->qty;
+                $order_details->marketer_price = $marketer_base_price;
+                $order_details->profit = ($sell_price - $marketer_base_price) * $item->qty;
                 $total_profit += $order_details->profit;
             } else {
                 $order_details->product_price = $item->price;

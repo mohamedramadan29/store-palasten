@@ -10,6 +10,7 @@ use App\Models\admin\faq;
 use App\Models\admin\MainCategory;
 use App\Models\admin\Product;
 use App\Models\admin\ProductVartions;
+use App\Models\admin\PublicSetting;
 use App\Models\admin\Review;
 use App\Models\admin\VartionsValues;
 use App\Models\front\wishlist;
@@ -21,6 +22,7 @@ class FrontController extends Controller
 {
     public function index()
     {
+        $public_setting = PublicSetting::first();
         $reviews = Review::latest()->limit(7)->get();
         $banners = Banner::where('status', 1)->get();
         $bestproducts = Product::with('gallary', 'Main_Category')->where('status', 1)->inRandomOrder()->limit(6)->get();
@@ -44,8 +46,8 @@ class FrontController extends Controller
             Cookie::queue(Cookie::make('session_id', $cookie_id, 60 * 24 * 30));
         }
 
-        $wishlistProducts = Wishlist::where('cookie_id', $cookie_id)->pluck('product_id')->toArray();
-        return view('front.index', compact('banners', 'advantages', 'bestproducts', 'lastproducts', 'mainCategories', 'selectedCategories', 'productsBySelectedCategories', 'brands', 'reviews', 'wishlistProducts'));
+        $wishlistProducts = wishlist::where('cookie_id', $cookie_id)->pluck('product_id')->toArray();
+        return view('front.index', compact('banners', 'advantages', 'bestproducts', 'lastproducts', 'mainCategories', 'selectedCategories', 'productsBySelectedCategories', 'brands', 'reviews', 'wishlistProducts', 'public_setting'));
     }
 
     public function getProductDetails($id)

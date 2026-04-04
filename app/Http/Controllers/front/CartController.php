@@ -91,21 +91,23 @@ class CartController extends Controller
             $hidden_vartion = null;
         }
         // Determine affiliate sell price from product's marketer_price
-        // If marketer_price is null or 0, use the regular product price as fallback
-        $affiliateSellPrice = null;
+        // The cart should always use regular price, marketer price is only for profit calculation
         if (Auth::guard('marketer')->check()) {
             $productModel = \App\Models\admin\Product::find($cartData['product_id']);
             $productMktPrice = $productModel->marketer_price ?? 0;
-            $basePrice = $productMktPrice > 0 ? $productMktPrice : ($productModel->price ?? $price);
             
             if ($hidden_vartion) {
                 $variationModel = \App\Models\admin\ProductVartions::find($hidden_vartion);
                 $variationMktPrice = $variationModel->marketer_price ?? 0;
-                // Check for variation marketer_price first if > 0, else fallback to product price
-                $affiliateSellPrice = $variationMktPrice > 0 ? $variationMktPrice : $basePrice;
+                // Use variation marketer_price if > 0, else use product marketer_price if > 0
+                $affiliateSellPrice = $variationMktPrice > 0 ? $variationMktPrice : ($productMktPrice > 0 ? $productMktPrice : $price);
             } else {
-                $affiliateSellPrice = $basePrice;
+                // Use product marketer_price if > 0, else use regular price
+                $affiliateSellPrice = $productMktPrice > 0 ? $productMktPrice : $price;
             }
+        } else {
+            // Not a marketer, use regular price
+            $affiliateSellPrice = $price;
         }
 
         $item = new Cart();

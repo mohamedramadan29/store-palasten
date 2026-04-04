@@ -211,6 +211,7 @@ $socialmedia = \App\Models\admin\SocialMedia::first();
                             <ul class="sub-nav-menu">
                                 @if(Auth::guard('marketer')->check())
                                     <li><a href="{{ url('marketer/dashboard') }}" class="sub-nav-link">لوحة التحكم</a></li>
+                                    <li><a href="{{ route('marketer.shop') }}" class="sub-nav-link">متجر المسوقين</a></li>
                                     <li><a href="{{ url('marketer/logout') }}" class="sub-nav-link">تسجيل الخروج</a></li>
                                 @else
                                     <li><a href="{{ url('marketer/login') }}" class="sub-nav-link">تسجيل دخول</a></li>

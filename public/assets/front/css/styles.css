@@ -2995,7 +2995,8 @@ header.header-bg {
   padding: 15px 0;
   min-width: max-content;
 }
-.widget-tabs.style-has-border .widget-menu-tab .item-title.active{
+
+.widget-tabs.style-has-border .widget-menu-tab .item-title.active {
   color: var(--main_title_color) !important;
 
 }
@@ -6674,11 +6675,13 @@ header.header-bg {
   margin-bottom: 20px;
 
 }
-#quick_view .tf-product-info-wrap .tf-product-info-list .tf-product-info-title a{
-  color:var(--product_title_color);
+
+#quick_view .tf-product-info-wrap .tf-product-info-list .tf-product-info-title a {
+  color: var(--product_title_color);
 }
-#quick_view .tf-product-info-wrap .tf-product-info-list .tf-product-info-title a:hover{
-  color:var(--product_title_color);
+
+#quick_view .tf-product-info-wrap .tf-product-info-list .tf-product-info-title a:hover {
+  color: var(--product_title_color);
 }
 
 #quick_view .tf-product-info-wrap .tf-product-info-list .tf-product-info-badges {
@@ -8856,10 +8859,11 @@ header.header-bg {
 
 .tf-product-info-title {
   margin-bottom: 20px !important;
-  color:var(--product_title_color);
+  color: var(--product_title_color);
 }
-.tf-product-info-title h5{
-  color:var(--product_title_color);
+
+.tf-product-info-title h5 {
+  color: var(--product_title_color);
 }
 
 .tf-product-info-badges {
@@ -10268,10 +10272,11 @@ header.header-bg {
   display: -webkit-box;
   overflow: hidden;
   padding: 10px;
-  color:var(--product_title_color);
+  color: var(--product_title_color);
 }
-.card-product .card-product-info .title:hover{
-   color:var(--product_title_color);
+
+.card-product .card-product-info .title:hover {
+  color: var(--product_title_color);
 }
 
 .card-product .card-product-info .price {
@@ -13344,8 +13349,12 @@ blockquote .text {
 }
 
 .flat-title .title {
-  font-size: 22px;
+  font-size: 16px;
   line-height: 26.4px;
+  color: var(--main_title_color);
+  background-color: var(--all_button_background);
+      padding: 6px 15px;
+    border-radius: 10px;
 }
 
 .flat-title .sub-title {
@@ -18227,9 +18236,12 @@ blockquote .text {
   }
 
   .flat-title .title {
-    font-size: 35px;
+    font-size: 30px;
     line-height: 10.4px;
     color: var(--main_title_color);
+    padding: 15px;
+    border-radius: 5px;
+    background-color: var(--all_button_background);
   }
 
   .flat-title.lg .sub-title {
@@ -19194,7 +19206,7 @@ blockquote .text {
     font-size: 14px;
     line-height: 18px;
   }
- 
+
 
   .widget-tabs.style-has-border .widget-content-tab .widget-content-inner {
     padding: 20px 15px;

@@ -49,7 +49,7 @@
                 @endphp
                 @if($socialmedia)
                 <div class="slider-social-icons position-absolute" style="left: 15px; bottom: 0; z-index: 22; transform: translateY(-50%);">
-                    <ul class="flex-wrap gap-2 tf-social-icon d-flex m-0" style="list-style: none; padding: 0;">
+                    <ul class="flex-wrap gap-2 m-0 tf-social-icon d-flex" style="list-style: none; padding: 0;">
                         @if ($socialmedia['facebook'] != '')
                             <li><a target="_blank" href="{{ $socialmedia['facebook'] }}" class="box-icon w_28 round social-facebook bg_white"><i class="icon fs-12 icon-fb"></i></a></li>
                         @endif
@@ -133,19 +133,23 @@
 
 
 
-    @if (count($bestproducts) > 0)
+    @if (count($bestproducts) > 0 && $public_setting->show_best_selling == 1)
     <!-- Best seller -->
     <div id="wishlistMessage"></div>
     <section class="flat-spacing-15 new_products">
         <div class="container">
             <div class="flat-title wow fadeInUp" data-wow-delay="0s">
                 <div>
-                    <span class="title wow fadeInUp" data-wow-delay="0s"> الاكثر مبيعا </span>
+                    <div class="gap-3 mb-3 d-flex align-items-center">
+                        <span class="title wow fadeInUp" data-wow-delay="0s"> الاكثر مبيعا </span>
+                        <span class="px-3 py-1 text-white d-inline-block rounded-2 fw-600 fs-13">
+                         
+                        </span>
+                    </div>
                     <p class="sub-title wow fadeInUp" data-wow-delay="0s"> اكثر المنتجات مبيعا في المتجر </p>
                 </div>
                 <div>
-                    {{-- <a href="{{ url('shop') }}" class="head_read_more"> عرض الكل <i
-                            class="bi bi-arrow-left"></i></a> --}}
+                    <a href="{{ url('shop') }}" class="head_read_more">    {{ count($bestproducts) }} منتج </a>
                 </div>
             </div>
             <div class="grid-layout wow" id="bestProductsGrid" data-wow-delay="0s" data-grid="grid-4" style="gap: 15px;">
@@ -156,13 +160,13 @@
                 @endforeach
             </div>
 
-            <div class="d-flex justify-content-center gap-2 gap-md-3 mt-4 pt-2">
+            <div class="gap-2 pt-2 mt-4 d-flex justify-content-center gap-md-3">
                 @if(count($bestproducts) > 6)
                 <button id="loadMoreBestProducts" class="tf-btn-loading tf-loading-default style-2 w-50" style="max-width: 200px; min-height: 48px; border-radius: 4px;">
                     <span class="text fs-15"><i class="icon icon-plus fs-5 pe-1"></i> عرض المزيد </span>
                 </button>
                 @endif
-                <a href="{{ url('shop') }}" class="tf-btn-loading tf-loading-default style-2 w-50 text-center" style="max-width: 200px; min-height: 48px; border-radius: 4px; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                <a href="{{ url('shop') }}" class="text-center tf-btn-loading tf-loading-default style-2 w-50" style="max-width: 200px; min-height: 48px; border-radius: 4px; text-decoration: none; display: flex; align-items: center; justify-content: center;">
                     <span class="text fs-15">عرض الكل</span>
                 </a>
             </div>
@@ -196,18 +200,20 @@
 
 
 
-    @if (count($lastproducts) > 0)
+    @if (count($lastproducts) > 0 && $public_setting->show_latest_products == 1)
     <!-- Start Best Products -->
     <section class="flat-spacing-5 flat-seller new_products">
         <div class="container">
             <div class="flat-title wow fadeInUp" data-wow-delay="0s">
                 <div>
-                    <span class="title wow fadeInUp" data-wow-delay="0s"> احدث المنتجات </span>
+                    <div class="gap-3 mb-3 d-flex align-items-center">
+                        <span class="title wow fadeInUp" data-wow-delay="0s"> احدث المنتجات </span> 
+                    </div>
                     <p class="sub-title wow fadeInUp" data-wow-delay="0s"> احدث المنتجات في المتجر </p>
                 </div>
-                {{-- <div>
-                    <a href="{{ url('shop') }}" class="head_read_more"> عرض الكل <i class="bi bi-arrow-left"></i></a>
-                </div> --}}
+                <div>
+                    <a href="{{ url('shop') }}" class="head_read_more">   {{ count($lastproducts) }} منتج </a>
+                </div>
 
             </div>
             <div class="grid-layout wow" id="lastProductsGrid" data-wow-delay="0s" data-grid="grid-4" style="gap: 15px;">
@@ -218,13 +224,13 @@
                 @endforeach
             </div>
 
-            <div class="d-flex justify-content-center gap-2 gap-md-3 mt-4 pt-2">
+            <div class="gap-2 pt-2 mt-4 d-flex justify-content-center gap-md-3">
                 @if(count($lastproducts) > 6)
                 <button id="loadMoreLastProducts" class="tf-btn-loading tf-loading-default style-2 w-50" style="max-width: 200px; min-height: 48px; border-radius: 4px;">
                     <span class="text fs-15"><i class="icon icon-plus fs-5 pe-1"></i> عرض المزيد </span>
                 </button>
                 @endif
-                <a href="{{ url('shop') }}" class="tf-btn-loading tf-loading-default style-2 w-50 text-center" style="max-width: 200px; min-height: 48px; border-radius: 4px; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                <a href="{{ url('shop') }}" class="text-center tf-btn-loading tf-loading-default style-2 w-50" style="max-width: 200px; min-height: 48px; border-radius: 4px; text-decoration: none; display: flex; align-items: center; justify-content: center;">
                     <span class="text fs-15">عرض الكل</span>
                 </a>
             </div>
@@ -268,10 +274,17 @@
         <div class="container">
             <div class="flat-title wow fadeInUp" data-wow-delay="0s">
                 <div>
-                    <span class="title wow fadeInUp" data-wow-delay="0s"> {{ $category['name'] }} </span>
-                    {{-- <p class="sub-title wow fadeInUp" data-wow-delay="0s"> اكثر المنتجات مبيعا في
-                        المتجر </p> --}}
+                    <div class="gap-3 mb-3 d-flex">
+                        <span class="title wow fadeInUp" data-wow-delay="0s"> {{ $category['name'] }} </span>
+                         
+                    </div>
+                    <p class="sub-title wow fadeInUp" data-wow-delay="0s"> اكثر المنتجات مبيعا في
+                        المتجر </p>
                 </div>
+                  <div>
+                    <a href="{{ url('shop') }}" class="head_read_more">    {{ count($category['products']) }} منتج </a>
+                </div>
+
             </div>
             
             <div class="grid-layout wow" id="catProductsGrid_{{ $category['id'] }}" data-wow-delay="0s" data-grid="grid-4" style="gap: 15px;">
@@ -282,13 +295,13 @@
                 @endforeach
             </div>
 
-            <div class="d-flex justify-content-center gap-2 gap-md-3 mt-4 pt-2">
+            <div class="gap-2 pt-2 mt-4 d-flex justify-content-center gap-md-3">
                 @if(count($category['products']) > 6)
                 <button id="loadMoreCatProducts_{{ $category['id'] }}" class="tf-btn-loading tf-loading-default style-2 w-50" style="max-width: 200px; min-height: 48px; border-radius: 4px;">
                     <span class="text fs-15"><i class="icon icon-plus fs-5 pe-1"></i> عرض المزيد </span>
                 </button>
                 @endif
-                <a href="{{ url('collection/' . $category['slug']) }}" class="tf-btn-loading tf-loading-default style-2 w-50 text-center" style="max-width: 200px; min-height: 48px; border-radius: 4px; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                <a href="{{ url('collection/' . $category['slug']) }}" class="text-center tf-btn-loading tf-loading-default style-2 w-50" style="max-width: 200px; min-height: 48px; border-radius: 4px; text-decoration: none; display: flex; align-items: center; justify-content: center;">
                     <span class="text fs-15">عرض الكل</span>
                 </a>
             </div>
@@ -330,10 +343,14 @@
         <div class="container">
             <div class="flat-title wow fadeInUp" data-wow-delay="0s">
                 <div>
-                    <span class="title"> آراء العملاء </span>
+                    <div class="gap-3 mb-3 d-flex align-items-center">
+                        <span class="title"> آراء العملاء </span>
+                        <span class="px-3 py-1 text-white bg-primary d-inline-block rounded-2 fw-600 fs-13">
+                            {{ count($reviews) }} تقييم
+                        </span>
+                    </div>
                     <p class="sub-title"> ماذا يقول العملاء عنا </p>
                 </div>
-
             </div>
             <div class="wrap-carousel">
                 <div class="swiper tf-sw-testimonial" data-preview="3" data-tablet="2" data-mobile="1"

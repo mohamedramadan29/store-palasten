@@ -303,6 +303,7 @@
                                         <ul class="menu-list">
                                             @if(Auth::guard('marketer')->check())
                                                 <li><a href="{{ url('marketer/dashboard') }}" class="menu-link-text link text_black-2">لوحة التحكم</a></li>
+                                                <li><a href="{{ route('marketer.shop') }}" class="menu-link-text link text_black-2">متجر المسوقين</a></li>
                                                 <li><a href="{{ url('marketer/logout') }}" class="menu-link-text link text_black-2">تسجيل الخروج</a></li>
                                             @else
                                                 <li><a href="{{ url('marketer/login') }}" class="menu-link-text link text_black-2">تسجيل دخول</a></li>
@@ -331,7 +332,10 @@
                                     class="fas fa-heart"></i><span class="count-box">{{ $wishlistCount }}</span></a>
                         </li>
                         <li class="nav-cart track-icon"><a id="trackOrderIcon" href="{{ url('track-order') }}"
-                                class="nav-icon-item"><i class="fas fa-forward"></i></a></li>
+                                class="nav-icon-item">
+                                <img width="25" src="{{ asset('assets/front/images/track-order.png') }}" alt="">
+                                {{-- <i class="fas fa-forward"></i> --}}
+                            </a></li>
                         <li class="nav-cart"><a id="shoppingCartmodel" href="#shoppingCart" data-bs-toggle="modal"
                                 class="nav-icon-item"><i class="fas fa-shopping-bag"></i><span
                                     class="count-box">{{ $cartCount }}</span></a></li>

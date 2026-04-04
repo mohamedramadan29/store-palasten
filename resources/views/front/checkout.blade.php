@@ -153,24 +153,39 @@
                                                 سعر المسوق المقترح: <strong>{{ $mktP }} {{ $storeCurrency }}</strong>
                                             </div>
                                             <div class="gap-2 d-flex align-items-center">
-                                                <label style="font-size:12px;white-space:nowrap">سعر البيع النهائي:</label>
+                                                <label style="font-size:12px;white-space:nowrap">سعر البيع للعميل:</label>
                                                 <input type="number" step="0.01" min="{{ $mktP }}"
                                                     class="form-control form-control-sm marketer-sell-price"
                                                     style="max-width:110px"
                                                     name="marketer_sell_price[{{ $idx }}]"
-                                                    value="{{ $mktP }}"
+                                                    value="{{ $storeP }}"
                                                     data-store-price="{{ $storeP }}"
                                                     data-mkt-price="{{ $mktP }}"
                                                     data-qty="{{ $item->qty }}">
                                             </div>
                                             <div style="font-size:12px;color:green">
-                                                ربحك: <strong class="item-profit-{{ $idx }}">{{ ($mktP - $storeP) * $item->qty }}</strong> {{ $storeCurrency }}
+                                                ربحك: <strong class="item-profit-{{ $idx }}">{{ number_format(($storeP - $mktP) * $item->qty, 2) }}</strong> {{ $storeCurrency }}
+                                                <small class="text-muted d-block">(شراء: {{ $mktP }} | بيع: <span class="sell-price-display">{{ $storeP }}</span>)</small>
                                             </div>
                                         </div>
                                     </div>
                                     @endforeach
                                     <div class="mt-2" style="font-size:14px;color:#5c4ac7">
-                                        إجمالي ربحك المتوقع: <strong id="total-marketer-profit">0</strong> {{ $storeCurrency }}
+                                        @php
+                                            $totalInitialProfit = 0;
+                                            foreach($cartitems as $idx => $item) {
+                                                $storeP = $item->price;
+                                                $mktP = $item->productdata->marketer_price ?? 0;
+                                                if ($item->product_variation_id) {
+                                                    $variationMktPrice = $item->variation->marketer_price ?? 0;
+                                                    $productMktPrice = $item->productdata->marketer_price ?? 0;
+                                                    $mktP = $variationMktPrice > 0 ? $variationMktPrice : ($productMktPrice > 0 ? $productMktPrice : $item->price);
+                                                    $storeP = $item->variation->price ?? $item->price;
+                                                }
+                                                $totalInitialProfit += ($storeP - $mktP) * $item->qty;
+                                            }
+                                        @endphp
+                                        إجمالي ربحك المتوقع: <strong id="total-marketer-profit">{{ number_format($totalInitialProfit, 2) }}</strong> {{ $storeCurrency }}
                                     </div>
                                 </div>
                                 @endif
@@ -298,7 +313,7 @@
                     $('.marketer-sell-price').each(function(index) {
                         let storePrice = parseFloat($(this).data('store-price'));
                         let mktPrice = parseFloat($(this).data('mkt-price'));
-                        let sellPrice = parseFloat($(this).val()) || mktPrice;
+                        let sellPrice = parseFloat($(this).val()) || storePrice;
                         let qty = parseInt($(this).data('qty'));
                         
                         // Minimum sell price is mktPrice
@@ -306,11 +321,31 @@
                             sellPrice = mktPrice;
                         }
 
-                        let itemProfit = (sellPrice - storePrice) * qty;
+                        // Profit is: (sell price to customer - marketer purchase price) * quantity
+                        let itemProfit = (sellPrice - mktPrice) * qty;
                         totalProfit += itemProfit;
                         subtotal += (sellPrice * qty);
 
+                        // Update profit display
                         $('.item-profit-' + index).text(itemProfit.toFixed(2));
+                        
+                        // Update sell price display
+                        $('.sell-price-display').eq(index).text(sellPrice.toFixed(2));
+                        
+                        // Show profit explanation
+                        let profitExplanation = '';
+                        if (sellPrice > mktPrice) {
+                            profitExplanation = `(ربح: ${(sellPrice - mktPrice).toFixed(2)} × ${qty} = ${itemProfit.toFixed(2)})`;
+                        } else if (sellPrice === mktPrice) {
+                            profitExplanation = `(لا يوجد ربح - بيع بسعر الشراء)`;
+                        }
+                        
+                        // Update explanation if element exists
+                        if ($('.profit-explanation-' + index).length === 0) {
+                            $('.item-profit-' + index).parent().append('<small class="profit-explanation-' + index + ' text-muted d-block">' + profitExplanation + '</small>');
+                        } else {
+                            $('.profit-explanation-' + index).text(profitExplanation);
+                        }
                     });
 
                     $('#total-marketer-profit').text(totalProfit.toFixed(2));

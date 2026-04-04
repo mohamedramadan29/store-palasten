@@ -70,25 +70,28 @@ class MarketerAuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email'    => 'required|email',
+            'login'    => 'required|string',
             'password' => 'required',
         ], [
-            'email.required'    => 'من فضلك ادخل البريد الإلكتروني',
-            'email.email'       => 'البريد الإلكتروني غير صحيح',
+            'login.required'    => 'من فضلك ادخل البريد الإلكتروني أو رقم الهاتف',
             'password.required' => 'من فضلك ادخل كلمة المرور',
         ]);
 
-        $user = User::where('email', $request->email)->where('user_type', 'marketer')->first();
+        // Check if login input is email or phone
+        $loginField = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
+        
+        $user = User::where($loginField, $request->login)->where('user_type', 'marketer')->first();
 
         if (!$user) {
-            return redirect()->back()->withInput()->withErrors(['email' => 'البريد الإلكتروني غير مسجل كمسوق']);
+            $fieldType = $loginField === 'email' ? 'البريد الإلكتروني' : 'رقم الهاتف';
+            return redirect()->back()->withInput()->withErrors(['login' => $fieldType . ' غير مسجل كمسوق']);
         }
 
         if ($user->status !== 'active') {
-            return redirect()->back()->withInput()->withErrors(['email' => 'حسابك لم يتم تفعيله بعد من الإدارة']);
+            return redirect()->back()->withInput()->withErrors(['login' => 'حسابك لم يتم تفعيله بعد من الإدارة']);
         }
 
-        if (Auth::guard('marketer')->attempt(['email' => $request->email, 'password' => $request->password])) {
+        if (Auth::guard('marketer')->attempt([$loginField => $request->login, 'password' => $request->password])) {
             $request->session()->regenerate();
             return redirect()->route('marketer.dashboard');
         }

@@ -4,63 +4,96 @@
     لوحة تحكم المسوق
 @endsection
 
+@section('css')
+<style>
+    .seller-data p{
+        font-size: 16px
+    }
+    .seller-data h3{
+        font-size: 23px
+    }
+</style>
+@endsection
 @section('content')
 <div class="tf-page-title">
     <div class="container-full">
-        <div class="heading text-center">لوحة تحكم المسوق: {{ $marketer->name }}</div>
+        <div class="text-center heading">لوحة تحكم المسوق: {{ $marketer->name }}</div>
     </div>
 </div>
 
 <section class="flat-spacing-10">
     <div class="container">
-        <div class="row mb-4">
-            <div class="col-lg-3 col-6 mb-3">
-                <div class="card text-center p-4 shadow-sm border-0 bg-light">
-                    <h3 class="fw-7 mb-1">{{ $totalOrders }}</h3>
-                    <p class="text-muted">إجمالي الطلبات</p>
+        <div class="mb-4 row">
+            <div class="mb-3 col-lg-3 col-6">
+                <div class="p-4 text-center text-white border-0 shadow-sm card bg-primary seller-data">
+                    <h3 class="mb-1 text-white fw-7">{{ $totalOrders }}</h3>
+                    <p class="text-white">إجمالي الطلبات</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-6 mb-3">
-                <div class="card text-center p-4 shadow-sm border-0 bg-success text-white">
-                    <h3 class="fw-7 mb-1 text-white">{{ number_format($totalProfit, 2) }}</h3>
-                    <p>أرباح مؤكدة</p>
+            <div class="mb-3 col-lg-3 col-6">
+                <div class="p-4 text-center text-white border-0 shadow-sm card bg-success seller-data">
+                    <h3 class="mb-1 text-white fw-7">{{ $completedOrders }}</h3>
+                    <p class="text-white">طلبات مكتملة</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-6 mb-3">
-                <div class="card text-center p-4 shadow-sm border-0 bg-warning text-dark">
-                    <h3 class="fw-7 mb-1">{{ number_format($pendingProfit, 2) }}</h3>
-                    <p>أرباح معلقة</p>
+            <div class="mb-3 col-lg-3 col-6">
+                <div class="p-4 text-center border-0 shadow-sm card bg-warning text-dark seller-data">
+                    <h3 class="mb-1 fw-7">{{ $pendingOrders }}</h3>
+                    <p class="text-dark">قيد الشحن</p>
                 </div>
             </div>
-            <div class="col-lg-3 col-6 mb-3">
-                <div class="card text-center p-4 shadow-sm border-0 bg-info text-white">
-                    <h3 class="fw-7 mb-1 text-white">{{ $completedOrders }}</h3>
-                    <p>طلبات مكتملة</p>
+            <div class="mb-3 col-lg-3 col-6">
+                <div class="p-4 text-center text-white border-0 shadow-sm card bg-danger seller-data">
+                    <h3 class="mb-1 text-white fw-7">{{ $cancelledOrders }}</h3>
+                    <p class="text-white">طلبات ملغية</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-4 row">
+            <div class="mb-3 col-lg-4 col-6">
+                <div class="p-4 text-center text-white border-0 shadow-sm card bg-info seller-data">
+                    <h3 class="mb-1 text-white fw-7">{{ number_format($totalProfit, 2) }} {{ $storeCurrency ?? '₪' }}</h3>
+                    <p class="text-white">أرباح مؤكدة</p>
+                </div>
+            </div>
+            <div class="mb-3 col-lg-4 col-6">
+                <div class="p-4 text-center text-white border-0 shadow-sm card bg-secondary seller-data">
+                    <h3 class="mb-1 text-white fw-7">{{ number_format($pendingProfit, 2) }} {{ $storeCurrency ?? '₪' }}</h3>
+                    <p class="text-white">أرباح معلقة</p>
+                </div>
+            </div>
+            <div class="mb-3 col-lg-4 col-6">
+                <div class="p-4 text-center border-0 shadow-sm card bg-gradient seller-data" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <h3 class="mb-1 fw-7">{{ number_format($totalProfit + $pendingProfit, 2) }} {{ $storeCurrency ?? '₪' }}</h3>
+                    <p class="">إجمالي الأرباح</p>
                 </div>
             </div>
         </div>
 
         <div class="row">
             <div class="col-lg-12">
-                <div class="tf-page-cart-wrap shadow-sm p-4 rounded bg-white">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h5 class="fw-6 mb-0">روابط سريعة</h5>
+                <div class="p-4 bg-white rounded shadow-sm tf-page-cart-wrap">
+                    <div class="mb-4 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-6">روابط سريعة</h5>
                         <form action="{{ route('marketer.logout') }}" method="get">
                             <button type="submit" class="btn btn-sm btn-outline-danger">تسجيل الخروج</button>
                         </form>
                     </div>
                     
-                    <div class="row text-center">
-                        <div class="col-lg-3 col-6 mb-3">
+                    
+                    
+                    <div class="text-center row">
+                        <div class="mb-3 col-lg-3 col-6">
                             <a href="{{ route('marketer.orders') }}" class="tf-btn w-100 radius-3 btn-outline animate-hover-btn">📦 طلباتي</a>
                         </div>
-                        <div class="col-lg-3 col-6 mb-3">
-                            <a href="{{ url('shop') }}" class="tf-btn w-100 radius-3 btn-outline animate-hover-btn">🛍️ المنتجات</a>
+                        <div class="mb-3 col-lg-3 col-6">
+                            <a href="{{ url('marketer-shop') }}" class="tf-btn w-100 radius-3 btn-outline animate-hover-btn">🛍️ متجر المسوقين </a>
                         </div>
-                        <div class="col-lg-3 col-6 mb-3">
+                        <div class="mb-3 col-lg-3 col-6">
                             <a href="{{ route('marketer.reports') }}" class="tf-btn w-100 radius-3 btn-outline animate-hover-btn">📊 التقارير</a>
                         </div>
-                        <div class="col-lg-3 col-6 mb-3">
+                        <div class="mb-3 col-lg-3 col-6">
                             <a href="{{ route('marketer.profile') }}" class="tf-btn w-100 radius-3 btn-outline animate-hover-btn">👤 الملف الشخصي</a>
                         </div>
                     </div>

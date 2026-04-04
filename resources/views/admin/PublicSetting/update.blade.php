@@ -156,6 +156,22 @@
                                             <option @if($public_setting['marketer_system_status'] == 1) selected @endif value="1"> مفعل </option>
                                         </select>
                                     </div>
+                                    <div class="col-lg-6">
+                                        <label for="show_best_selling" class="form-label"> عرض قسم الأكثر مبيعاً </label>
+                                        <select required name="show_best_selling" class="form-control" id="show_best_selling" data-choices
+                                                data-choices-groups data-placeholder="Select">
+                                            <option @if($public_setting['show_best_selling'] == 0) selected @endif value="0"> غير مفعل </option>
+                                            <option @if($public_setting['show_best_selling'] == 1) selected @endif value="1"> مفعل </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label for="show_latest_products" class="form-label"> عرض قسم أحدث المنتجات </label>
+                                        <select required name="show_latest_products" class="form-control" id="show_latest_products" data-choices
+                                                data-choices-groups data-placeholder="Select">
+                                            <option @if($public_setting['show_latest_products'] == 0) selected @endif value="0"> غير مفعل </option>
+                                            <option @if($public_setting['show_latest_products'] == 1) selected @endif value="1"> مفعل </option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>

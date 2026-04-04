@@ -23,6 +23,7 @@ Route::controller(FrontController::class)->group(function () {
 
 Route::controller(ShopController::class)->group(function () {
     Route::get('shop', 'shop');
+    Route::get('marketer-shop', 'marketerShop')->name('marketer.shop');
 });
 
 Route::controller(ShopCollection::class)->group(function () {

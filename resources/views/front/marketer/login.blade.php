@@ -7,7 +7,7 @@
 @section('content')
 <div class="tf-page-title">
     <div class="container-full">
-        <div class="heading text-center">دخول المسوقين</div>
+        <div class="text-center heading">دخول المسوقين</div>
     </div>
 </div>
 
@@ -34,8 +34,8 @@
                     <form action="{{ route('marketer.login.submit') }}" method="post" class="form-login">
                         @csrf
                         <div class="tf-field style-1 mb_15">
-                            <input class="tf-field-input tf-input" placeholder=" " type="email" id="email" name="email" value="{{ old('email') }}" required>
-                            <label class="tf-field-label" for="email">البريد الإلكتروني</label>
+                            <input class="tf-field-input tf-input" placeholder=" " type="text" id="login" name="login" value="{{ old('login') }}" required>
+                            <label class="tf-field-label" for="login">البريد الإلكتروني أو رقم الهاتف</label>
                         </div>
 
                         <div class="tf-field style-1 mb_30">

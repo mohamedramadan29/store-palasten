@@ -28,7 +28,7 @@
                 @endif
                 <div class="col-xl-12">
                     <div class="card">
-                        <div class="card-header d-flex justify-content-between align-items-center gap-1">
+                        <div class="gap-1 card-header d-flex justify-content-between align-items-center">
                             <h4 class="card-title flex-grow-1">  اراء العملاء  </h4>
                             <a href="{{url('admin/review/store')}}" class="btn btn-sm btn-primary">
                                اضف جديد
@@ -40,18 +40,15 @@
                         <div>
                             <div class="table-responsive">
                                 <table id="table-search"
-                                       class="table table-bordered gridjs-table align-middle mb-0 table-hover table-centered">
+                                       class="table mb-0 align-middle table-bordered gridjs-table table-hover table-centered">
                                     <thead class="bg-light-subtle">
                                     <tr>
-                                        <th style="width: 20px;">
-                                            <div class="form-check">
-                                                <input type="checkbox" class="form-check-input" id="customCheck1">
-                                                <label class="form-check-label" for="customCheck1"></label>
-                                            </div>
+                                        <th>
+                                           # 
                                         </th>
                                         <th> الاسم  </th>
                                         <th> الصورة </th>
-                                        <th> التقيم  </th>
+                                        {{-- <th> التقيم  </th> --}}
                                         <th> العمليات</th>
                                     </tr>
                                     </thead>
@@ -73,9 +70,9 @@
                                                     <span> لا يوجد </span>
                                                 @endif
                                             </td>
-                                            <td> {!! $review['description']  !!} </td>
+                                            {{-- <td> {!! $review['description']  !!} </td> --}}
                                             <td>
-                                                <div class="d-flex gap-2">
+                                                <div class="gap-2 d-flex">
                                                     <a href="{{url('admin/review/update/'.$review['id'])}}" type="button" class="btn btn-soft-primary btn-sm">
                                                         <iconify-icon icon="solar:pen-2-broken"
                                                                       class="align-middle fs-18"></iconify-icon>

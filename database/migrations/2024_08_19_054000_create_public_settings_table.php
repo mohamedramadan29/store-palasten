@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('website_name')->default('اسم الموقع');
             $table->string('website_logo')->nullable();
-            $table->string('website_short_desc')->nullable();
-            $table->string('website_description')->nullable();
-            $table->string('website_keywords')->nullable();
+            $table->text('website_short_desc')->nullable();
+            $table->text('website_description')->nullable();
+            $table->text('website_keywords')->nullable();
             $table->tinyInteger('status')->default('1');
             $table->string('main_color')->default('#FE6C2F');
             $table->string('second_color')->default('#FFDACD');
