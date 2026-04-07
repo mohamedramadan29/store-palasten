@@ -67,7 +67,7 @@ class SalesReportController extends Controller
         // Prepare chart data
         $chartData = $this->prepareChartData($orderDetails);
 
-        return view('admin.reports.sales', compact(
+        return view('admin.Reports.sales', compact(
             'orderDetails',
             'totalSales',
             'totalOrders',
