@@ -80,6 +80,10 @@ class MarketerManagementController extends Controller
             $query->whereBetween('created_at', [$request->start_date, $request->end_date]);
         }
 
+        if ($request->filled('order_status') && $request->order_status != '') {
+            $query->where('order_status', $request->order_status);
+        }
+
         $orders = $query->with('marketer')->get();
 
         // Group by marketer

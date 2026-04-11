@@ -142,7 +142,7 @@
 
         @if ($products->count() > 0)
             <!-- Section Product -->
-            <section class="flat-spacing-2">
+            <section class="flat-spacing-20">
                 <div class="container">
                     <div class="row">
 

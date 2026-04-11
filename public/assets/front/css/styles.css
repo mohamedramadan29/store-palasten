@@ -1296,8 +1296,8 @@ label {
 }
 
 .flat-spacing-20 {
-  padding-top: 30px;
-  padding-bottom: 33px;
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 .flat-spacing-21 {
@@ -11672,12 +11672,12 @@ blockquote .text {
 }
 
 .tf-page-title {
-  padding: 100px 0 65px;
+  padding: 75px 0 10px;
   background-image: url(../images/shop/file/page-title-blog.png);
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 }
 
 .tf-page-title .heading {

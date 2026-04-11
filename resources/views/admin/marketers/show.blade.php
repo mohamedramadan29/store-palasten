@@ -26,15 +26,15 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="text-center">
-                            <div class="avatar-lg mx-auto mb-3">
-                                <span class="avatar-title rounded-circle bg-primary text-white fs-3">
+                            <div class="mx-auto mb-3 avatar-lg">
+                                <span class="text-white avatar-title rounded-circle bg-primary fs-3">
                                     {{ substr($marketer->name, 0, 1) }}
                                 </span>
                             </div>
                             <h5 class="mb-1">{{ $marketer->name }}</h5>
-                            <p class="text-muted mb-3">{{ $marketer->email }}</p>
+                            <p class="mb-3 text-muted">{{ $marketer->email }}</p>
                             
-                            <div class="d-flex justify-content-center gap-2 mb-3">
+                            <div class="gap-2 mb-3 d-flex justify-content-center">
                                 @if($marketer->status == 'active')
                                     <span class="badge bg-success">مفعل</span>
                                 @else
@@ -44,8 +44,8 @@
                             </div>
 
                             <div class="mt-4">
-                                <p class="text-muted mb-1"><i class="ri-phone-line me-1"></i> {{ $marketer->phone ?? 'غير متوفر' }}</p>
-                                <p class="text-muted mb-1"><i class="ri-calendar-line me-1"></i> انضم: {{ $marketer->created_at->format('Y-m-d') }}</p>
+                                <p class="mb-1 text-muted"><i class="ri-phone-line me-1"></i> {{ $marketer->phone ?? 'غير متوفر' }}</p>
+                                <p class="mb-1 text-muted"><i class="ri-calendar-line me-1"></i> انضم: {{ $marketer->created_at->format('Y-m-d') }}</p>
                             </div>
                         </div>
                     </div>
@@ -55,8 +55,8 @@
             <!-- الإحصائيات -->
             <div class="col-xl-8">
                 <div class="row">
-                    <div class="col-md-4">
-                        <div class="card bg-success text-white">
+                    <div class="col-md-4 col-6">
+                        <div class="text-white card bg-success">
                             <div class="card-body">
                                 <div class="d-flex align-items-center">
                                     <div class="flex-grow-1">
@@ -67,11 +67,11 @@
                                         <i class="ri-money-dollar-circle-line fs-3"></i>
                                     </div>
                                 </div>
-                                <p class="mb-0 mt-2 small">من {{ $completedOrders->count() }} طلب مكتمل</p>
+                                <p class="mt-2 mb-0 small">من {{ $completedOrders->count() }} طلب مكتمل</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4 col-6">
                         <div class="card bg-warning">
                             <div class="card-body">
                                 <div class="d-flex align-items-center">
@@ -83,12 +83,12 @@
                                         <i class="ri-time-line fs-3"></i>
                                     </div>
                                 </div>
-                                <p class="mb-0 mt-2 small">من {{ $pendingOrders->count() }} طلب قيد التنفيذ</p>
+                                <p class="mt-2 mb-0 small">من {{ $pendingOrders->count() }} طلب قيد التنفيذ</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="card bg-info text-white">
+                    <div class="col-md-4 col-6">
+                        <div class="text-white card bg-info">
                             <div class="card-body">
                                 <div class="d-flex align-items-center">
                                     <div class="flex-grow-1">
@@ -99,42 +99,42 @@
                                         <i class="ri-shopping-bag-line fs-3"></i>
                                     </div>
                                 </div>
-                                <p class="mb-0 mt-2 small">{{ $totalOrders }} طلب كلي</p>
+                                <p class="mt-2 mb-0 small">{{ $totalOrders }} طلب كلي</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="row mt-3">
-                    <div class="col-md-3">
+                <div class="mt-3 row">
+                    <div class="col-md-3 col-6">
                         <div class="card">
-                            <div class="card-body text-center">
+                            <div class="text-center card-body">
                                 <h3 class="text-primary">{{ $totalOrders }}</h3>
-                                <p class="text-muted mb-0">إجمالي الطلبات</p>
+                                <p class="mb-0 text-muted">إجمالي الطلبات</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-6">
                         <div class="card">
-                            <div class="card-body text-center">
+                            <div class="text-center card-body">
                                 <h3 class="text-success">{{ $completedOrders->count() }}</h3>
-                                <p class="text-muted mb-0">الطلبات المكتملة</p>
+                                <p class="mb-0 text-muted">الطلبات المكتملة</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-6">
                         <div class="card">
-                            <div class="card-body text-center">
+                            <div class="text-center card-body">
                                 <h3 class="text-warning">{{ $pendingOrders->count() }}</h3>
-                                <p class="text-muted mb-0">قيد التنفيذ</p>
+                                <p class="mb-0 text-muted">قيد التنفيذ</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3 col-6">
                         <div class="card">
-                            <div class="card-body text-center">
+                            <div class="text-center card-body">
                                 <h3 class="text-danger">{{ $cancelledOrders->count() }}</h3>
-                                <p class="text-muted mb-0">الملغية</p>
+                                <p class="mb-0 text-muted">الملغية</p>
                             </div>
                         </div>
                     </div>
@@ -143,11 +143,11 @@
         </div>
 
         <!-- جدول الطلبات -->
-        <div class="row mt-4">
+        <div class="mt-4 row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0">طلبات المسوق</h5>
+                        <h5 class="mb-0 card-title">طلبات المسوق</h5>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -196,7 +196,7 @@
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="8" class="text-center py-4 text-muted">
+                                        <td colspan="8" class="py-4 text-center text-muted">
                                             لا توجد طلبات لهذا المسوق
                                         </td>
                                     </tr>

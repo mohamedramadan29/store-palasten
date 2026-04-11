@@ -13,7 +13,7 @@
             </div>
         </div>
         <!-- /page-title -->
-        <section class="flat-spacing-1">
+        <section class="flat-spacing-20">
             <div class="container">
                 <div class="tf-grid-layout lg-col-3 tf-col-2">
                     @foreach($categories as $category)

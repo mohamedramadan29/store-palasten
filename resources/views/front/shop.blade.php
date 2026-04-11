@@ -16,7 +16,7 @@
         <!-- /page-title -->
 
         <!-- Section Product -->
-        <section class="flat-spacing-2">
+        <section class="flat-spacing-20">
             <div class="container">
                 <div class="tf-shop-control align-items-center">
                     <div class="tf-control-sorting d-flex justify-content-center align-items-center">

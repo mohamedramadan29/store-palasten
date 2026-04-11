@@ -202,13 +202,16 @@
                         </ul>
                     </div>
                 </li>
+
+                <li class="nav-mb-item"><a href="{{ url('/cart') }}" class="mb-menu-link">سلة الشراء</a></li>
                 @if (Auth::check())
-                    <li class="menu-item"><a href="{{ route('customer.dashboard') }}" class="item-link"> حسابي </a>
+                    <li class="nav-mb-item"><a href="{{ route('customer.dashboard') }}" class="mb-menu-link"> حسابي
+                        </a>
                     </li>
                 @else
-                    <li class="menu-item"><a href="{{ route('customer.login') }}" class="item-link"> حسابي </a></li>
+                    <li class="nav-mb-item"><a href="{{ route('customer.login') }}" class="mb-menu-link"> حسابي </a>
+                    </li>
                 @endif
-                <li class="nav-mb-item"><a href="{{ url('/cart') }}" class="mb-menu-link">سلة الشراء</a></li>
                 <li class="nav-mb-item"><a href="{{ url('track-order') }}" class="mb-menu-link"> تتبع طلبيتك </a>
                 </li>
                 <li class="nav-mb-item"><a href="{{ url('faq') }}" class="mb-menu-link">الاسئلة الشائعة</a></li>

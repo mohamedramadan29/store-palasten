@@ -151,7 +151,7 @@
                                                              alt="{{ $detail['productdata']['name'] ?? 'منتج غير محدد' }}" 
                                                              style="width: 50px; height: 50px; object-fit: cover; margin-left: 10px;">
                                                     @else
-                                                        <div class="bg-secondary text-white d-flex align-items-center justify-content-center" 
+                                                        <div class="text-white bg-secondary d-flex align-items-center justify-content-center" 
                                                              style="width: 50px; height: 50px; margin-left: 10px;">
                                                             <i class="fas fa-image"></i>
                                                         </div>
