@@ -9,7 +9,7 @@
         <!-- page-title -->
         <div class="tf-page-title" style="margin-bottom: 0;padding-bottom:0px !important">
             <div class="container-full">
-                <div class="heading text-center"> المتجر </div>
+                <div class="text-center heading"> المتجر </div>
                 <p class="text-center text-2 text_black-2 mt_5"> جميع المنتجات </p>
             </div>
         </div>
@@ -18,26 +18,8 @@
         <!-- Section Product -->
         <section class="flat-spacing-2">
             <div class="container">
-                <div class="tf-shop-control grid-3 align-items-center">
-
-                    {{-- <ul class="tf-control-layout d-flex justify-content-center">
-                        <li class="tf-view-layout-switch sw-layout-2" data-value-grid="grid-2">
-                            <div class="item"><span class="icon icon-grid-2"></span></div>
-                        </li>
-                        <li class="tf-view-layout-switch sw-layout-3" data-value-grid="grid-3">
-                            <div class="item"><span class="icon icon-grid-3"></span></div>
-                        </li>
-                        <li class="tf-view-layout-switch sw-layout-4 active" data-value-grid="grid-4">
-                            <div class="item"><span class="icon icon-grid-4"></span></div>
-                        </li>
-                        <li class="tf-view-layout-switch sw-layout-5" data-value-grid="grid-5">
-                            <div class="item"><span class="icon icon-grid-5"></span></div>
-                        </li>
-                        <li class="tf-view-layout-switch sw-layout-6" data-value-grid="grid-6">
-                            <div class="item"><span class="icon icon-grid-6"></span></div>
-                        </li>
-                    </ul> --}}
-                    <div class="tf-control-sorting d-flex justify-content-start">
+                <div class="tf-shop-control align-items-center">
+                    <div class="tf-control-sorting d-flex justify-content-center align-items-center">
                         <div class="tf-dropdown-sort" style="border: none" data-bs-toggle="dropdown">
                             <form class="filter-choice select-form" name="sortProducts" id="sortProducts">
                                 <select name="sort" title="sort-by" class="form-select"
@@ -57,6 +39,8 @@
                                 </select>
                             </form>
                         </div>
+                        
+                    </div>
                     </div>
                 </div>
                 <div class="wrapper-control-shop">

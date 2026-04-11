@@ -2356,7 +2356,7 @@ header {
 }
 
 header.header-bg {
-  background-color: #222F3E;
+  background-color: var(--third_navbar_background);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
@@ -13352,7 +13352,7 @@ blockquote .text {
   font-size: 16px;
   line-height: 26.4px;
   color: var(--main_title_color);
-  background-color: var(--all_button_background);
+  background-color: var(--main_title_background);
       padding: 6px 15px;
     border-radius: 10px;
 }
@@ -18241,7 +18241,7 @@ blockquote .text {
     color: var(--main_title_color);
     padding: 15px;
     border-radius: 5px;
-    background-color: var(--all_button_background);
+    background-color: var(--main_title_background);
   }
 
   .flat-title.lg .sub-title {

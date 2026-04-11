@@ -77,6 +77,9 @@
                         <li class="sub-nav-item">
                             <a class="sub-nav-link" href="{{url('admin/main-categories')}}"> التصنيفات الرئيسية </a>
                         </li>
+                         <li class="sub-nav-item">
+                            <a class="sub-nav-link" href="{{url('admin/main-category/add')}}"> اضافة تصنيف  </a>
+                        </li>
                     </ul>
                 </div>
             </li>
@@ -140,11 +143,17 @@
                 <div class="collapse" id="sidebarMarketers">
                     <ul class="nav sub-navbar-nav">
                         <li class="sub-nav-item">
-                            <a class="sub-nav-link" href="{{url('admin/marketers')}}"> إدارة المسوقين </a>
+                            <a class="sub-nav-link" href="{{url('admin/marketers')}}">إدارة المسوقين</a>
                         </li>
                         <li class="sub-nav-item">
-                            <a class="sub-nav-link" href="{{url('admin/marketer-orders')}}"> طلبات المسوقين </a>
+                            <a class="sub-nav-link" href="{{url('admin/marketer-orders')}}">طلبات المسوقين</a>
                         </li>
+                        <li class="sub-nav-item">
+                            <a class="sub-nav-link" href="{{url('admin/marketer-reports')}}">تقارير المسوقين</a>
+                        </li>
+                        {{-- <li class="sub-nav-item">
+                            <a class="sub-nav-link" href="{{url('admin/marketer-profit-summary')}}">ملخص الارباح</a>
+                        </li> --}}
                     </ul>
                 </div>
             </li>
@@ -206,6 +215,15 @@
                                          <iconify-icon icon="solar:share-circle-bold-duotone"></iconify-icon>
                                    </span>
                     <span class="nav-text">  مواقع التواصل الاجتماعي    </span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{{url('admin/pages')}}">
+                                   <span class="nav-icon">
+                                         <iconify-icon icon="solar:document-text-bold-duotone"></iconify-icon>
+                                   </span>
+                    <span class="nav-text">  الصفحات    </span>
                 </a>
             </li>
 

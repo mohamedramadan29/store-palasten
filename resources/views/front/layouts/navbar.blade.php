@@ -20,6 +20,7 @@
     $search_background = $colors['search_background'];
     $search_icon_background = $colors['search_icon_background'];
     $search_icon_color = $colors['search_icon_color'];
+    $main_title_background = $colors['main_title_background'];
 
 @endphp
 
@@ -32,6 +33,7 @@
         --second_navbar_background: <?php echo $second_navbar_background; ?>;
         --third_navbar_background: <?php echo $third_navbar_background; ?>;
         --main_title_color: <?php echo $main_title_color; ?>;
+        --main_title_background :<? echo $main_title_background; ?>;
         --all_button_background: <?php echo $all_button_background; ?>;
         --main_price_color: <?php echo $main_price_color; ?>;
         --public_add_to_cart_background: <?php echo $public_add_to_cart_background; ?>;
@@ -291,6 +293,11 @@
                                 </a></li>
 
                             <li class="menu-item"><a href="{{ url('cart') }}" class="item-link"> السلة </a></li>
+                            @if(Auth::check())
+                                <li class="menu-item"><a href="{{ route('customer.dashboard') }}" class="item-link"> حسابي </a></li>
+                            @else
+                                <li class="menu-item"><a href="{{ route('customer.login') }}" class="item-link"> حسابي </a></li>
+                            @endif
                             <li class="menu-item"><a href="{{ url('track-order') }}" class="item-link"> تتبع طلبيتك
                                 </a></li>
                             <li class="menu-item"><a href="{{ url('faq') }}" class="item-link"> الاسئلة الشائعة

@@ -1,0 +1,221 @@
+@extends('admin.layouts.master')
+@section('title')
+     <span> </span>
+@endsection
+@section('css')
+
+@endsection
+@section('content')
+    <!-- ==================================================== -->
+    <div class="page-content">
+
+        <!-- Start Container Fluid -->
+        <div class="container-xxl">
+            <form method="post" action="{{url('admin/order/update/'.$order['id'])}}" enctype="multipart/form-data">
+                @csrf
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12">
+                        @if (Session::has('Success_message'))
+                            @php
+                                toastify()->success(\Illuminate\Support\Facades\Session::get('Success_message'));
+                            @endphp
+                        @endif
+                        @if ($errors->any())
+                            @foreach ($errors->all() as $error)
+                                @php
+                                    toastify()->error($error);
+                                @endphp
+                            @endforeach
+                        @endif
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title"> <span> </span>  </h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label for="name" class="form-label">  <span> </span>  </label>
+                                            <input disabled required type="text" id="name" class="form-control" name="name"
+                                                   value="{{$order['name']}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label for="name" class="form-label">  <span> </span>  </label>
+                                            <input disabled required type="text" id="name" class="form-control" name="name"
+                                                   value="{{$order['address']}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label for="name" class="form-label">  <span> </span>  </label>
+                                            <input disabled required type="text" id="name" class="form-control" name="name"
+                                                   value="{{$order['city']['city'] ?? ' <span> </span> '}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label for="phone" class="form-label"> <span> </span> </label>
+                                            <input disabled required type="text" id="phone" class="form-control" name="phone"
+                                                   value="{{$order['phone']}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label for="phone2" class="form-label"> <span> </span> </label>
+                                            <input disabled type="text" id="phone2" class="form-control" name="phone2"
+                                                   value="{{$order['phone2']}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="mb-3">
+                                            <label for="note" class="form-label"> <span> </span> </label>
+                                            <textarea disabled class="form-control" rows="3">{{$order['note']}}</textarea>
+                                        </div>
+                                    </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        @if($order['is_marketer_order'] && $order['marketer'])
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title"> <span> </span>  </h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label class="form-label"> <span> </span> </label>
+                                            <input type="text" class="form-control" value="{{ $order['marketer']->name }}" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label class="form-label"> <span> </span> </label>
+                                            <input type="email" class="form-control" value="{{ $order['marketer']->email }}" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label class="form-label"> <span> </span> </label>
+                                            <input type="text" class="form-control" value="{{ $order['marketer']->phone }}" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label class="form-label"> <span> </span> </label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" value="{{ number_format($order['total_profit'] ?? 0, 2) }}" disabled>
+                                                <span class="input-group-text">{{ $storeCurrency ?? ' <span> </span> ' }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <a href="{{ route('admin.marketer.show', $order['marketer']->id) }}" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-user me-2"></i> <span> </span>
+                                    </a>
+                                    <a href="{{ route('admin.marketer.reports') }}" class="btn btn-info btn-sm ms-2">
+                                        <i class="fas fa-chart-line me-2"></i> <span> </span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title"> <span> </span>   </h4>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>  <span> </span>   </th>
+                                        <th> <span> </span>  </th>
+                                        <th> <span> </span>   </th>
+                                        <th> <span> </span>   </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($order['details'] as $detail)
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    @if(isset($detail['productdata']['image']))
+                                                        <img src="{{asset('assets/uploads/product_images/'.$detail['productdata']['image'])}}" 
+                                                             alt="{{ $detail['productdata']['name'] ?? ' <span> </span> ' }}" 
+                                                             style="width: 50px; height: 50px; object-fit: cover; margin-left: 10px;">
+                                                    @else
+                                                        <div class="bg-secondary text-white d-flex align-items-center justify-content-center" 
+                                                             style="width: 50px; height: 50px; margin-left: 10px;">
+                                                            <i class="fas fa-image"></i>
+                                                        </div>
+                                                    @endif
+                                                    <div>
+                                                        <strong>{{ $detail['productdata']['name'] ?? ' <span> </span> ' }}</strong>
+                                                        @if(isset($detail['productdata']['product_variation_id']))
+                                                            <br><small class="text-muted">{{ $detail['variation_name'] ?? '' }}</small>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>{{ $detail['qty'] ?? 0 }}</td>
+                                            <td>{{ number_format($detail['price'] ?? 0, 2) }}</td>
+                                            <td>{{ number_format(($detail['price'] ?? 0) * ($detail['qty'] ?? 0), 2) }}</td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="3" class="text-end"><strong> <span> </span> </strong></td>
+                                            <td class="text-end"><strong>{{number_format($order['grand_total'], 2)}}</strong></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title"> <span> </span>  </h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="col-lg-12">
+                                        <div class="mb-3">
+                                            <label for="name" class="form-label">  <span> </span>   </label>
+                                            <select class="form-select" name="order_status">
+                                                <option value="" selected disabled> -- <span> </span>  --</option>
+                                                <option {{$order['order_status'] == ' <span> </span> ' ? 'selected' : ''}} value=" <span> </span> "> <span> </span> </option>
+                                                <option {{$order['order_status'] == ' <span> </span> ' ? 'selected' : ''}} value=" <span> </span> "> <span> </span> </option>
+                                                <option {{$order['order_status'] == ' <span> </span> ' ? 'selected' : ''}} value=" <span> </span> "> <span> </span> </option>
+                                                <option {{$order['order_status'] == ' <span> </span> ' ? 'selected' : ''}} value=" <span> </span> "> <span> </span> </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <div class="p-3 mb-3 rounded bg-light">
+                            <div class="row justify-content-end g-2">
+                                <div class="col-lg-2">
+                                    <a href="{{url('admin/orders')}}" class="btn btn-primary w-100"> <span> </span> </a>
+                                </div>
+                                <div class="col-lg-2">
+                                    <button type="submit" class="btn btn-outline-secondary w-100">  <span> </span>  <i class='bx bxs-save'></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- End Container Fluid -->
+
+
+        <!-- ==================================================== -->
+        <!-- End Page Content -->
+        <!-- ==================================================== -->
+@endsection

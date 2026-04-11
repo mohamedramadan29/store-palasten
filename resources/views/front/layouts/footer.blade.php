@@ -1,8 +1,9 @@
 <!-- Footer -->
 
 @php
-$public_setting = \App\Models\admin\PublicSetting::first();
-$socialmedia = \App\Models\admin\SocialMedia::first();
+    $public_setting = \App\Models\admin\PublicSetting::first();
+    $socialmedia = \App\Models\admin\SocialMedia::first();
+    $footer_pages = \App\Models\Page::active()->inFooter()->orderBy('title')->get();
 @endphp
 <footer id="footer" class="footer md-pb-70">
     <div class="footer-wrap">
@@ -31,34 +32,36 @@ $socialmedia = \App\Models\admin\SocialMedia::first();
                         </div>
                         <ul>
                             <li>
-                                <p>البريد الالكتروني : <a href="mailto:{{ $public_setting['website_email'] }}">{{
-                                        $public_setting['website_email'] }}</a></p>
+                                <p>البريد الالكتروني : <a
+                                        href="mailto:{{ $public_setting['website_email'] }}">{{ $public_setting['website_email'] }}</a>
+                                </p>
                             </li>
                             <li>
-                                <p>رقم الهاتف : <a href="tel:{{ $public_setting['website_phone'] }}">{{
-                                        $public_setting['website_phone'] }}</a></p>
+                                <p>رقم الهاتف : <a
+                                        href="tel:{{ $public_setting['website_phone'] }}">{{ $public_setting['website_phone'] }}</a>
+                                </p>
                             </li>
                         </ul>
                         <ul class="gap-10 tf-social-icon d-flex">
                             @if ($socialmedia['facebook'] != '')
-                            <li><a href="{{ $socialmedia['facebook'] }}"
-                                    class="box-icon w_34 round social-facebook social-line"><i
-                                        class="icon fs-14 icon-fb"></i></a></li>
+                                <li><a href="{{ $socialmedia['facebook'] }}"
+                                        class="box-icon w_34 round social-facebook social-line"><i
+                                            class="icon fs-14 icon-fb"></i></a></li>
                             @endif
                             @if ($socialmedia['x-twitter'] != '')
-                            <li><a href="{{ $socialmedia['x-twitter'] }}"
-                                    class="box-icon w_34 round social-twiter social-line"><i
-                                        class="icon fs-12 icon-Icon-x"></i></a></li>
+                                <li><a href="{{ $socialmedia['x-twitter'] }}"
+                                        class="box-icon w_34 round social-twiter social-line"><i
+                                            class="icon fs-12 icon-Icon-x"></i></a></li>
                             @endif
                             @if ($socialmedia['instagram'] != '')
-                            <li><a href="{{ $socialmedia['instagram'] }}"
-                                    class="box-icon w_34 round social-instagram social-line"><i
-                                        class="icon fs-14 icon-instagram"></i></a></li>
+                                <li><a href="{{ $socialmedia['instagram'] }}"
+                                        class="box-icon w_34 round social-instagram social-line"><i
+                                            class="icon fs-14 icon-instagram"></i></a></li>
                             @endif
                             @if ($socialmedia['tiktok'] != '')
-                            <li><a href="{{ $socialmedia['tiktok'] }}"
-                                    class="box-icon w_34 round social-tiktok social-line"><i
-                                        class="icon fs-14 icon-tiktok"></i></a></li>
+                                <li><a href="{{ $socialmedia['tiktok'] }}"
+                                        class="box-icon w_34 round social-tiktok social-line"><i
+                                            class="icon fs-14 icon-tiktok"></i></a></li>
                             @endif
                         </ul>
                     </div>
@@ -73,9 +76,11 @@ $socialmedia = \App\Models\admin\SocialMedia::first();
                             <li><a href="privacy-policy.html" class="footer-menu_item">شروط الاستخدام</a></li>
                             <li><a href="delivery-return.html" class="footer-menu_item">التوصيل والارجاع</a></li>
                             <li><a href="shipping-delivery.html" class="footer-menu_item">الاسئلة الشائعة</a></li>
-                            @if($public_setting->marketer_system_status)
-                                <li><a href="{{ url('marketer/register') }}" class="footer-menu_item">انضم كمسوق</a></li>
-                            @endif
+                            @foreach ($footer_pages as $page)
+                                <li><a href="{{ route('page.show', $page->slug) }}"
+                                        class="footer-menu_item">{{ $page->title }}</a></li>
+                            @endforeach
+
                         </ul>
                     </div>
                 </div>
@@ -87,8 +92,8 @@ $socialmedia = \App\Models\admin\SocialMedia::first();
                     <div class="col-12">
                         <div
                             class="flex-wrap gap-20 footer-bottom-wrap d-flex justify-content-between align-items-center">
-                            <div class="footer-menu_item">جميع الحقوق محفوظة © 2024 {{ $public_setting['website_name']
-                                }} .</div>
+                            <div class="footer-menu_item">جميع الحقوق محفوظة © {{ date('Y') }} برمجة وتصميم <a
+                                    href="https://palslt.com/" target="_blank"> palslt.com </a> .</div>
                         </div>
                     </div>
                 </div>
@@ -109,8 +114,8 @@ $socialmedia = \App\Models\admin\SocialMedia::first();
 
 <div class="tf-toolbar-bottom type-1150">
     @php
-    $wishlistCount = \App\Models\front\wishlist::wishlistitems()->count();
-    $cartCount = \App\Models\front\Cart::getcartitems()->count();
+        $wishlistCount = \App\Models\front\wishlist::wishlistitems()->count();
+        $cartCount = \App\Models\front\Cart::getcartitems()->count();
     @endphp
 
     <div class="toolbar-item {{ request()->is('/') ? 'active' : '' }}">
@@ -133,8 +138,8 @@ $socialmedia = \App\Models\admin\SocialMedia::first();
         <a href="{{ url('wishlist') }}">
             <div class="toolbar-icon nav-wishlist">
                 <i class="fas fa-heart"></i>
-                @if($wishlistCount > 0)
-                <div class="toolbar-count count-box">{{ $wishlistCount }}</div>
+                @if ($wishlistCount > 0)
+                    <div class="toolbar-count count-box">{{ $wishlistCount }}</div>
                 @endif
             </div>
             <div class="toolbar-label">المفضلة</div>
@@ -144,8 +149,8 @@ $socialmedia = \App\Models\admin\SocialMedia::first();
         <a href="{{ url('cart') }}">
             <div class="toolbar-icon nav-cart">
                 <i class="fas fa-shopping-bag"></i>
-                @if($cartCount > 0)
-                <div class="toolbar-count count-box">{{ $cartCount }}</div>
+                @if ($cartCount > 0)
+                    <div class="toolbar-count count-box">{{ $cartCount }}</div>
                 @endif
             </div>
             <div class="toolbar-label">السلة</div>
@@ -167,40 +172,48 @@ $socialmedia = \App\Models\admin\SocialMedia::first();
                         <span class="btn-open-sub"></span>
                     </a>
                     @php
-                    $categories = \App\Models\admin\MainCategory::with('SubCategories')->where('status', 1)->get();
+                        $categories = \App\Models\admin\MainCategory::with('SubCategories')->where('status', 1)->get();
                     @endphp
                     <div id="dropdown-menu-two" class="collapse">
                         <ul class="sub-nav-menu" id="sub-menu-navigation">
                             @foreach ($categories as $category)
-                            @if ($category->SubCategories->isNotEmpty())
-                            <li>
-                                <a href="#sub-shop-one_{{ $category['slug'] }}" class="sub-nav-link collapsed"
-                                    data-bs-toggle="collapse" aria-expanded="true" aria-controls="sub-shop-one">
-                                    <span>{{ $category['name'] }}</span>
-                                    <span class="btn-open-sub"></span>
-                                </a>
-                                <div id="sub-shop-one_{{ $category['slug'] }}" class="collapse">
-                                    <ul class="sub-nav-menu sub-menu-level-2">
-                                        @foreach ($category->SubCategories as $subcategory)
-                                        <li><a href="{{ url('collection/' . $category['slug'] . '/' . $subcategory['slug']) }}"
-                                                class="sub-nav-link">{{ $subcategory['name'] }}</a></li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            </li>
-                            @else
-                            <li><a href="{{ url('collection/' . $category['slug']) }}" class="sub-nav-link"><span>{{
-                                        $category['name'] }}</span></a></li>
-                            @endif
+                                @if ($category->SubCategories->isNotEmpty())
+                                    <li>
+                                        <a href="#sub-shop-one_{{ $category['slug'] }}"
+                                            class="sub-nav-link collapsed" data-bs-toggle="collapse"
+                                            aria-expanded="true" aria-controls="sub-shop-one">
+                                            <span>{{ $category['name'] }}</span>
+                                            <span class="btn-open-sub"></span>
+                                        </a>
+                                        <div id="sub-shop-one_{{ $category['slug'] }}" class="collapse">
+                                            <ul class="sub-nav-menu sub-menu-level-2">
+                                                @foreach ($category->SubCategories as $subcategory)
+                                                    <li><a href="{{ url('collection/' . $category['slug'] . '/' . $subcategory['slug']) }}"
+                                                            class="sub-nav-link">{{ $subcategory['name'] }}</a></li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    </li>
+                                @else
+                                    <li><a href="{{ url('collection/' . $category['slug']) }}"
+                                            class="sub-nav-link"><span>{{ $category['name'] }}</span></a></li>
+                                @endif
                             @endforeach
                         </ul>
                     </div>
                 </li>
+                @if (Auth::check())
+                    <li class="menu-item"><a href="{{ route('customer.dashboard') }}" class="item-link"> حسابي </a>
+                    </li>
+                @else
+                    <li class="menu-item"><a href="{{ route('customer.login') }}" class="item-link"> حسابي </a></li>
+                @endif
                 <li class="nav-mb-item"><a href="{{ url('/cart') }}" class="mb-menu-link">سلة الشراء</a></li>
-                <li class="nav-mb-item"><a href="{{ url('track-order') }}" class="mb-menu-link"> تتبع طلبيتك </a></li>
+                <li class="nav-mb-item"><a href="{{ url('track-order') }}" class="mb-menu-link"> تتبع طلبيتك </a>
+                </li>
                 <li class="nav-mb-item"><a href="{{ url('faq') }}" class="mb-menu-link">الاسئلة الشائعة</a></li>
 
-                @if($public_setting->marketer_system_status)
+                @if ($public_setting->marketer_system_status)
                     <li class="nav-mb-item">
                         <a href="#dropdown-marketer" class="collapsed mb-menu-link" data-bs-toggle="collapse"
                             aria-expanded="false" aria-controls="dropdown-marketer">
@@ -209,13 +222,18 @@ $socialmedia = \App\Models\admin\SocialMedia::first();
                         </a>
                         <div id="dropdown-marketer" class="collapse">
                             <ul class="sub-nav-menu">
-                                @if(Auth::guard('marketer')->check())
-                                    <li><a href="{{ url('marketer/dashboard') }}" class="sub-nav-link">لوحة التحكم</a></li>
-                                    <li><a href="{{ route('marketer.shop') }}" class="sub-nav-link">متجر المسوقين</a></li>
-                                    <li><a href="{{ url('marketer/logout') }}" class="sub-nav-link">تسجيل الخروج</a></li>
+                                @if (Auth::guard('marketer')->check())
+                                    <li><a href="{{ url('marketer/dashboard') }}" class="sub-nav-link">لوحة
+                                            التحكم</a></li>
+                                    <li><a href="{{ route('marketer.shop') }}" class="sub-nav-link">متجر المسوقين</a>
+                                    </li>
+                                    <li><a href="{{ url('marketer/logout') }}" class="sub-nav-link">تسجيل الخروج</a>
+                                    </li>
                                 @else
-                                    <li><a href="{{ url('marketer/login') }}" class="sub-nav-link">تسجيل دخول</a></li>
-                                    <li><a href="{{ url('marketer/register') }}" class="sub-nav-link">تسجيل مسوق جديد</a></li>
+                                    <li><a href="{{ url('marketer/login') }}" class="sub-nav-link">تسجيل دخول</a>
+                                    </li>
+                                    <li><a href="{{ url('marketer/register') }}" class="sub-nav-link">تسجيل مسوق
+                                            جديد</a></li>
                                 @endif
                             </ul>
                         </div>
@@ -234,8 +252,8 @@ $socialmedia = \App\Models\admin\SocialMedia::first();
     </div>
 </div>
 
-<div class="modal fullLeft fade modal-shopping-cart" id="shoppingCart" tabindex="-1" aria-labelledby="shoppingCartLabel"
-    aria-hidden="true">
+<div class="modal fullLeft fade modal-shopping-cart" id="shoppingCart" tabindex="-1"
+    aria-labelledby="shoppingCartLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="header">
@@ -273,7 +291,7 @@ $socialmedia = \App\Models\admin\SocialMedia::first();
     function fetchCardPrice(uniqueId) {
         let card = document.getElementById(`product-card-${uniqueId}`);
         if (!card) return;
-        
+
         let productId = card.getAttribute('data-product-id');
         let form = document.getElementById(`addToCartForm_${uniqueId}`);
         let formData = new FormData(form);
@@ -290,16 +308,16 @@ $socialmedia = \App\Models\admin\SocialMedia::first();
                 // تحديث السعر
                 const priceElem = card.querySelector('.card-price');
                 const oldPriceElem = card.querySelector('.card-old-price');
-                
+
                 if (priceElem) {
                     if (data.discount && data.discount > 0) {
-                        priceElem.innerText = data.discount + ' {{ $storeCurrency ?? "" }}';
+                        priceElem.innerText = data.discount + ' {{ $storeCurrency ?? '' }}';
                         if (oldPriceElem) {
-                            oldPriceElem.innerText = data.price + ' {{ $storeCurrency ?? "" }}';
+                            oldPriceElem.innerText = data.price + ' {{ $storeCurrency ?? '' }}';
                             oldPriceElem.style.display = 'inline';
                         }
                     } else if (data.price) {
-                        priceElem.innerText = data.price + ' {{ $storeCurrency ?? "" }}';
+                        priceElem.innerText = data.price + ' {{ $storeCurrency ?? '' }}';
                         if (oldPriceElem) oldPriceElem.style.display = 'none';
                     } else {
                         priceElem.innerText = 'غير متوفر';
@@ -359,6 +377,7 @@ $socialmedia = \App\Models\admin\SocialMedia::first();
             }
         });
     });
+
     function addToCart(uniqueId) {
         let form = $(`#addToCartForm_${uniqueId}`);
         $.ajax({
@@ -444,11 +463,11 @@ $socialmedia = \App\Models\admin\SocialMedia::first();
                 const discountedPrice = document.getElementById('discounted-price-modal');
 
                 if (priceValue) {
-                    priceValue.innerText = data.price ? data.price + ' {{ $storeCurrency ?? "" }}' : 'غير متوفر';
+                    priceValue.innerText = data.price ? data.price + ' {{ $storeCurrency ?? '' }}' : 'غير متوفر';
                 }
 
                 if (data.discount && data.discount > 0) {
-                    if (discountedPrice) discountedPrice.innerText = data.discount + ' {{ $storeCurrency ?? "" }}';
+                    if (discountedPrice) discountedPrice.innerText = data.discount + ' {{ $storeCurrency ?? '' }}';
                     if (discountSection) discountSection.style.display = 'block';
                     if (priceValue) priceValue.style.textDecoration = "line-through";
                 } else {
@@ -456,9 +475,12 @@ $socialmedia = \App\Models\admin\SocialMedia::first();
                     if (priceValue) priceValue.style.textDecoration = "none";
                 }
 
-                if (document.getElementById('hidden-variation-modal')) document.getElementById('hidden-variation-modal').value = data.variation_id;
-                if (document.getElementById('hidden-price-modal')) document.getElementById('hidden-price-modal').value = data.price;
-                if (document.getElementById('hidden-discount-modal')) document.getElementById('hidden-discount-modal').value = data.discount || '';
+                if (document.getElementById('hidden-variation-modal')) document.getElementById(
+                    'hidden-variation-modal').value = data.variation_id;
+                if (document.getElementById('hidden-price-modal')) document.getElementById('hidden-price-modal')
+                    .value = data.price;
+                if (document.getElementById('hidden-discount-modal')) document.getElementById(
+                    'hidden-discount-modal').value = data.discount || '';
 
                 if (data.image) {
                     const modalImg = document.getElementById('main-product-image-modal');
@@ -483,10 +505,11 @@ $socialmedia = \App\Models\admin\SocialMedia::first();
                 // تحديث حالة المخزون في النافذة المنبثقة
                 let stockStatus = document.getElementById('stock-status-modal');
                 let addToCartBtn = document.getElementById('addtocartbutton-modal');
-                
+
                 if (data.stock !== undefined) {
                     if (data.stock > 0) {
-                        if (stockStatus) stockStatus.innerHTML = `<span class="badge bg-success">متوفر: ${data.stock}</span>`;
+                        if (stockStatus) stockStatus.innerHTML =
+                            `<span class="badge bg-success">متوفر: ${data.stock}</span>`;
                         if (addToCartBtn) {
                             addToCartBtn.disabled = false;
                             addToCartBtn.style.backgroundColor = "";
@@ -494,7 +517,8 @@ $socialmedia = \App\Models\admin\SocialMedia::first();
                             addToCartBtn.querySelector('span').innerText = "اضف الي السلة";
                         }
                     } else {
-                        if (stockStatus) stockStatus.innerHTML = `<span class="badge bg-danger">غير متوفر حالياً</span>`;
+                        if (stockStatus) stockStatus.innerHTML =
+                            `<span class="badge bg-danger">غير متوفر حالياً</span>`;
                         if (addToCartBtn) {
                             addToCartBtn.disabled = true;
                             addToCartBtn.style.backgroundColor = "#ccc";
@@ -602,7 +626,8 @@ $socialmedia = \App\Models\admin\SocialMedia::first();
                 $('#quick_view').modal('hide');
             },
             error: function(xhr) {
-                const msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : "حدث خطأ أثناء الإضافة للسلة";
+                const msg = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message :
+                    "حدث خطأ أثناء الإضافة للسلة";
                 Toastify({
                     text: msg,
                     duration: 3000,

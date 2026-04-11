@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->string('second_navbar_background')->nullable();
             $table->string('third_navbar_background')->nullable();
             $table->string('main_title_color')->nullable();
+            $table->string('main_title_background')->nullable();
             $table->string('all_button_background')->nullable();
             $table->string('main_price_color')->nullable();
             $table->string('public_add_to_cart_background')->nullable();

@@ -12,6 +12,7 @@ use \App\Http\Controllers\front\OrderController;
 use \App\Http\Controllers\front\TermsController;
 use \App\Http\Controllers\front\OfferController;
 use \App\Http\Controllers\front\OfferOrderController;
+use \App\Http\Controllers\front\PageController;
 
 Route::controller(FrontController::class)->group(function () {
     Route::get('/', 'index');
@@ -82,6 +83,32 @@ Route::controller(OfferOrderController::class)->group(function () {
 Route::controller(\App\Http\Controllers\front\ReviewController::class)->group(function (){
    Route::match(['post','get'],'review','review');
    Route::get('all-reviews','all_reviews');
+});
+
+// Customer Auth Routes
+Route::controller(\App\Http\Controllers\Auth\CustomerAuthController::class)->group(function (){
+    Route::get('register', 'showRegister')->name('customer.register');
+    Route::post('register', 'register')->name('customer.register.submit');
+    Route::get('login', 'showLogin')->name('customer.login');
+    Route::post('login', 'login')->name('customer.login.submit');
+    Route::post('logout', 'logout')->name('customer.logout');
+});
+
+// Customer Dashboard Routes
+Route::middleware('auth')->prefix('customer')->group(function () {
+    Route::get('dashboard', [\App\Http\Controllers\CustomerController::class, 'dashboard'])->name('customer.dashboard');
+    Route::get('profile', [\App\Http\Controllers\CustomerController::class, 'profile'])->name('customer.profile');
+    Route::post('profile', [\App\Http\Controllers\CustomerController::class, 'updateProfile'])->name('customer.profile.update');
+    Route::post('password', [\App\Http\Controllers\CustomerController::class, 'updatePassword'])->name('customer.password.update');
+    Route::get('orders', [\App\Http\Controllers\CustomerController::class, 'orders'])->name('customer.orders');
+    Route::get('addresses', [\App\Http\Controllers\CustomerController::class, 'addresses'])->name('customer.addresses');
+    Route::post('addresses', [\App\Http\Controllers\CustomerController::class, 'storeAddress'])->name('customer.addresses.store');
+    Route::get('password', [\App\Http\Controllers\CustomerController::class, 'showPasswordForm'])->name('customer.password');
+});
+
+Route::controller(PageController::class)->group(function (){
+   Route::get('page/{slug}', 'show')->name('page.show');
+   Route::get('pages', 'index')->name('pages.index');
 });
 
 //////////////////////// Marketer Routes ////////////////////////

@@ -1,4 +1,4 @@
-    <div class="tf-mini-cart-threshold px-3 pt-3">
+    <div class="px-3 pt-3 tf-mini-cart-threshold">
         @php
             $publicSetting = \App\Models\admin\PublicSetting::first();
             $cityId = session('shipping_city_id');
@@ -17,8 +17,8 @@
         @endphp
 
         <div id="mini-cart-threshold-wrapper" style="{{ $threshold > 0 ? '' : 'display: none;' }}">
-            <div class="free-shipping-text-wrapper mb-2">
-                <p class="free-shipping-text fw-5 mb-0" style="font-size: 13px; color: #333;">
+            <div class="mb-2 free-shipping-text-wrapper">
+                <p class="mb-0 free-shipping-text fw-5" style="font-size: 13px; color: #333;">
                     @if($threshold > 0)
                         @if($remaining > 0)
                             <i class="bi bi-box-seam me-2" style="color: #666;"></i>
@@ -30,7 +30,7 @@
                     @endif
                 </p>
             </div>
-            <div class="progress-bar-container position-relative mb-3" style="height: 6px; background-color: #e9ecef; border-radius: 3px; overflow: visible;">
+            <div class="mb-3 progress-bar-container position-relative" style="height: 6px; background-color: #e9ecef; border-radius: 3px; overflow: visible;">
                 <div class="progress-bar-fill" style="height: 100%; background-color: #28a745; border-radius: 3px; transition: width 0.3s ease; width: {{ $percent }}%;"></div>
                 <div class="progress-star position-absolute" style="top: -8px; left: calc({{ $percent }}% - 12px); transition: left 0.3s ease;">
                     <i class="fas fa-star" style="color: #ffc107; font-size: 16px; text-shadow: 0 0 5px rgba(0,0,0,0.2);"></i>

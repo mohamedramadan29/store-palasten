@@ -23,7 +23,7 @@ class OrderController extends Controller
 
     public function update(Request $request, $id)
     {
-        $order = Order::with('details','city')->where('id',$id)->first();
+        $order = Order::with('details','city','marketer')->where('id',$id)->first();
         if (!isset($order)){
             return redirect()->route('orders');
         }

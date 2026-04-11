@@ -3,7 +3,7 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'b67ee75c4d4bfdd4796b7c74b7181914a8ef3312',
+        'reference' => '788ebcb0edd3790d65b826a1e97ebe2bc79c06e9',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -388,7 +388,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'b67ee75c4d4bfdd4796b7c74b7181914a8ef3312',
+            'reference' => '788ebcb0edd3790d65b826a1e97ebe2bc79c06e9',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -1012,6 +1012,15 @@
             'install_path' => __DIR__ . '/../spatie/laravel-ignition',
             'aliases' => array(),
             'dev_requirement' => true,
+        ),
+        'spatie/laravel-sluggable' => array(
+            'pretty_version' => '3.8.1',
+            'version' => '3.8.1.0',
+            'reference' => '3624a2d7d8c8475d8561c53faf63f1af583ef76c',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../spatie/laravel-sluggable',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'spatie/once' => array(
             'dev_requirement' => false,

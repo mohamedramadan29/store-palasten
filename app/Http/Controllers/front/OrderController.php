@@ -87,6 +87,14 @@ class OrderController extends Controller
             $order->is_marketer_order = 1;
             $order->marketer_id = \Illuminate\Support\Facades\Auth::guard('marketer')->id();
         }
+        
+        // Customer fields - save customer ID if logged in
+        $isCustomer = \Illuminate\Support\Facades\Auth::check();
+        if ($isCustomer) {
+            $order->customer_id = \Illuminate\Support\Facades\Auth::id();
+            $order->customer_name = \Illuminate\Support\Facades\Auth::user()->name;
+            $order->customer_email = \Illuminate\Support\Facades\Auth::user()->email;
+        }
 
         $order->save();
 

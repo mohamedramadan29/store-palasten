@@ -26,6 +26,7 @@ class ColorController extends Controller
             'second_navbar_background' => $data['second_navbar_background'],
             'third_navbar_background' => $data['third_navbar_background'],
             'main_title_color' => $data['main_title_color'],
+            'main_title_background' => $data['main_title_background'],
             'product_title_color' => $data['product_title_color'],
             'all_button_background' => $data['all_button_background'],
             'main_price_color' => $data['main_price_color'],

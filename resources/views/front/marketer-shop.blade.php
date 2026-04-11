@@ -9,7 +9,7 @@
         <!-- page-title -->
         <div class="tf-page-title" style="margin-bottom: 0;padding-bottom:0px !important">
             <div class="container-full">
-                <div class="heading text-center"> متجر المسوقين </div>
+                <div class="text-center heading"> متجر المسوقين </div>
                 <p class="text-center text-2 text_black-2 mt_5"> الأسعار الخاصة للمسوقين </p>
             </div>
         </div>
@@ -66,13 +66,23 @@
 
                 <div class="wrapper-control-shop">
                     <div class="meta-filter-shop"></div>
-                    <div class="grid-layout wrapper-shop" data-grid="grid-4">
-                        @foreach ($products as $product)
-                            @include('front.partials.marketer-product-card', ['product' => $product])
-                        @endforeach
-                    </div>
-                    <!-- pagination -->
-                    {!! $products->links('vendor.pagination.pagination') !!}
+                    @if ($products->count() > 0)
+                        <div class="grid-layout wrapper-shop" data-grid="grid-4">
+                            @foreach ($products as $product)
+                                @include('front.partials.marketer-product-card', ['product' => $product])
+                            @endforeach
+                        </div>
+                        <!-- pagination -->
+                        {!! $products->links('vendor.pagination.pagination') !!}
+                    @else
+                        <div class="py-5 text-center">
+                            <div class="alert alert-info">
+                                <i class="mb-3 fas fa-info-circle fa-2x"></i>
+                                <h4 class="alert-heading">لا يوجد منتجات</h4>
+                                <p class="mb-0">لا توجد منتجات متاحة في هذا القسم</p>
+                            </div>
+                        </div>
+                    @endif
                 </div>
 
             </div>
@@ -124,11 +134,11 @@
 @section('js')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        function fetchPrice() {
+        function fetchPrice(productId) {
             let form = document.getElementById('addToCart');
             let formData = new FormData(form);
 
-            fetch('{{ route('product.getPrice', $product->id) }}', {
+            fetch(`/product/get-price/${productId}`, {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'

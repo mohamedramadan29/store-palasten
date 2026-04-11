@@ -27,6 +27,7 @@ use \App\Http\Controllers\admin\SalesReportController;
 use \App\Http\Controllers\admin\InventoryMovementController;
 use \App\Http\Controllers\admin\InventoryLogController;
 use \App\Http\Controllers\admin\NotificationController;
+use \App\Http\Controllers\admin\PageController;
 Route::group(['prefix' => 'admin'], function () {
 // Admin Login
 
@@ -259,6 +260,22 @@ Route::group(['prefix' => 'admin'], function () {
             Route::post('marketer/status/{id}','updateStatus')->name('admin.marketer.status');
             Route::post('marketer/delete/{id}','delete')->name('admin.marketer.delete');
             Route::get('marketer-orders','marketerOrders')->name('admin.marketer.orders');
+            Route::get('marketer-reports','report')->name('admin.marketer.reports');
+            Route::get('marketer-profit-summary','profitSummary')->name('admin.marketer.profit-summary');
+        });
+
+        //////////////////////// Start Pages Management /////////////////
+        ///
+        Route::controller(PageController::class)->group(function (){
+            Route::get('pages','index')->name('admin.pages.index');
+            Route::get('pages/create','create')->name('admin.pages.create');
+            Route::post('pages','store')->name('admin.pages.store');
+            Route::get('pages/{page}','show')->name('admin.pages.show');
+            Route::get('pages/{page}/edit','edit')->name('admin.pages.edit');
+            Route::put('pages/{page}','update')->name('admin.pages.update');
+            Route::delete('pages/{page}','destroy')->name('admin.pages.destroy');
+            Route::post('pages/{id}/restore','restore')->name('admin.pages.restore');
+            Route::delete('pages/{id}/force-delete','forceDelete')->name('admin.pages.force-delete');
         });
     });
 });

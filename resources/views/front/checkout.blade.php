@@ -150,7 +150,7 @@
                                                 سعر المنتج: <strong>{{ $storeP }} {{ $storeCurrency }}</strong>
                                             </div>
                                             <div style="font-size:12px;color:#666">
-                                                سعر المسوق المقترح: <strong>{{ $mktP }} {{ $storeCurrency }}</strong>
+                                               سعر الجملة : <strong>{{ $mktP }} {{ $storeCurrency }}</strong>
                                             </div>
                                             <div class="gap-2 d-flex align-items-center">
                                                 <label style="font-size:12px;white-space:nowrap">سعر البيع للعميل:</label>
@@ -165,7 +165,7 @@
                                             </div>
                                             <div style="font-size:12px;color:green">
                                                 ربحك: <strong class="item-profit-{{ $idx }}">{{ number_format(($storeP - $mktP) * $item->qty, 2) }}</strong> {{ $storeCurrency }}
-                                                <small class="text-muted d-block">(شراء: {{ $mktP }} | بيع: <span class="sell-price-display">{{ $storeP }}</span>)</small>
+                                                <small class="text-muted d-block">(الجملة : {{ $mktP }} | بيع: <span class="sell-price-display">{{ $storeP }}</span>)</small>
                                             </div>
                                         </div>
                                     </div>

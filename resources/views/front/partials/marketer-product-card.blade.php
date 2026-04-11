@@ -96,12 +96,12 @@
                 <div class="marketer-price-info">
                     <span class="price marketer-price card-price text-success">{{ number_format($marketerPrice, 2) }} {{ $storeCurrency }}</span>
                     <span class="price regular-price card-old-price text-muted">{{ number_format($regularPrice, 2) }} {{ $storeCurrency }}</span>
-                    <div class="small text-info mt-1">سعر المسوق (الجملة)</div>
+                    <div class="mt-1 small text-info">سعر المسوق (الجملة)</div>
                 </div>
             @else
                 <div class="regular-price-info">
                     <span class="price main_price card-price">{{ number_format($regularPrice, 2) }} {{ $storeCurrency }}</span>
-                    <div class="small text-muted mt-1">سعر البيع العادي</div>
+                    <div class="mt-1 small text-muted">سعر البيع العادي</div>
                 </div>
             @endif
         </div>
@@ -119,7 +119,7 @@
                 @endphp
                 
                 @if($hasMarketerVariations)
-                    <div class="text-success small mt-1">
+                    <div class="mt-1 text-success small">
                         <i class="ri-checkbox-circle-line"></i> 
                         أسعار مسوق متاحة
                     </div>
@@ -245,3 +245,11 @@
         margin-top: 8px;
     }
 </style>
+
+<script>
+function fetchCardPrice(uniqueId) {
+    // This function can be used to update prices when variants change
+    // Implementation depends on your specific requirements
+    console.log('Price update requested for product:', uniqueId);
+}
+</script>

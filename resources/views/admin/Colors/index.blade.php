@@ -14,7 +14,7 @@
             @csrf
 
             <div class="row">
-                <div class="col-xl-12 col-lg-12 ">
+                <div class="col-xl-12 col-lg-12">
                     @if (Session::has('Success_message'))
                     @php
                     toastify()->success(\Illuminate\Support\Facades\Session::get('Success_message'));
@@ -158,6 +158,20 @@
                                         <input type="text" class="form-control hex-input"
                                             value="#{{ strtoupper(ltrim($colors['main_title_color'] ?? '#000000', '#')) }}"
                                             data-target="main_title_color" style="max-width: 110px;">
+                                    </div>
+                                </div>
+                            </div>
+
+                             <div class="col-lg-4 col-12">
+                                <div class="mb-3">
+                                    <label for="main_title_color" class="form-label"> لون الخلفية الاساسي للعناوين   </label>
+                                    <div class="input-group">
+                                        <input type="color" id="main_title_background"
+                                            class="form-control form-control-color" name="main_title_background"
+                                            value="#{{ ltrim($colors['main_title_background'] ?? '#000000', '#') }}">
+                                        <input type="text" class="form-control hex-input"
+                                            value="#{{ strtoupper(ltrim($colors['main_title_background'] ?? '#000000', '#')) }}"
+                                            data-target="main_title_background" style="max-width: 110px;">
                                     </div>
                                 </div>
                             </div>

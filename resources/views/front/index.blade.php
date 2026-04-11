@@ -146,7 +146,7 @@
                          
                         </span>
                     </div>
-                    <p class="sub-title wow fadeInUp" data-wow-delay="0s"> اكثر المنتجات مبيعا في المتجر </p>
+                    {{-- <p class="sub-title wow fadeInUp" data-wow-delay="0s"> اكثر المنتجات مبيعا في المتجر </p> --}}
                 </div>
                 <div>
                     <a href="{{ url('shop') }}" class="head_read_more">    {{ count($bestproducts) }} منتج </a>
@@ -209,7 +209,7 @@
                     <div class="gap-3 mb-3 d-flex align-items-center">
                         <span class="title wow fadeInUp" data-wow-delay="0s"> احدث المنتجات </span> 
                     </div>
-                    <p class="sub-title wow fadeInUp" data-wow-delay="0s"> احدث المنتجات في المتجر </p>
+                    {{-- <p class="sub-title wow fadeInUp" data-wow-delay="0s"> احدث المنتجات في المتجر </p> --}}
                 </div>
                 <div>
                     <a href="{{ url('shop') }}" class="head_read_more">   {{ count($lastproducts) }} منتج </a>
@@ -278,8 +278,8 @@
                         <span class="title wow fadeInUp" data-wow-delay="0s"> {{ $category['name'] }} </span>
                          
                     </div>
-                    <p class="sub-title wow fadeInUp" data-wow-delay="0s"> اكثر المنتجات مبيعا في
-                        المتجر </p>
+                    {{-- <p class="sub-title wow fadeInUp" data-wow-delay="0s"> اكثر المنتجات مبيعا في
+                        المتجر </p> --}}
                 </div>
                   <div>
                     <a href="{{ url('shop') }}" class="head_read_more">    {{ count($category['products']) }} منتج </a>
@@ -345,9 +345,9 @@
                 <div>
                     <div class="gap-3 mb-3 d-flex align-items-center">
                         <span class="title"> آراء العملاء </span>
-                        <span class="px-3 py-1 text-white bg-primary d-inline-block rounded-2 fw-600 fs-13">
+                        {{-- <span class="px-3 py-1 text-white bg-primary d-inline-block rounded-2 fw-600 fs-13">
                             {{ count($reviews) }} تقييم
-                        </span>
+                        </span> --}}
                     </div>
                     <p class="sub-title"> ماذا يقول العملاء عنا </p>
                 </div>

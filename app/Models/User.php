@@ -18,6 +18,7 @@ class User extends Authenticatable
         'user_type',
         'phone',
         'status',
+        'role', // Add role field for customer/admin distinction
     ];
 
     protected $hidden = [
@@ -33,5 +34,10 @@ class User extends Authenticatable
     public function orders()
     {
         return $this->hasMany(\App\Models\front\Order::class, 'marketer_id');
+    }
+
+    public function addresses()
+    {
+        return $this->hasMany(\App\Models\Address::class);
     }
 }
